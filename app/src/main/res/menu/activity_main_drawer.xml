@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inicio"
+            android:icon="@drawable/inicio"
+            android:title="Inicio" />
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/perfil"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/nav_rutas"
+            android:icon="@drawable/mapa_rutas"
+            android:title="Rutas" />
+        <item
+            android:id="@+id/nav_eventos"
+            android:icon="@drawable/eventos"
+            android:title="Eventos" />
+    </group>
+
+    <item android:title="Opciones">
+        <menu>
+            <item
+                android:id="@+id/nav_acerca_de"
+                android:icon="@drawable/informacion"
+                android:title="Acerca de" />
+            <item
+            android:id="@+id/nav_ayuda"
+            android:icon="@drawable/ayuda"
+            android:title="Ayuda" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/logout"
+                android:title="Logout" />
+            <item
+                android:id="@+id/nav_salir"
+                android:icon="@drawable/salir"
+                android:title="Salir" />
+        </menu>
+    </item>
+
+</menu>
