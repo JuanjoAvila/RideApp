@@ -31,9 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
         <activity android:name=".SplashScreen" />
         <activity android:name=".Chat" />
         <activity android:name=".EdicionPerfil" />
@@ -57,7 +54,8 @@
 
         <activity
             android:name=".Rutas"
-            android:label="@string/title_activity_rutas"></activity>
+            android:label="@string/title_activity_rutas" />
+        <activity android:name=".Login"></activity>
     </application>
 
 </manifest>
