@@ -4,27 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.juanjo.rideapp.Login">
-    <ImageView
+    <!--<ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/fondo"
         android:scaleType="centerCrop"
-        android:id="@+id/fondoLogin"/>
+        android:id="@+id/fondoLogin"
 
+        />-->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:id="@+id/logoLogin"
-        android:src="@drawable/logoRideApp"
-        android:layout_marginBottom="317dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:scaleType="fitCenter" />
+        android:layout_height="100dp"
+        android:id="@+id/logo"
+        android:src="@drawable/rideapp_titulo"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"/>
+
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+
+        android:layout_below="@+id/logo"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,21 +42,141 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Comienza cuando quieras y donde quieras con RideApp"
+                android:text="Comienza cuándo quieras y dónde quieras con RideApp"
                 android:textColor="@color/esloganColor"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:layout_marginBottom="30dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:paddingTop="10dp"/>
             <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="Usuario"
-                android:background="@drawable/cuadrado_redondo_login"
+                android:background="@drawable/cuadrado_redondo_login_usuario"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"/>
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/usuariologin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:id="@+id/loginusuario"
+                android:layout_marginBottom="15dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Contraseña"
+                android:textColorHint="@color/blanco"
+                android:background="@drawable/cuadrado_redondo_login_contrasena"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/contrasenalogin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:textColor="@color/blanco"
+                android:paddingStart="10dp"
+                android:inputType="textPassword"
+                android:id="@+id/logincontraseña"
+                android:layout_marginBottom="30dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recuerdame"
+                    android:textSize="12dp"
+                    android:textColor="@color/remember"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Eres nuevo?"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="Sign up"
+                    android:textColor="@color/registrarse"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/botonsign"
+                android:onClick="iniciar"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Sign in"
+                android:textColor="@color/blanco"
+                android:textStyle="normal" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/linea"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/google"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/loggoogle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:text="Log in with Google"
+                    android:textSize="14dp"
+                    android:textColor="@color/registrarse"
+                    android:textStyle="bold"
+                    android:textAlignment="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/facebook"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/logface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log in with Facebook"
+                    android:textAlignment="center"
+                    android:textSize="14dp"
+                    android:textColor="@color/registrarse"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"/>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
