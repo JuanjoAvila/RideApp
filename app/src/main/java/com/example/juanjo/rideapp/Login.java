@@ -17,6 +17,7 @@ public class Login extends AppCompatActivity {
         //Sirve para que no salga al inciar el login , el pop up para escribir .
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
+    //Sirve para cerrar la ventana anterior es decir esta en el login , pasa al main activity y cierra el login . Si vuelve para atras saldra de la aplicacion
     public void iniciar(View view){
         startActivity(new Intent(getBaseContext(), MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
