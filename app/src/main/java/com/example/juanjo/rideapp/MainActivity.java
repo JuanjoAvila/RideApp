@@ -24,22 +24,25 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Asigna la barra de abajo como la predeterminada
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //Adquiere la ventana principal para al poder cambiar de ventana con el menu si estas en la misma no te añada una nueva ventana
         esPrincipal = true;
 
 
-
+        //Crea el boton del menu para poderse abrir y cerrar
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //Al apretar adquiere el valor del boton y te muestra el menu
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
+    //Este metodo te crea el efecto de abrir y cerrar el menu .
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -49,29 +52,27 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
+    //Es el menu aun incompleto del usuario que hay en la parte derecha , donde se podra cambiar contraseña , cerrar session
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Crea el menu y hace que se muestre solo faltaran añadirle las opciones
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
+    //Para seleccionar las opciones que pasara en cada una de ellas
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_perfil) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
+    //Al apretar las opciones del menu lateral lo que pasa
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -99,7 +100,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_ayuda) {
             Toast.makeText(getApplicationContext(),"Ayuda",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
-            Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getBaseContext(), Login.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+            finish();
         }else if (id == R.id.nav_salir) {
             this.finish();
         }
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    //mantiene la actividad principal como la actual en este momento para evitar el problema del menu al inciar otra vez la misma actividad
     @Override
     protected  void onResume() {
         super.onResume();
