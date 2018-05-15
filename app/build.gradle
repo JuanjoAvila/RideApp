@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.example.juanjo.rideapp"
         minSdkVersion 21
@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -29,5 +29,4 @@ dependencies {
     compile 'com.android.support:design:26.+'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
 }
