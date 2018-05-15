@@ -2,7 +2,13 @@
 <resources>
     <color name="colorPrimary">#72bb53</color>
     <color name="colorPrimaryDark">#629c44</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#629c44</color>
     <color name="fondoVentanaPrincipal">#dfedd6</color>
     <color name="colorMenu">#ffffff</color>
+    <color name="esloganColor">#4e5516</color>
+    <color name="contrasenaContorno">#629c44</color>
+    <color name="remember">#243e16</color>
+    <color name="blanco">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="registrarse">#243e16</color>
 </resources>
