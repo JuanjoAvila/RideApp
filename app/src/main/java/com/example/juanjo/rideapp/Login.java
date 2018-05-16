@@ -37,7 +37,11 @@ public class Login extends AppCompatActivity {
 
 
     }
+
     public void iniciar(){
+
+    //Sirve para cerrar la ventana anterior es decir esta en el login , pasa al main activity y cierra el login . Si vuelve para atras saldra de la aplicacion
+   
         startActivity(new Intent(getBaseContext(), MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();
