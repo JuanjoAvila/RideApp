@@ -6,4 +6,101 @@
     android:layout_height="match_parent"
     tools:context="com.example.juanjo.rideapp.Usuario.Perfil">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                >
+                <ImageView
+                    android:id="@+id/usuarioAvatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/perfil_defecto_avatar_usuario" />
+                <TextView
+                    android:id="@+id/usuarioID"
+                    android:paddingTop="5dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="USUARIO"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/configUsuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="80dp"
+                    app:srcCompat="@mipmap/perfil_editarusuario" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/seguidoresTexto"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="Seguidores"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recyclerViewSeguidores"
+                android:orientation="horizontal">
+            </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/seguidosTexto"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="Seguidos"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recyclerViewSeguidos"
+                android:orientation="horizontal">
+            </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/descripcionUsuarioTexto"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="Descripción:"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/descripcionUsuario"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="Tengo cierto hobbies para poder divertirme, etc..."
+                android:textColor="@color/black"
+                android:textSize="8dp"
+                android:textStyle="normal" />
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

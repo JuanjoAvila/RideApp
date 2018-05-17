@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import com.example.juanjo.rideapp.Usuario.UsuarioDTO;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -22,7 +24,7 @@ public class Login extends AppCompatActivity {
     public static final String NAMESPACE = "http://tempuri.org/";
     public AutoCompleteTextView loginusuario;
     public AutoCompleteTextView logincontraseña;
-    private UsuarioDTO user = null;
+    private static UsuarioDTO user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +36,15 @@ public class Login extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         loginusuario = findViewById(R.id.loginusuario);
         logincontraseña = findViewById(R.id.logincontraseña);
+    }
 
-
+    public static UsuarioDTO getUsuari(){
+        UsuarioDTO returnUser = user;
+        return returnUser;
     }
 
     public void iniciar(){
-
     //Sirve para cerrar la ventana anterior es decir esta en el login , pasa al main activity y cierra el login . Si vuelve para atras saldra de la aplicacion
-   
         startActivity(new Intent(getBaseContext(), MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();
@@ -50,8 +53,6 @@ public class Login extends AppCompatActivity {
         TareaWSConsulta twsc = new TareaWSConsulta(this);
         twsc.execute(String.valueOf(loginusuario.getText()));
     }
-
-
 
     //Tarea Asíncrona para llamar al WS de consulta en segundo plano
     private class TareaWSConsulta extends AsyncTask<String,Void,Boolean> {
@@ -87,14 +88,11 @@ public class Login extends AppCompatActivity {
                 result = false;
                 e.printStackTrace();
             }
-
-
             return result;
         }
 
         protected void onPostExecute(Boolean result) {
             if(result){
-
                 if(user.getPassword().equals(String.valueOf(logincontraseña.getText())))iniciar();
 
                 else Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();

@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity
         //Adquiere la ventana principal para al poder cambiar de ventana con el menu si estas en la misma no te añada una nueva ventana
         esPrincipal = true;
 
-
         //Crea el boton del menu para poderse abrir y cerrar
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
