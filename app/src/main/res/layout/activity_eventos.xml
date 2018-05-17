@@ -4,6 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juanjo.rideapp.Eventos">
+    tools:context="com.example.juanjo.rideapp.Evento.Eventos">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            >
+            <TextView
+                android:id="@+id/eventoTitulo"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="5dp"
+                android:text="Eventos:"
+                android:textColor="@color/registrarse"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/addEvento"
+                android:paddingTop="9dp"
+                android:paddingLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="50dp"
+                android:text="Añadir evento"
+                android:textColor="@color/registrarse"
+                android:textSize="12dp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/anadirBoton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:onClick="crearEvento"
+                android:paddingLeft="3dp"
+                app:srcCompat="@drawable/add"
+                tools:layout_editor_absoluteX="330dp"
+                tools:layout_editor_absoluteY="16dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

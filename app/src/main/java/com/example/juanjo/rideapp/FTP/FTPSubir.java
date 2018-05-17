@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.FTP;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.SocketException;
 
-public class FTPSubir extends AsyncTask<File , Integer, Long> {
+public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
     private static final int SELECT_FILE = 1;
     //Credenciales
     private String ip =  "rideapp.somee.com";
@@ -86,36 +86,34 @@ public class FTPSubir extends AsyncTask<File , Integer, Long> {
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
         //Cambia la carpeta Ftp
-        if (ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/")){
+        if(rutaCompleta.getName().endsWith("gpx")){
+            ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/");
+        }
+        else{
+            ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/");
+        }
+        //Informa al usuario
+        System.out.println("Carpeta ftp cambiada . . .");
 
+        //Crea un buffer hacia el servidor de subida
+        bufferIn = new BufferedInputStream(new FileInputStream(rutaCompleta));
+
+        if (ftpClient.storeFile(rutaCompleta.getName(), bufferIn)){
             //Informa al usuario
-            System.out.println("Carpeta ftp cambiada . . .");
-
-            //Crea un buffer hacia el servidor de subida
-            bufferIn = new BufferedInputStream(new FileInputStream(rutaCompleta));
-
-            if (ftpClient.storeFile(rutaCompleta.getName(), bufferIn)){
-                //Informa al usuario
-                System.out.println("Archivo subido . . .");
-                bufferIn.close();		//Cierra el bufer
-                return true;		//Se ha subido con éxito
-            }
-            else{
-                //Informa al usuario
-                System.out.println("Imposible subir archivo . . .");
-                bufferIn.close();		//Cierra el bufer
-                return false;		//No se ha subido
-            }
+            System.out.println("Archivo subido . . .");
+            bufferIn.close();		//Cierra el bufer
+            return true;		//Se ha subido con éxito
         }
         else{
             //Informa al usuario
-            System.out.println("Carpeta ftp imposible cambiar . . .");
-            return false;		//Imposible cambiar de directo en servidor ftp
+            System.out.println("Imposible subir archivo . . .");
+            bufferIn.close();		//Cierra el bufer
+            return false;		//No se ha subido
         }
     }
 
     @Override
-    protected Long doInBackground(File... files) {
+    protected Boolean doInBackground(File... files) {
         try {
             for (int i = 0; i < files.length; i++){
                 rutaCompleta = files[0];
@@ -125,12 +123,13 @@ public class FTPSubir extends AsyncTask<File , Integer, Long> {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Imposible conectar . . .");
+            return false;
         }
-        return null;
+        return true;
     }
 
     @Override
-    protected void onPostExecute(Long result) {
+    protected void onPostExecute(Boolean result) {
         //Termina proceso
         Log.i("TAG" , "Termina proceso de lectura de archivos.");
     }

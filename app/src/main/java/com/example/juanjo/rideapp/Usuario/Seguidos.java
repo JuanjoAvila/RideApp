@@ -1,13 +1,15 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Usuario;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class EdicionPerfil extends AppCompatActivity {
+import com.example.juanjo.rideapp.R;
+
+public class Seguidos extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edicion_perfil);
+        setContentView(R.layout.activity_seguidos);
     }
 }

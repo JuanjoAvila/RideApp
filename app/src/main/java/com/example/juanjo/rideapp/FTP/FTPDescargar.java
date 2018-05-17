@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.FTP;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.Locale;
 
-public class FTPDescargar extends AsyncTask<Void , Integer, Long> {
+public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     //Credenciales
     private static String IP =  "rideapp.somee.com";
     public static  String USUARIO = "jesus93";				//Almacena el usuario
@@ -93,7 +93,7 @@ public class FTPDescargar extends AsyncTask<Void , Integer, Long> {
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
         //Cambia la carpeta Ftp
-        if (ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/")){
+        if (ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/")){
             System.out.println(ftpClient.printWorkingDirectory());
             //Informa al usuario
             System.out.println("Carpeta ftp cambiada . . .");
@@ -103,8 +103,6 @@ public class FTPDescargar extends AsyncTask<Void , Integer, Long> {
             System.out.println("Ruta SD obtenida . . .");
             // externalStorage
             String ExternalStorageDirectory = Environment.getExternalStorageDirectory() + File.separator;
-            // uri de la imagen seleccionada
-            Uri uri = Uri.fromFile(new File(ExternalStorageDirectory + "Download/imagenseleccionada.jpg"));
             //carpeta "imagenesguardadas"
             String rutacarpeta = "RideApp/";
             // nombre del nuevo png
@@ -126,14 +124,11 @@ public class FTPDescargar extends AsyncTask<Void , Integer, Long> {
                 System.out.println("Archivo bajado . . .");
                 bufferOut.close();		//Cierra el bufer
                 ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, "Titulo");
-                values.put(MediaStore.Images.Media.DESCRIPTION, "Descripción");
-                values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis ());
-                values.put(MediaStore.Images.ImageColumns.BUCKET_ID, rutaCompleta.toString().toLowerCase(Locale.getDefault()).hashCode());
-                values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, rutaCompleta.getName().toLowerCase(Locale.getDefault()));
+                values.put(MediaStore.Files.FileColumns.TITLE, "Descripción");
+                values.put(MediaStore.Files.FileColumns.DATE_ADDED, System.currentTimeMillis ());
                 values.put("_data", rutaCompleta.getAbsolutePath());
                 ContentResolver cr = context.getContentResolver();
-                cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                //cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 return true;		//Se ha bajado con éxito
             }
             else{
@@ -151,19 +146,20 @@ public class FTPDescargar extends AsyncTask<Void , Integer, Long> {
         }
     }
     @Override
-    protected Long doInBackground(Void... voids) {
+    protected Boolean doInBackground(String... ruta) {
         try {
             login();
-            BajarArchivo("default.png");
+            BajarArchivo(ruta[0]);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Imposible conectar . . .");
+            return false;
         }
-        return null;
+        return true;
     }
 
     @Override
-    protected void onPostExecute(Long result) {
+    protected void onPostExecute(Boolean result) {
         //Termina proceso
         Log.i("TAG" , "Termina proceso de lectura de archivos.");
     }
