@@ -10,8 +10,6 @@ import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
-import com.example.juanjo.rideapp.Usuario.UsuarioDTO;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -24,7 +22,7 @@ public class Login extends AppCompatActivity {
     public static final String NAMESPACE = "http://tempuri.org/";
     public AutoCompleteTextView loginusuario;
     public AutoCompleteTextView logincontraseña;
-    private static UsuarioDTO user = null;
+    private static com.example.juanjo.rideapp.UsuarioDTO user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +36,13 @@ public class Login extends AppCompatActivity {
         logincontraseña = findViewById(R.id.logincontraseña);
     }
 
-    public static UsuarioDTO getUsuari(){
-        UsuarioDTO returnUser = user;
+    public static com.example.juanjo.rideapp.UsuarioDTO getUsuari(){
+        com.example.juanjo.rideapp.UsuarioDTO returnUser = user;
         return returnUser;
     }
 
     public void iniciar(){
-    //Sirve para cerrar la ventana anterior es decir esta en el login , pasa al main activity y cierra el login . Si vuelve para atras saldra de la aplicacion
+        //Sirve para cerrar la ventana anterior es decir esta en el login , pasa al main activity y cierra el login . Si vuelve para atras saldra de la aplicacion
         startActivity(new Intent(getBaseContext(), MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();
@@ -81,7 +79,7 @@ public class Login extends AppCompatActivity {
 
                 // Se corrige el password obtenido, eliminando caracteres de control '%00'. Acuerdate que tambien elimina espacios, VALIDAR PASS AL CREAR USUARIO
                 String pass = resSoap.getPropertyAsString(2).replaceAll("\\W", "");
-                user = new UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
+                user = new com.example.juanjo.rideapp.UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
                         resSoap.getPropertyAsString(4), resSoap.getPropertyAsString(5), resSoap.getPropertyAsString(6), resSoap.getPropertyAsString(7));
 
             } catch (Exception e) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#72bb53</color>
+    <color name="colorCuadradoPerfil">#cc68c640</color>
     <color name="colorPrimaryDark">#629c44</color>
     <color name="colorAccent">#629c44</color>
     <color name="fondoVentanaPrincipal">#dfedd6</color>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
+import com.example.juanjo.rideapp.UsuarioDTO;
 
 public class Perfil extends AppCompatActivity {
     UsuarioDTO usuario;
