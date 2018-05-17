@@ -1,9 +1,145 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.juanjo.rideapp.Registro">
+    <!--<ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fondo"
+        android:scaleType="centerCrop"
+        android:id="@+id/fondoLogin"
 
-</android.support.constraint.ConstraintLayout>
+        />-->
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rectangulo_transparente"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Necesitamos tus datos para poder comenzar"
+                android:textColor="@color/esloganColor"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="30dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="10dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Usuario"
+                android:background="@drawable/cuadrado_redondo_login_usuario"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/usuariologin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:id="@+id/loginusuario"
+                android:layout_marginBottom="15dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Contraseña"
+                android:textColorHint="@color/blanco"
+                android:background="@drawable/cuadrado_redondo_login_contrasena"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/contrasenalogin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:textColor="@color/blanco"
+                android:paddingStart="10dp"
+                android:inputType="textPassword"
+                android:id="@+id/logincontraseña"
+                android:layout_marginBottom="15dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Repetir Contraseña"
+                android:textColorHint="@color/blanco"
+                android:background="@drawable/cuadrado_redondo_login_contrasena"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/contrasenalogin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:textColor="@color/blanco"
+                android:paddingStart="10dp"
+                android:inputType="textPassword"
+                android:id="@+id/loginrepetircontraseña"
+                android:layout_marginBottom="15dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Nombre"
+                android:background="@drawable/cuadrado_redondo_login_nombre"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/usuariologin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:id="@+id/loginnombre"
+                android:layout_marginBottom="15dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Apellidos"
+                android:background="@drawable/cuadrado_redondo_login_apellidos"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/usuariologin"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:id="@+id/loginapellidos"
+                android:layout_marginBottom="15dp"/>
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Correo Electrónico"
+                android:background="@drawable/cuadrado_redondo_login_correo"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableLeft="@mipmap/correo"
+                android:textSize="14dp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:id="@+id/logincorreo"
+                android:layout_marginBottom="20dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/botonsign"
+                android:onClick="añadir"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Sign up"
+                android:textColor="@color/blanco"
+                android:textStyle="normal" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

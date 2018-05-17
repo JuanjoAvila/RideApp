@@ -41,7 +41,8 @@
         <activity android:name=".Evento" />
         <activity android:name=".Eventos" />
         <activity android:name=".Perfil" />
-        <activity android:name=".Registro" />
+        <activity android:name=".Registro"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Seguidores" />
         <activity android:name=".Seguidos" />
         <!--
