@@ -1,8 +1,9 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Rutas;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.juanjo.rideapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -10,14 +11,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class Rutas extends FragmentActivity implements OnMapReadyCallback {
+public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rutas);
+        setContentView(R.layout.rutas_nueva_ruta);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

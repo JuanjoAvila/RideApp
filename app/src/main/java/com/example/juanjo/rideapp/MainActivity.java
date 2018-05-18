@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.Evento.Eventos;
+import com.example.juanjo.rideapp.Rutas.Rutas_main;
 import com.example.juanjo.rideapp.Usuario.Perfil;
 
 public class MainActivity extends AppCompatActivity
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_rutas) {
-            Intent i = new Intent(this, Rutas.class );
+            Intent i = new Intent(this, Rutas_main.class );
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_eventos) {

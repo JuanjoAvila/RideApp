@@ -60,8 +60,11 @@
             android:value="26.1.0" />
 
         <activity
-            android:name=".Rutas"
-            android:label="@string/title_activity_rutas" />
+            android:name=".Rutas.Rutas_main" />
+        <activity
+            android:name=".Rutas.Rutas_cargar_ruta" />
+        <activity
+            android:name=".Rutas.Rutas_nueva_ruta" />
         <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar"></activity>

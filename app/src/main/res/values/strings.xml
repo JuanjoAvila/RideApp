@@ -24,4 +24,11 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_rutas">Map</string>
+
+    <!-- Rutas -->
+    <string name="nueva_ruta">NUEVA_RUTA</string>
+    <string name="cargar_ruta">CARGAR_RUTA</string>
+    <string name="emergencias">EMERGENCIAS</string>
+    <string name="title_activity_rutas_nueva_ruta">Map</string>
+    <string name="title_activity_rutas_cargar_ruta">Map</string>
 </resources>
