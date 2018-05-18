@@ -8,10 +8,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.Evento.Eventos;
 import com.example.juanjo.rideapp.Rutas.Rutas_main;
 import com.example.juanjo.rideapp.Usuario.Perfil;
@@ -19,6 +21,7 @@ import com.example.juanjo.rideapp.Usuario.Perfil;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static boolean esPrincipal;
+    private UsuarioDTO usuarioActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //Adquiere la ventana principal para al poder cambiar de ventana con el menu si estas en la misma no te añada una nueva ventana
         esPrincipal = true;
-
+        usuarioActivo = Login.getUsuari();
         //Crea el boton del menu para poderse abrir y cerrar
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_perfil) {
             Intent i = new Intent(this, Perfil.class );
+            i.putExtra("usuario", usuarioActivo.getIdUsuario());
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_rutas) {

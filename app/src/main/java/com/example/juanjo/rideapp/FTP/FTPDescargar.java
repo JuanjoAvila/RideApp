@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.Locale;
 
+/**
+ * Clase encargada de gestionar mediante un hilo la descarga de una ruta para poderla cargar en la aplicación.
+ * Para poder descargar la ruta necesita recibir un string, con el cual identificará la ruta del FTP que debe descargar
+ * y devolverá un Boolean según su resultado.
+ */
 public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     //Credenciales
     private static String IP =  "rideapp.somee.com";
@@ -34,7 +39,7 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     Context context;                //Almacena el contexto de la aplicacion
 
     /**
-     * Crea una instancia de FTP sin credenciales
+     * Crea una instancia de FTPDescargar sin credenciales
      */
     public FTPDescargar(Context context) {
 

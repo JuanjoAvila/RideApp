@@ -10,9 +10,13 @@ import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.IOException;
 
-
+/**
+ * Clase encargada de gestionar mediante un hilo la descarga de una imagen para poderla cargar en la aplicación.
+ * Para poder descargar la imagen necesita recibir un string, con el cual identificará la imagen del FTP que debe descargar
+ * y devolverá un Bitmap con su contenido.
+ */
 public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
-    private String usuarioID;
+    private String imagenID;
     private String ip =  "rideapp.somee.com";
     public static  String USUARIO = "jesus93";				//Almacena el usuario
     public static String PASS = "rideapp@M";			//Almacena la contraseña
@@ -20,10 +24,18 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
     private Bitmap loadedImage;
     private Context mContext;
 
+    /**
+     * Crea una instancia de FTPCargarImagen sin credenciales
+     */
     public FTPCargarImagen(Context context) {
         mContext = context;
     }
 
+    /**
+     * Realiza el login en el servidor
+     * @return	Verdad en caso de haber realizado login correctamente
+     * @throws IOException
+     */
     public boolean login () throws IOException {
         //Establece conexión con el servidor
         System.out.println("Conectando . . .");
@@ -52,6 +64,10 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
         }
     }
 
+    /**
+     * Pasamos a modo pasivo en el FTP, cambiamos el directorio a donde tenemos las imagenes guardadas y cargamos
+     * con un stream el bitmap con los datos de la imagen correspondiente.
+     */
     public void cargarImagen(){
         try {
             ftpClient.enterLocalPassiveMode();
@@ -59,16 +75,16 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
             ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/");
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2; // el factor de escala a minimizar la imagen, siempre es potencia de 2
-            loadedImage = BitmapFactory.decodeStream(ftpClient.retrieveFileStream(usuarioID));
+            loadedImage = BitmapFactory.decodeStream(ftpClient.retrieveFileStream(imagenID));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected Bitmap doInBackground(String... usuarioID) {
+    protected Bitmap doInBackground(String... imagenID) {
         try {
-            this.usuarioID = usuarioID[0];
+            this.imagenID = imagenID[0];
             login();
             cargarImagen();
         } catch (IOException e) {

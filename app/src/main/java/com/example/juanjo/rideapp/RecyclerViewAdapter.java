@@ -2,6 +2,7 @@ package com.example.juanjo.rideapp;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.juanjo.rideapp.FTP.FTPManager;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,18 +49,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        Glide.with(mContext)
-                .asBitmap()
-                .load(mImageUrls.get(position))
-                .into(holder.image);
-
+        FTPManager ftpManager = new FTPManager(mContext);
+        try {
+            Bitmap avatarBitmap = ftpManager.FTPCargarImagen(mImageUrls.get(position));
+            holder.image.setImageBitmap(avatarBitmap);
+        } catch (ExecutionException e) {
+            holder.image.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+        } catch (InterruptedException e) {
+            holder.image.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+        }
         holder.name.setText(mNames.get(position));
-
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on an image: " + mNames.get(position));
-                Toast.makeText(mContext, mNames.get(position), Toast.LENGTH_SHORT).show();
+
             }
         });
     }

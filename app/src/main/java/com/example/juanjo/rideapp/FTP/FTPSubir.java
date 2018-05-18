@@ -28,7 +28,7 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
     Context context;                //Almacena el contexto de la aplicacion
 
     /**
-     * Crea una instancia de FTP sin credenciales
+     * Crea una instancia de FTPSubir sin credenciales
      */
     public FTPSubir(Context context) {
 

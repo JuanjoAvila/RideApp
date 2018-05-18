@@ -6,25 +6,56 @@ import android.graphics.Bitmap;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * El FTPManager es la clase capaz de poder gestionar todas las funcionalidades que queremos definir del FTP,
+ * como poder cargar una imagen del FTP en la aplicación, descargar un archivo, en nuestro caso serán rutas y la
+ * subida de rutas y imagenes al FTP en sus correspondientes carpetas.
+ */
 public class FTPManager {
     private Context mContext;
 
+    /**
+     * Instancia del FTPManager con el contexto de la actividad que llamará a los métodos.
+     * @param mContext
+     */
     public FTPManager(Context mContext) {
         this.mContext = mContext;
     }
 
-    public Bitmap FTPCargarImagen(String usuarioID) throws ExecutionException, InterruptedException {
+    /**
+     * Crea una instancia de la clase FTPCargarImagen y la ejecuta.
+     * @see FTPCargarImagen
+     * @param imagenID nombre de la imagen en el FTP
+     * @return bitmap de la imagen devuelta del FTP
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public Bitmap FTPCargarImagen(String imagenID) throws ExecutionException, InterruptedException {
         FTPCargarImagen ftpCI = new FTPCargarImagen(mContext);
-        Bitmap bitmap = ftpCI.execute(usuarioID).get();
+        Bitmap bitmap = ftpCI.execute(imagenID).get();
         return bitmap;
     }
 
+    /**
+     * * Crea una instancia de la clase FTPDescargar y la ejecuta.
+     * @see FTPDescargar
+     * @return True para cuando la descarga del fichero ha sido exitosa, False para lo contrario.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public Boolean FTPDescargar() throws ExecutionException, InterruptedException {
         FTPDescargar ftpD = new FTPDescargar(mContext);
         Boolean exito = ftpD.execute().get();
         return exito;
     }
 
+    /**
+     * * Crea una instancia de la clase FTPSubir y la ejecuta.
+     * @see FTPSubir
+     * @return True para cuando la carga del fichero ha sido exitosa, False para lo contrario.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public Boolean FTPSubir(File fichero) throws ExecutionException, InterruptedException {
         FTPSubir ftpS = new FTPSubir(mContext);
         Boolean exito = ftpS.execute(fichero).get();
