@@ -37,4 +37,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.0'
 }
