@@ -9,13 +9,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
-
-import com.example.juanjo.rideapp.Usuario.UsuarioDTO;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import com.example.juanjo.rideapp.UsuarioDTO;
 
 public class Login extends AppCompatActivity {
     public static final String URL = "http://rideapp.somee.com/WebService.asmx";

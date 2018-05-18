@@ -24,7 +24,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:27.+'
+    implementation 'com.android.support:appcompat-v7:27.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:design:27.+'
     implementation 'com.google.android.gms:play-services-maps:11.0.4'
@@ -37,4 +37,12 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+    implementation 'com.mcxiaoke.viewpagerindicator:library:2.4.1'
+
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-v4:27.1.0'
+    }
 }
