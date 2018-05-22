@@ -1,6 +1,7 @@
 package com.example.juanjo.rideapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -20,6 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.juanjo.rideapp.Evento.Eventos;
+import com.example.juanjo.rideapp.FTP.FTPManager;
+import com.example.juanjo.rideapp.Rutas.Rutas_main;
+import com.example.juanjo.rideapp.Usuario.Perfil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,9 +35,12 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.apache.commons.net.ftp.FTP;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
@@ -189,11 +197,29 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         }else{
+            String foto = Login.user.getAvatar();
             String nombre = Login.user.getNombre();
             String correo = Login.user.getCorreo();
             nombreUsuarioMenu.setText(Login.user.getNombre());
             correoUsuarioMenu.setText(Login.user.getCorreo());
-            imagenUsuarioMenu.setImageResource(R.drawable.perfil);
+            Bitmap bitmap;
+            if(foto!=null && foto!=""){
+                FTPManager ftpManager = new FTPManager(this);
+                try {
+                    bitmap = ftpManager.FTPCargarImagen(foto);
+                    if(bitmap!=null){
+                        imagenUsuarioMenu.setImageBitmap(bitmap);
+                    }else{
+                        imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                }
+            }else{
+                imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+            }
+
+
         }
     }
 
@@ -242,7 +268,7 @@ public class MainActivity extends AppCompatActivity
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_rutas) {
-            Intent i = new Intent(this, Rutas.class );
+            Intent i = new Intent(this, Rutas_main.class );
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_eventos) {
