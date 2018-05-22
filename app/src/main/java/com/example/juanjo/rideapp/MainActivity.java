@@ -1,18 +1,18 @@
 package com.example.juanjo.rideapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +31,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
@@ -39,18 +41,26 @@ public class MainActivity extends AppCompatActivity
     public ImageView imagenUsuarioMenu;
     public TextView nombreUsuarioMenu;
     public TextView correoUsuarioMenu;
+    public ImageView imagenUsuarioMenuVentanaPrincipal;
     public static  boolean otras = true;
     public static ArrayList<String> usuario = new ArrayList<>();
     private GoogleApiClient googleApiClient;
+
+    // Inicializar Rutas en el tab
+    List<RutaRecicleView> items = new ArrayList<>();
+
+    private RecyclerView recycler;
+    private RecyclerView.Adapter<RecicleViewAdapterRutas.RutasViewHolder> adapter;
+    private RecyclerView.LayoutManager lManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        imagenUsuarioMenu = findViewById(R.id.imagenUsuarioMenu);
-        nombreUsuarioMenu = findViewById(R.id.nombreUsuarioMenu);
-        correoUsuarioMenu = findViewById(R.id.correoUsuarioMenu);
+
         //Asigna la barra de abajo como la predeterminada
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //Adquiere la ventana principal para al poder cambiar de ventana con el menu si estas en la misma no te añada una nueva ventana
         esPrincipal = true;
@@ -65,43 +75,137 @@ public class MainActivity extends AppCompatActivity
 
 
 
+        //Iniciar tabs
+        BottomNavigationView navigation =  findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         //Crea el boton del menu para poderse abrir y cerrar
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         //Al apretar adquiere el valor del boton y te muestra el menu
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View hView = navigationView.getHeaderView(0);
+        imagenUsuarioMenu = hView.findViewById(R.id.imagenUsuarioMenu);
+        nombreUsuarioMenu = hView.findViewById(R.id.nombreUsuarioMenu);
+        correoUsuarioMenu = hView.findViewById(R.id.correoUsuarioMenu);
+        imagenUsuarioMenuVentanaPrincipal = findViewById(R.id.action_perfil);
+
+        items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Montserrat", R.drawable.imagenrutaprueba, "12/07/2018",4,R.drawable.caritasonriente,20,R.drawable.caritatriste, 5));
+        items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por el puerto de Barcelona", R.drawable.imagenrutaprueba, "11/05/2018",2,R.drawable.caritasonriente,20,R.drawable.caritatriste, 15));
+        items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Tarragona", R.drawable.imagenrutaprueba, "20/01/2018",3,R.drawable.caritasonriente,40,R.drawable.caritatriste, 20));
+// Obtener el Recycler
+        recycler = findViewById(R.id.reciclador);
+        recycler.setHasFixedSize(true);
+
+// Usar un administrador para LinearLayout
+        lManager = new LinearLayoutManager(getApplicationContext());
+        recycler.setLayoutManager(lManager);
+
+// Crear un nuevo adaptador
+        adapter = new RecicleViewAdapterRutas(items);
+        recycler.setAdapter(adapter);
+
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.ultimas_rutas:
+                    items.clear();
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Montserrat", R.drawable.imagenrutaprueba, "12/07/2018",4,R.drawable.caritasonriente,20,R.drawable.caritatriste, 5));
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por el puerto de Barcelona", R.drawable.imagenrutaprueba, "11/05/2018",2,R.drawable.caritasonriente,20,R.drawable.caritatriste, 15));
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Tarragona", R.drawable.imagenrutaprueba, "20/01/2018",3,R.drawable.caritasonriente,40,R.drawable.caritatriste, 20));
+// Obtener el Recycler
+                    recycler = findViewById(R.id.reciclador);
+                    recycler.setHasFixedSize(true);
+
+// Usar un administrador para LinearLayout
+                    lManager = new LinearLayoutManager(getApplicationContext());
+                    recycler.setLayoutManager(lManager);
+
+// Crear un nuevo adaptador
+                    adapter = new RecicleViewAdapterRutas(items);
+                    recycler.setAdapter(adapter);
+                    return true;
+                case R.id.mejores_rutas:
+                    items.clear();
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Madrid", R.drawable.imagenrutaprueba, "12/07/2018",4,R.drawable.caritasonriente,150,R.drawable.caritatriste, 14));
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Olesa", R.drawable.imagenrutaprueba, "11/05/2018",2,R.drawable.caritasonriente,145,R.drawable.caritatriste, 52));
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Arco de triunfo", R.drawable.imagenrutaprueba, "20/01/2018",3,R.drawable.caritasonriente,120,R.drawable.caritatriste, 19));
+                    // Obtener el Recycler
+                    recycler = findViewById(R.id.reciclador);
+                    recycler.setHasFixedSize(true);
+
+// Usar un administrador para LinearLayout
+                    lManager = new LinearLayoutManager(getApplicationContext());
+                    recycler.setLayoutManager(lManager);
+
+// Crear un nuevo adaptador
+                    adapter = new RecicleViewAdapterRutas(items);
+                    recycler.setAdapter(adapter);
+                    return true;
+                case R.id.rutas_mas_dificiles:
+                    items.clear();
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por Andorra", R.drawable.imagenrutaprueba, "12/07/2018",5,R.drawable.caritasonriente,30,R.drawable.caritatriste, 4));
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta por los puertos", R.drawable.imagenrutaprueba, "11/05/2018",5,R.drawable.caritasonriente,22,R.drawable.caritatriste, 55));
+                    items.add(new RutaRecicleView(R.mipmap.usuariologin, "Ruta Sant Antoni", R.drawable.imagenrutaprueba, "20/01/2018",4,R.drawable.caritasonriente,40,R.drawable.caritatriste, 60));
+                    // Obtener el Recycler
+                    recycler = findViewById(R.id.reciclador);
+                    recycler.setHasFixedSize(true);
+
+// Usar un administrador para LinearLayout
+                    lManager = new LinearLayoutManager(getApplicationContext());
+                    recycler.setLayoutManager(lManager);
+
+// Crear un nuevo adaptador
+                    adapter = new RecicleViewAdapterRutas(items);
+                    recycler.setAdapter(adapter);
+                    return true;
+            }
+            return false;
+        }
+    };
     @Override
     protected void onStart(){
         super.onStart();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-        if(opr.isDone()){
-            GoogleSignInResult result = opr.get();
-            handleSignResult(result);
+        if(Login.usuarioGoogle) {
+            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+            if (opr.isDone()) {
+                GoogleSignInResult result = opr.get();
+                handleSignResult(result);
+            } else {
+                opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                    @Override
+                    public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+                        handleSignResult(googleSignInResult);
+                    }
+                });
+            }
         }else{
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    handleSignResult(googleSignInResult);
-                }
-            });
+            String nombre = Login.user.getNombre();
+            String correo = Login.user.getCorreo();
+            nombreUsuarioMenu.setText(Login.user.getNombre());
+            correoUsuarioMenu.setText(Login.user.getCorreo());
+            imagenUsuarioMenu.setImageResource(R.drawable.perfil);
         }
     }
 
     private void handleSignResult(GoogleSignInResult result) {
         if(result.isSuccess()){
             GoogleSignInAccount account = result.getSignInAccount();
-            Glide.with(this).load(account.getPhotoUrl()).into(imagenUsuarioMenu);
-            nombreUsuarioMenu.setText(account.getDisplayName());
-            correoUsuarioMenu.setText(account.getEmail());
-
-        }else{
-            goLogInScreen();
+            Glide.with(this).load(Objects.requireNonNull(account).getPhotoUrl()).into(imagenUsuarioMenu);
+            String nombreUsuarioGoogle = account.getDisplayName();
+            String correoUsuarioGoogle = account.getEmail();
+            nombreUsuarioMenu.setText(nombreUsuarioGoogle);
+            correoUsuarioMenu.setText(correoUsuarioGoogle);
+            //Glide.with(this).load(account.getPhotoUrl()).into(imagenUsuarioMenuVentanaPrincipal);
         }
     }
 
@@ -114,37 +218,18 @@ public class MainActivity extends AppCompatActivity
     //Este metodo te crea el efecto de abrir y cerrar el menu .
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
-    //Es el menu aun incompleto del usuario que hay en la parte derecha , donde se podra cambiar contraseña , cerrar session
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Crea el menu y hace que se muestre solo faltaran añadirle las opciones
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    //Para seleccionar las opciones que pasara en cada una de ellas
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-
-        if (id == R.id.action_perfil) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     //Al apretar las opciones del menu lateral lo que pasa
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -169,21 +254,25 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_ayuda) {
             Toast.makeText(getApplicationContext(),"Ayuda",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
-            Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(@NonNull Status status) {
-                    if(status.isSuccess()){
-                      goLogInScreen();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"No se pudo cerrar session",Toast.LENGTH_SHORT).show();
+            if(Login.usuarioGoogle) {
+                Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()) {
+                            goLogInScreen();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No se pudo cerrar session", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                goLogInScreen();
+            }
         }else if (id == R.id.nav_salir) {
             this.finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -196,6 +285,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Toast.makeText(this, "Error de conexion!", Toast.LENGTH_SHORT).show();
+        Log.e("GoogleSignIn", "OnConnectionFailed: " + connectionResult);
     }
 }
