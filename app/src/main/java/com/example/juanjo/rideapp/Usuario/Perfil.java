@@ -1,50 +1,71 @@
 package com.example.juanjo.rideapp.Usuario;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
+import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
 
-import java.util.LinkedList;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Clase controladora del Perfil del usuario o de un seguidor/seguido.
+ * En el perfil se muestran los datos del usuario, sus seguidores y sus seguidos además de un acceso a sus rutas
+ */
 public class Perfil extends AppCompatActivity {
     public static final String URL = "http://rideapp.somee.com/WebService.asmx";
     public static final String METHOD_NAME_AMIGOS = "listaAmigos";
     public static final String SOAP_ACTION_AMIGOS = "http://tempuri.org/listaAmigos";
     public static final String METHOD_NAME_USUARIO = "obtenerUsuario_byIdUsuario";
     public static final String SOAP_ACTION_USUARIO = "http://tempuri.org/obtenerUsuario_byIdUsuario";
+    public static final String METHOD_NAME_FOLLOW = "nuevoAmigo";
+    public static final String SOAP_ACTION_FOLLOW = "http://tempuri.org/nuevoAmigo";
+    public static final String METHOD_NAME_UNFOLLOW = "borrarAmigo_by_idUsuario_amigo";
+    public static final String SOAP_ACTION_UNFOLLOW = "http://tempuri.org/borrarAmigo_by_idUsuario_amigo";
     public static final String NAMESPACE = "http://tempuri.org/";
+    private UsuarioDTO usuarioPerfil;
     private UsuarioDTO usuarioActivo;
-    private Integer usuarioActivoID;
+    private Integer usuarioPerfilID;
     private UsuarioDTO usuario;
     private ImageView avatar;
+    private ImageView seguirUsuario;
+    private ImageView dejarseguirUsuario;
     private TextView usuarioNick;
     private RecyclerView seguidoresRecycler;
     private RecyclerView seguidosRecycler;
     private TextView descripcion;
-    private TextView rutasCont;
-    private LinkedList<AmigoDTO> amigosDTO;
-    private LinkedList<Integer> seguidoresID;
-    private LinkedList<Integer> seguidosID;
-    private LinkedList<String> seguidoresNombres;
-    private LinkedList<String> seguidoresAvatares;
-    private LinkedList<String> seguidosNombres;
-    private LinkedList<String> seguidosAvatares;
+    private ArrayList<AmigoDTO> amigosDTO;
+    private ArrayList<Integer> seguidoresID;
+    private ArrayList<Integer> seguidosID;
+    private ArrayList<String> seguidoresNombres;
+    private ArrayList<String> seguidoresAvatares;
+    private ArrayList<String> seguidosNombres;
+    private ArrayList<String> seguidosAvatares;
+    private FTPManager ftpManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,52 +75,151 @@ public class Perfil extends AppCompatActivity {
         seguidosRecycler = findViewById(R.id.Perfil_recyclerViewSeguidos);
         seguidoresRecycler = findViewById(R.id.Perfil_recyclerViewSeguidores);
         descripcion = findViewById(R.id.Perfil_descripcionUsuario);
-        rutasCont = findViewById(R.id.Perfil_rutasCont);
-        amigosDTO = new LinkedList<AmigoDTO>();
-        seguidoresID = new LinkedList<Integer>();
-        seguidosID = new LinkedList<Integer>();
-        seguidoresNombres = new LinkedList<String>();
-        seguidoresAvatares = new LinkedList<String>();
-        seguidosNombres = new LinkedList<String>();
-        seguidosAvatares = new LinkedList<String>();
+        amigosDTO = new ArrayList<AmigoDTO>();
+        seguidoresID = new ArrayList<Integer>();
+        seguidosID = new ArrayList<Integer>();
+        seguidoresNombres = new ArrayList<String>();
+        seguidoresAvatares = new ArrayList<String>();
+        seguidosNombres = new ArrayList<String>();
+        seguidosAvatares = new ArrayList<String>();
         usuarioActivo = Login.getUsuari();
+        seguirUsuario = findViewById(R.id.Perfil_seguirUsuario);
+        dejarseguirUsuario = findViewById(R.id.Perfil_dejarseguirUsuario);
+        ftpManager = new FTPManager(this);
         try {
             iniciacionDatos();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Método de inicialización de los datos del perfil.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     private void iniciacionDatos() throws ExecutionException, InterruptedException {
-        new consultaAmigos(this).execute();
-        cargarRecyclerLists();
+        cargarDatosPerfil();
+        final ConsultaAmigos selectAmigos = new ConsultaAmigos(this);
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    selectAmigos.execute().get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
-    private void cargarRecyclerLists() throws ExecutionException, InterruptedException {
 
+    /**
+     * Obtiene el ID del usuario pasado con el intent que llama a la clase.
+     * Una vez obtenida la ID, se genera la consulta del usuario a la BD y rellena los campos del perfil con los datos del usuario.
+     */
+    private void cargarDatosPerfil(){
+        usuarioPerfilID = getIntent().getExtras().getInt("usuario");
+        try {
+            usuarioPerfil = new ConsultaUsuario(this).execute(usuarioPerfilID).get();
+            if(usuarioPerfil !=null){
+                usuarioNick.setText(usuarioPerfil.getUsuario());
+                if(usuarioPerfil.getAvatar()!=null && usuarioPerfil.getAvatar().length()>0){
+                    Handler uiHandler = new Handler(this.getMainLooper());
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap bitmapAvatar = null;
+                            try {
+                                if(usuarioPerfil.getNombre().endsWith("google")){
+                                    bitmapAvatar = ftpManager.HTTPCargarImagen(usuarioPerfil.getAvatar());
+                                }
+                                else {
+                                    bitmapAvatar = ftpManager.FTPCargarImagen(usuarioPerfil.getAvatar());
+                                }
+                                if(bitmapAvatar!=null) {
+                                    avatar.setImageBitmap(bitmapAvatar);
+                                }
+                                else{
+                                    avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                                }
+                            } catch (ExecutionException | InterruptedException e) {
+                                avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                            }
+                        }
+                    });
+                }
+                else{
+                    avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                }
+                descripcion.setText(usuarioPerfil.getDescripcion());
+
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error al cargar el perfil", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Recorre la lista de seguidoresID y seguidosID y carga los ArrayList de avatares y nombres que luego se enviarán al adaptador del RecyclerView.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    private void cargarRecyclerLists() throws ExecutionException, InterruptedException {
         for(Integer id: seguidoresID){
-            UsuarioDTO seguidor = new consultaUsuario(this).execute(id).get();
+            UsuarioDTO seguidor = new ConsultaUsuario(this).execute(id).get();
             if(seguidor!=null){
                 seguidoresAvatares.add(seguidor.getAvatar());
                 seguidoresNombres.add(seguidor.getUsuario());
             }
         }
         for(Integer id: seguidosID){
-            UsuarioDTO seguido = new consultaUsuario(this).execute(id).get();
+            UsuarioDTO seguido = new ConsultaUsuario(this).execute(id).get();
             if(seguido!=null) {
                 seguidosAvatares.add(seguido.getAvatar());
                 seguidosNombres.add(seguido.getUsuario());
             }
         }
+        if(usuarioPerfilID!=usuarioActivo.getIdUsuario()){
+            if(!seguidoresID.contains(usuarioActivo.getIdUsuario())){
+                seguirUsuario.setVisibility(View.VISIBLE);
+            }
+            else {
+                dejarseguirUsuario.setVisibility(View.VISIBLE);
+            }
+        }
+        generarRecyclerLists();
     }
 
-    //Tarea Asíncrona para llamar al WS de consulta en segundo plano
-    private class consultaAmigos extends AsyncTask<String,Void,Boolean> {
+    /**
+     * Carga los RecyclerList del perfil.
+     */
+    private void generarRecyclerLists(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        seguidoresRecycler.setLayoutManager(layoutManager);
+        Perfil_RVAdapter adapter = new Perfil_RVAdapter(this, seguidoresNombres, seguidoresAvatares, seguidoresID);
+        seguidoresRecycler.setAdapter(adapter);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        seguidosRecycler.setLayoutManager(layoutManager2);
+        Perfil_RVAdapter adapter2 = new Perfil_RVAdapter(this, seguidosNombres, seguidosAvatares, seguidosID);
+        seguidosRecycler.setAdapter(adapter2);
+    }
+
+    public void seguirUsuario(View view){
+        SeguirUsuario follow = new SeguirUsuario(this);
+        follow.execute(usuarioPerfilID);
+    }
+
+    public void dejarSeguirUsuario(View view){
+        DejarSeguirUsuario unfollow = new DejarSeguirUsuario(this);
+        unfollow.execute(usuarioPerfilID);
+    }
+    /**
+     * Tarea Asíncrona para llamar al WS de consulta en segundo plano para obtener todos los datos de la tabla Amigos de la BD.
+     */
+    private class ConsultaAmigos extends AsyncTask<String,Void,Boolean> {
 
         private Context context;
 
-        public consultaAmigos(Context context) {
+        public ConsultaAmigos(Context context) {
             this.context = context;
         }
 
@@ -121,8 +241,13 @@ public class Perfil extends AppCompatActivity {
                 for (int i = 0; i < resSoap.getPropertyCount(); i++){
                     SoapObject iu = (SoapObject)resSoap.getProperty(i);
                     iu.getPropertyAsString(0);
-                    AmigoDTO amigo = new AmigoDTO(Integer.valueOf(iu.getPropertyAsString(0)), Integer.valueOf(iu.getPropertyAsString(1)),Integer.valueOf(iu.getPropertyAsString(2)));
-
+                    Integer i1 = Integer.valueOf(iu.getPropertyAsString(0));
+                    Integer i2 = Integer.valueOf(iu.getPropertyAsString(1));
+                    Integer i3 = Integer.valueOf(iu.getPropertyAsString(2));
+                    AmigoDTO amigo = new AmigoDTO();
+                    amigo.setIdAmigo(i1);
+                    amigo.setidUsuario(i2);
+                    amigo.setamigo(i3);
                     amigosDTO.add(amigo);
                 }
             } catch (Exception e) {
@@ -135,25 +260,33 @@ public class Perfil extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             if(result){
                 for(AmigoDTO amigo: amigosDTO){
-                    if(amigo.getidUsuario()==usuarioActivo.getIdUsuario()){
+                    if(amigo.getidUsuario()== usuarioPerfil.getIdUsuario()){
                         seguidosID.add(amigo.getamigo());
                     }
-                    else if(amigo.getamigo()==usuarioActivo.getIdUsuario()){
+                    else if(amigo.getamigo()== usuarioPerfil.getIdUsuario()){
                         seguidoresID.add(amigo.getidUsuario());
                     }
                 }
-            }else{
+                try {
+                    cargarRecyclerLists();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else {
                 Toast.makeText(getApplicationContext(), "Error al cargar seguidoresID/seguidosID", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    //Tarea Asíncrona para llamar al WS de consulta en segundo plano
-    private class consultaUsuario extends AsyncTask<Integer,Void,UsuarioDTO> {
+    /**
+     * Tarea Asíncrona para llamar al WS de consulta en segundo plano para obtener un usuario dado una ID.
+     * Devuelve una instancia de la clase UsuarioDTO con los datos del usuario consultado.
+     */
+    private class ConsultaUsuario extends AsyncTask<Integer,Void,UsuarioDTO> {
 
         private Context context;
 
-        public consultaUsuario(Context context) {
+        public ConsultaUsuario(Context context) {
             this.context = context;
         }
 
@@ -189,6 +322,102 @@ public class Perfil extends AppCompatActivity {
 
             }else{
                 Toast.makeText(getApplicationContext(), "Usuario incorrecto", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Tarea Asíncrona para llamar al WS de consulta en segundo plano para obtener un usuario dado una ID.
+     * Devuelve una instancia de la clase UsuarioDTO con los datos del usuario consultado.
+     */
+    private class SeguirUsuario extends AsyncTask<Integer,Void,Boolean> {
+
+        private Context context;
+
+        public SeguirUsuario(Context context) {
+            this.context = context;
+        }
+
+        protected Boolean doInBackground(Integer... params) {
+
+            Boolean result = true;
+
+            AmigoDTO amigo = new AmigoDTO();
+            amigo.setidUsuario(usuarioActivo.getIdUsuario());
+            amigo.setamigo(params[0]);
+
+            PropertyInfo pi = new PropertyInfo();
+            pi.setName("amigo");
+            pi.setValue(amigo);
+            pi.setType(amigo.getClass());
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_FOLLOW);
+            request.addProperty(pi);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+            envelope.addMapping(NAMESPACE, "AmigoDTO", amigo.getClass());
+
+            HttpTransportSE transporte = new HttpTransportSE(URL);
+
+            try {
+                transporte.call(SOAP_ACTION_FOLLOW,envelope);
+                SoapObject resSoap = (SoapObject)envelope.getResponse();
+
+            } catch (Exception e) {
+                result = false;
+            }
+            return result;
+        }
+        protected void onPostExecute(Boolean result) {
+            if(result){
+                Toast.makeText(this.context, "No se ha podido seguir al usuario", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this.context, "Has empezado a seguir a este usuario", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    /**
+     * Tarea Asíncrona para llamar al WS de consulta en segundo plano para obtener un usuario dado una ID.
+     * Devuelve una instancia de la clase UsuarioDTO con los datos del usuario consultado.
+     */
+    private class DejarSeguirUsuario extends AsyncTask<Integer,Void,Boolean> {
+
+        private Context context;
+
+        public DejarSeguirUsuario(Context context) {
+            this.context = context;
+        }
+
+        protected Boolean doInBackground(Integer... params) {
+
+            Boolean result = true;
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_UNFOLLOW);
+            request.addProperty("idUsuario", usuarioActivo.getIdUsuario());
+            request.addProperty("amigo", usuarioPerfilID);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(URL);
+
+            try {
+                transporte.call(SOAP_ACTION_UNFOLLOW,envelope);
+                SoapPrimitive resSoap = (SoapPrimitive)envelope.getResponse();
+
+            } catch (XmlPullParserException | IOException e) {
+                e.printStackTrace();
+                result = false;
+            }
+            return result;
+        }
+        protected void onPostExecute(Boolean result) {
+            if(result){
+                Toast.makeText(this.context, "No se ha podido dejar de seguir al usuario", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this.context, "Has dejado de seguir a este usuario", Toast.LENGTH_LONG).show();
             }
         }
     }

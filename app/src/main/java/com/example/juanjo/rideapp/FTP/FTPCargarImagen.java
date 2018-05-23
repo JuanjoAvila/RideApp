@@ -3,6 +3,7 @@ package com.example.juanjo.rideapp.FTP;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 
 import org.apache.commons.net.ftp.FTP;
@@ -38,7 +39,6 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
      */
     public boolean login () throws IOException {
         //Establece conexión con el servidor
-        System.out.println("Conectando . . .");
         try{
             ftpClient = new FTPClient();
             ftpClient.connect(ip);
@@ -46,7 +46,6 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
         catch (Exception e){
             e.printStackTrace();
             //Informa al usuario
-            System.out.println("Imposible conectar . . .");
             return false;	//En caso de que no sea posible la conexion
         }
         //Hace login en el servidor
@@ -54,12 +53,10 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
 
         if (ftpClient.login(USUARIO, PASS)){
             //Informa al usuario
-            System.out.println("Login correcto . . .");
             return true;	//En caso de login correcto
         }
         else{
             //Informa al usuario
-            System.out.println("Login incorrecto . . .");
             return false;	//En caso de login incorrecto
         }
     }
@@ -74,10 +71,10 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/");
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2; // el factor de escala a minimizar la imagen, siempre es potencia de 2
-            loadedImage = BitmapFactory.decodeStream(ftpClient.retrieveFileStream(imagenID));
+            options.inSampleSize = 4; // el factor de escala a minimizar la imagen, siempre es potencia de 2
+            loadedImage = BitmapFactory.decodeStream(ftpClient.retrieveFileStream(imagenID), new Rect(0, 0, 0, 0), options);
         } catch (IOException e) {
-            e.printStackTrace();
+            loadedImage = null;
         }
     }
 
@@ -88,13 +85,12 @@ public class FTPCargarImagen extends AsyncTask<String, Integer, Bitmap>  {
             login();
             cargarImagen();
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
         return loadedImage;
     }
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        //mContext.cambiarImagen(loadedImage);
         super.onPostExecute(bitmap);
     }
 }

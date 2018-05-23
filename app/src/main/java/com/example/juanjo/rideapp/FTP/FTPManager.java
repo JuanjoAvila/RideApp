@@ -61,4 +61,10 @@ public class FTPManager {
         Boolean exito = ftpS.execute(fichero).get();
         return exito;
     }
+
+    public Bitmap HTTPCargarImagen(String imagenID) throws ExecutionException, InterruptedException {
+        HTTPCargarImagen httpCargarImagen = new HTTPCargarImagen(mContext);
+        Bitmap bitmap = httpCargarImagen.execute(imagenID).get();
+        return bitmap;
+    }
 }
