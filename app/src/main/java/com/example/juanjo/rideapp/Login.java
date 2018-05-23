@@ -100,9 +100,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             handleSignInResult(result);
         }
     }
-    public UsuarioDTO getUsuari(){
+    public static UsuarioDTO getUsuari(){
         return user;
     }
+
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
             GoogleSignInAccount account = result.getSignInAccount();

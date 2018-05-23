@@ -71,4 +71,9 @@
     <string name="nombre_menu_lateral">Android Studio</string>
     <string name="correo_menu_lateral">android.studio@android.com</string>
     <string name="titulo">Titulo</string>
+    <string name="opcion_cambiar">Cambiar</string>
+    <string name="nombre_edicion_perfil">Nombre:</string>
+    <string name="datos_personales_perfil">Datos</string>
+    <string name="foto_de_perfil_actual_edicion_perfil">Foto de perfil Actual</string>
+    <string name="ruleta_para_cambiar_la_foto_edicion_perfil">Ruleta para cambiar la foto</string>
 </resources>

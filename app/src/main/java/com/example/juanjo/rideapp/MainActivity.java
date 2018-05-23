@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.example.juanjo.rideapp.Evento.Eventos;
 import com.example.juanjo.rideapp.FTP.FTPManager;
@@ -34,9 +33,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-
-import org.apache.commons.net.ftp.FTP;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -198,8 +194,6 @@ public class MainActivity extends AppCompatActivity
             }
         }else{
             String foto = Login.user.getAvatar();
-            String nombre = Login.user.getNombre();
-            String correo = Login.user.getCorreo();
             nombreUsuarioMenu.setText(Login.user.getNombre());
             correoUsuarioMenu.setText(Login.user.getCorreo());
             Bitmap bitmap;
