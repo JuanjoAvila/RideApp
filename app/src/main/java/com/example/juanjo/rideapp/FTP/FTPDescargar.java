@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.Locale;
 
+/**
+ * Clase encargada de gestionar mediante un hilo la descarga de una ruta para poderla cargar en la aplicación.
+ * Para poder descargar la ruta necesita recibir un string, con el cual identificará la ruta del FTP que debe descargar
+ * y devolverá un Boolean según su resultado.
+ */
 public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     //Credenciales
     private static String IP =  "rideapp.somee.com";
@@ -34,7 +39,7 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     Context context;                //Almacena el contexto de la aplicacion
 
     /**
-     * Crea una instancia de FTP sin credenciales
+     * Crea una instancia de FTPDescargar sin credenciales
      */
     public FTPDescargar(Context context) {
 
@@ -56,7 +61,6 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
      */
     public boolean login () throws IOException {
         //Establece conexión con el servidor
-        System.out.println("Conectando . . .");
         try{
             ftpClient = new FTPClient();
             ftpClient.connect(IP);
@@ -64,19 +68,16 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
         catch (Exception e){
             e.printStackTrace();
             //Informa al usuario
-            System.out.println("Imposible conectar . . .");
             return false;	//En caso de que no sea posible la conexion
         }
         //Hace login en el servidor
 
         if (ftpClient.login(USUARIO, PASS)){
             //Informa al usuario
-            System.out.println("Login correcto . . .");
             return true;	//En caso de login correcto
         }
         else{
             //Informa al usuario
-            System.out.println("Login incorrecto . . .");
             return false;	//En caso de login incorrecto
         }
     }
@@ -94,13 +95,8 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
 
         //Cambia la carpeta Ftp
         if (ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/")){
-            System.out.println(ftpClient.printWorkingDirectory());
-            //Informa al usuario
-            System.out.println("Carpeta ftp cambiada . . .");
-
             //Obtiene la dirección de la ruta sd
             //rutaSd = Environment.getExternalStorageDirectory();
-            System.out.println("Ruta SD obtenida . . .");
             // externalStorage
             String ExternalStorageDirectory = Environment.getExternalStorageDirectory() + File.separator;
             //carpeta "imagenesguardadas"
@@ -114,14 +110,12 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
 
             //Obtiene la ruta completa donde se encuentra el archivo
             rutaCompleta = new File(ExternalStorageDirectory + rutacarpeta + nombre);
-            System.out.println("Ruta completa archivo obtenida . . .");
 
             //Crea un buffer hacia el servidor de subida
             bufferOut = new BufferedOutputStream(new FileOutputStream(rutaCompleta));
 
             if (ftpClient.retrieveFile(nombreArchivo, bufferOut)){
                 //Informa al usuario
-                System.out.println("Archivo bajado . . .");
                 bufferOut.close();		//Cierra el bufer
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Files.FileColumns.TITLE, "Descripción");
@@ -133,7 +127,6 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
             }
             else{
                 //Informa al usuario
-                System.out.println("Imposible bajar archivo . . .");
                 bufferOut.close();		//Cierra el bufer
                 return false;		//No se ha subido
             }
@@ -141,7 +134,6 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
         else{
 
             //Informa al usuario
-            System.out.println("Carpeta ftp imposible cambiar . . .");
             return false;		//Imposible cambiar de directo en servidor ftp
         }
     }
@@ -152,7 +144,6 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
             BajarArchivo(ruta[0]);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Imposible conectar . . .");
             return false;
         }
         return true;
@@ -160,7 +151,5 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        //Termina proceso
-        Log.i("TAG" , "Termina proceso de lectura de archivos.");
     }
 }

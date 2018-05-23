@@ -39,7 +39,8 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
     implementation 'com.mcxiaoke.viewpagerindicator:library:2.4.1'
-
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.0'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 }
 
 configurations.all {

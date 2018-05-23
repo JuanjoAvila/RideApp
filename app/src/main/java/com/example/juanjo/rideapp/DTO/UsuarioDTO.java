@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.DTO;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
@@ -41,16 +41,16 @@ public class UsuarioDTO implements KvmSerializable{
         this.correo = correo;
     }
 
+    public UsuarioDTO() {
+        this.idUsuario = 0;
+    }
+
     public Integer getIdUsuario() {
         return idUsuario;
     }
 
     public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
-    }
-
-    public UsuarioDTO() {
-        this.idUsuario = 0;
     }
 
     public String getUsuario() {

@@ -28,7 +28,7 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
     Context context;                //Almacena el contexto de la aplicacion
 
     /**
-     * Crea una instancia de FTP sin credenciales
+     * Crea una instancia de FTPSubir sin credenciales
      */
     public FTPSubir(Context context) {
 
@@ -49,7 +49,6 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
      */
     public boolean login () throws IOException {
         //Establece conexión con el servidor
-        System.out.println("Conectando . . .");
         try{
             ftpClient = new FTPClient();
             ftpClient.connect(ip);
@@ -57,7 +56,6 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
         catch (Exception e){
             e.printStackTrace();
             //Informa al usuario
-            System.out.println("Imposible conectar . . .");
             return false;	//En caso de que no sea posible la conexion
         }
         //Hace login en el servidor
@@ -65,12 +63,10 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
 
         if (ftpClient.login(USUARIO, PASS)){
             //Informa al usuario
-            System.out.println("Login correcto . . .");
             return true;	//En caso de login correcto
         }
         else{
             //Informa al usuario
-            System.out.println("Login incorrecto . . .");
             return false;	//En caso de login incorrecto
         }
     }
@@ -92,21 +88,17 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
         else{
             ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/");
         }
-        //Informa al usuario
-        System.out.println("Carpeta ftp cambiada . . .");
 
         //Crea un buffer hacia el servidor de subida
         bufferIn = new BufferedInputStream(new FileInputStream(rutaCompleta));
 
         if (ftpClient.storeFile(rutaCompleta.getName(), bufferIn)){
             //Informa al usuario
-            System.out.println("Archivo subido . . .");
             bufferIn.close();		//Cierra el bufer
             return true;		//Se ha subido con éxito
         }
         else{
             //Informa al usuario
-            System.out.println("Imposible subir archivo . . .");
             bufferIn.close();		//Cierra el bufer
             return false;		//No se ha subido
         }
@@ -121,8 +113,6 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
             login();
             SubirArchivo();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Imposible conectar . . .");
             return false;
         }
         return true;
@@ -130,8 +120,6 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        //Termina proceso
-        Log.i("TAG" , "Termina proceso de lectura de archivos.");
     }
 
 }

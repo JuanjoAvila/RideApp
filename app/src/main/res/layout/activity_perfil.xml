@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juanjo.rideapp.Usuario.Perfil">
+    tools:context="com.example.juanjo.rideapp.Usuario.Perfil"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="@color/fondoVentanaPrincipal">
 
         <LinearLayout
             android:paddingTop="15dp"
@@ -21,18 +22,18 @@
             android:layout_marginEnd="30dp"
             >
 
-            <GridLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
                 android:columnCount="4"
                 android:orientation="horizontal">
-                <ImageView
+
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/Perfil_usuarioAvatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@mipmap/perfil_defecto_avatar_usuario" />
 
                 <TextView
@@ -41,19 +42,44 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="5dp"
+                    android:paddingLeft="5dp"
                     android:paddingTop="5dp"
                     android:text="USUARIO"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_columnSpan="2"/>
 
                 <ImageView
                     android:id="@+id/Perfil_configUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/perfil_editarusuario"
-                    android:layout_columnSpan="2"/>
+                    android:src="@mipmap/perfil_editarusuario" />
             </GridLayout>
+            <LinearLayout
+                android:paddingTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:id="@+id/Perfil_seguirUsuario"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:onClick="seguirUsuario"
+                    android:src="@drawable/perfil_follow"
+                    android:visibility="invisible" />
+                <ImageView
+                    android:id="@+id/Perfil_dejarseguirUsuario"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:onClick="dejarSeguirUsuario"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/perfil_unfollow"
+                    android:visibility="invisible" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/Perfil_seguidoresTexto"
                 android:paddingTop="5dp"
@@ -66,7 +92,7 @@
                 android:textStyle="bold" />
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/Perfil_recyclerViewSeguidores"
                 android:orientation="horizontal">
             </android.support.v7.widget.RecyclerView>
@@ -83,8 +109,8 @@
                 android:textStyle="bold" />
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/recyclerViewSeguidos"
+                android:layout_height="wrap_content"
+                android:id="@+id/Perfil_recyclerViewSeguidos"
                 android:orientation="horizontal">
             </android.support.v7.widget.RecyclerView>
             <TextView
@@ -110,58 +136,21 @@
                 android:textStyle="normal"
                 android:background="@drawable/perfil_cuadrado_rutas"
                 />
-            <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="80dp" >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="103dp"
-                    android:layout_marginEnd="103dp"
-                    android:layout_marginTop="5dp"
-                    android:orientation="vertical"
-                    android:textAlignment="center"
-                    android:background="@drawable/perfil_cuadrado_rutas"
-                    >
-                        <TextView
-                            android:id="@+id/Perfil_rutasTexto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:text="Rutas"
-                            android:textColor="@color/black"
-                            android:textSize="14sp"
-                            android:textStyle="normal" />
-                        <TextView
-                            android:id="@+id/Perfil_rutasCont"
-                            android:paddingTop="5dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:text="X"
-                            android:textColor="@color/black"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                </LinearLayout>
-                <Button
-                    android:id="@+id/Perfil_botonRutas"
-                    android:layout_marginTop="90dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:background="@drawable/botonsign"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Ver Rutas"
-                    android:textColor="@color/blanco"
-                    android:textSize="14sp"
-                    android:textStyle="normal" />
-
-            </RelativeLayout>
+            <Button
+                android:id="@+id/Perfil_botonRutas"
+                android:layout_marginTop="90dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:background="@drawable/botonsign"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="Ver Rutas"
+                android:textColor="@color/blanco"
+                android:textSize="14sp"
+                android:textStyle="normal" />
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>
