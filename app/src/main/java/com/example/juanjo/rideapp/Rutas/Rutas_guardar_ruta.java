@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esafirm.imagepicker.features.ImagePicker;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.R;
 
@@ -287,4 +288,13 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
             e.printStackTrace();
         }
     }
+
+    public void abrirGaleria(View view){
+        ImagePicker.create(this)
+                .limit(1) // max images can be selected (99 by default)
+                .showCamera(true) // show camera or not (true by default)
+                .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+                .start(); // start image picker activity with request code // start image picker activity with request code
+    }
+
 }

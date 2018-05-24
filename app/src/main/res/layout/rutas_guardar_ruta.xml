@@ -110,5 +110,17 @@
             android:background="#00ffffff"
             android:onClick="help"
             app:srcCompat="@drawable/rutas_interrogation" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/rutas_descripcion"
+            android:layout_alignEnd="@+id/rutas_descripcion"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:onClick="abrirGaleria"
+            app:srcCompat="@drawable/gallery" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

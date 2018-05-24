@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.mcxiaoke.viewpagerindicator:library:2.4.1'
     //import de Google Play Services Location
     implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.13.0'
 }
 
 configurations.all {
