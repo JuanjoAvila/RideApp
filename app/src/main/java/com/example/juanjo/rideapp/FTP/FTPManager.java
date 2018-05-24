@@ -3,7 +3,10 @@ package com.example.juanjo.rideapp.FTP;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import org.apache.commons.net.ftp.FTPClient;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -23,21 +26,7 @@ public class FTPManager {
     }
 
     /**
-     * Crea una instancia de la clase FTPCargarImagen y la ejecuta.
-     * @see FTPCargarImagen
-     * @param imagenID nombre de la imagen en el FTP
-     * @return bitmap de la imagen devuelta del FTP
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    public Bitmap FTPCargarImagen(String imagenID) throws ExecutionException, InterruptedException {
-        FTPCargarImagen ftpCI = new FTPCargarImagen(mContext);
-        Bitmap bitmap = ftpCI.execute(imagenID).get();
-        return bitmap;
-    }
-
-    /**
-     * * Crea una instancia de la clase FTPDescargar y la ejecuta.
+     * Crea una instancia de la clase FTPDescargar y la ejecuta.
      * @see FTPDescargar
      * @return True para cuando la descarga del fichero ha sido exitosa, False para lo contrario.
      * @throws ExecutionException

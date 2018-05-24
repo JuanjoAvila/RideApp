@@ -2,16 +2,19 @@ package com.example.juanjo.rideapp.Usuario;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Base64;
 
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
@@ -54,32 +57,40 @@ public class Perfil extends AppCompatActivity {
     private ImageView seguirUsuario;
     private ImageView dejarseguirUsuario;
     private TextView usuarioNick;
+    private TextView usuarioNombre;
     private RecyclerView seguidoresRecycler;
     private RecyclerView seguidosRecycler;
     private TextView descripcion;
     private ArrayList<AmigoDTO> amigosDTO;
     private ArrayList<Integer> seguidoresID;
     private ArrayList<Integer> seguidosID;
+    private ArrayList<String> seguidoresUsuarios;
     private ArrayList<String> seguidoresNombres;
     private ArrayList<String> seguidoresAvatares;
+    private ArrayList<String> seguidosUsuarios;
     private ArrayList<String> seguidosNombres;
     private ArrayList<String> seguidosAvatares;
     private FTPManager ftpManager;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_perfil);
         avatar = findViewById(R.id.Perfil_usuarioAvatar);
         usuarioNick = findViewById(R.id.Perfil_usuarioID);
+        usuarioNombre = findViewById(R.id.Perfil_nombreCuenta);
         seguidosRecycler = findViewById(R.id.Perfil_recyclerViewSeguidos);
         seguidoresRecycler = findViewById(R.id.Perfil_recyclerViewSeguidores);
         descripcion = findViewById(R.id.Perfil_descripcionUsuario);
         amigosDTO = new ArrayList<AmigoDTO>();
         seguidoresID = new ArrayList<Integer>();
         seguidosID = new ArrayList<Integer>();
+        seguidoresUsuarios = new ArrayList<String>();
         seguidoresNombres = new ArrayList<String>();
         seguidoresAvatares = new ArrayList<String>();
+        seguidosUsuarios = new ArrayList<String>();
         seguidosNombres = new ArrayList<String>();
         seguidosAvatares = new ArrayList<String>();
         usuarioActivo = Login.getUsuari();
@@ -98,18 +109,22 @@ public class Perfil extends AppCompatActivity {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    private void iniciacionDatos() throws ExecutionException, InterruptedException {
-        cargarDatosPerfil();
-        final ConsultaAmigos selectAmigos = new ConsultaAmigos(this);
-        new Thread(new Runnable() {
+    private void iniciacionDatos(){
+        Handler uiHandlerPerfil = new Handler(this.getMainLooper());
+        uiHandlerPerfil.post(new Runnable() {
+            @Override
             public void run() {
-                try {
-                    selectAmigos.execute().get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                cargarDatosPerfil();
             }
-        }).start();
+        });
+        Handler uiHandlerRecyclerViews = new Handler(this.getMainLooper());
+        uiHandlerRecyclerViews.post(new Runnable() {
+            @Override
+            public void run() {
+                ConsultaAmigos selectAmigos = new ConsultaAmigos(mContext);
+                selectAmigos.execute();
+            }
+        });
     }
 
     /**
@@ -121,35 +136,32 @@ public class Perfil extends AppCompatActivity {
         try {
             usuarioPerfil = new ConsultaUsuario(this).execute(usuarioPerfilID).get();
             if(usuarioPerfil !=null){
-                usuarioNick.setText(usuarioPerfil.getUsuario());
                 if(usuarioPerfil.getAvatar()!=null && usuarioPerfil.getAvatar().length()>0){
-                    Handler uiHandler = new Handler(this.getMainLooper());
-                    uiHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Bitmap bitmapAvatar = null;
-                            try {
-                                if(usuarioPerfil.getNombre().endsWith("google")){
-                                    bitmapAvatar = ftpManager.HTTPCargarImagen(usuarioPerfil.getAvatar());
-                                }
-                                else {
-                                    bitmapAvatar = ftpManager.FTPCargarImagen(usuarioPerfil.getAvatar());
-                                }
-                                if(bitmapAvatar!=null) {
-                                    avatar.setImageBitmap(bitmapAvatar);
-                                }
-                                else{
-                                    avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
-                                }
-                            } catch (ExecutionException | InterruptedException e) {
-                                avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
-                            }
+                    Bitmap bitmapAvatar = null;
+                    try {
+                        if(usuarioPerfil.getUsuario().endsWith("google")){
+                            usuarioNick.setText(usuarioPerfil.getNombre()+" "+usuarioPerfil.getApellidos());
+                            bitmapAvatar = ftpManager.HTTPCargarImagen(usuarioPerfil.getAvatar());
                         }
-                    });
+                        else {
+                            usuarioNick.setText(usuarioPerfil.getUsuario());
+                            byte[] decodeValue = Base64.decode(usuarioPerfil.getAvatar(), Base64.DEFAULT);
+                            bitmapAvatar = BitmapFactory.decodeByteArray(decodeValue, 0, decodeValue.length);
+                        }
+                        if(bitmapAvatar!=null) {
+                            avatar.setImageBitmap(bitmapAvatar);
+                        }
+                        else{
+                            avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                        }
+                    } catch (ExecutionException | InterruptedException e) {
+                        avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                    }
                 }
                 else{
                     avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
                 }
+                usuarioNombre.setText(usuarioPerfil.getNombre()+" "+usuarioPerfil.getApellidos());
                 descripcion.setText(usuarioPerfil.getDescripcion());
 
             }
@@ -168,14 +180,16 @@ public class Perfil extends AppCompatActivity {
             UsuarioDTO seguidor = new ConsultaUsuario(this).execute(id).get();
             if(seguidor!=null){
                 seguidoresAvatares.add(seguidor.getAvatar());
-                seguidoresNombres.add(seguidor.getUsuario());
+                seguidoresUsuarios.add(seguidor.getUsuario());
+                seguidoresNombres.add(seguidor.getNombre());
             }
         }
         for(Integer id: seguidosID){
             UsuarioDTO seguido = new ConsultaUsuario(this).execute(id).get();
             if(seguido!=null) {
                 seguidosAvatares.add(seguido.getAvatar());
-                seguidosNombres.add(seguido.getUsuario());
+                seguidosUsuarios.add(seguido.getUsuario());
+                seguidosNombres.add(seguido.getNombre());
             }
         }
         if(usuarioPerfilID!=usuarioActivo.getIdUsuario()){
@@ -193,24 +207,43 @@ public class Perfil extends AppCompatActivity {
      * Carga los RecyclerList del perfil.
      */
     private void generarRecyclerLists(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         seguidoresRecycler.setLayoutManager(layoutManager);
-        Perfil_RVAdapter adapter = new Perfil_RVAdapter(this, seguidoresNombres, seguidoresAvatares, seguidoresID);
+        Perfil_RVAdapter adapter = new Perfil_RVAdapter(mContext, seguidoresUsuarios, seguidoresAvatares, seguidoresID, seguidoresNombres);
         seguidoresRecycler.setAdapter(adapter);
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         seguidosRecycler.setLayoutManager(layoutManager2);
-        Perfil_RVAdapter adapter2 = new Perfil_RVAdapter(this, seguidosNombres, seguidosAvatares, seguidosID);
+        Perfil_RVAdapter adapter2 = new Perfil_RVAdapter(mContext, seguidosUsuarios, seguidosAvatares, seguidosID, seguidosNombres);
         seguidosRecycler.setAdapter(adapter2);
     }
 
     public void seguirUsuario(View view){
         SeguirUsuario follow = new SeguirUsuario(this);
-        follow.execute(usuarioPerfilID);
+        Boolean exito = false;
+        try {
+            exito = follow.execute(usuarioPerfilID).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        if(exito) {
+            seguirUsuario.setVisibility(View.INVISIBLE);
+            dejarseguirUsuario.setVisibility(View.VISIBLE);
+        }
     }
 
     public void dejarSeguirUsuario(View view){
         DejarSeguirUsuario unfollow = new DejarSeguirUsuario(this);
-        unfollow.execute(usuarioPerfilID);
+        Boolean exito = false;
+        try {
+            exito = unfollow.execute(usuarioPerfilID).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        if(exito) {
+            seguirUsuario.setVisibility(View.VISIBLE);
+            dejarseguirUsuario.setVisibility(View.INVISIBLE);
+        }
     }
     /**
      * Tarea Asíncrona para llamar al WS de consulta en segundo plano para obtener todos los datos de la tabla Amigos de la BD.
@@ -362,7 +395,7 @@ public class Perfil extends AppCompatActivity {
 
             try {
                 transporte.call(SOAP_ACTION_FOLLOW,envelope);
-                SoapObject resSoap = (SoapObject)envelope.getResponse();
+                SoapPrimitive resSoap = (SoapPrimitive) envelope.getResponse();
 
             } catch (Exception e) {
                 result = false;
@@ -370,7 +403,7 @@ public class Perfil extends AppCompatActivity {
             return result;
         }
         protected void onPostExecute(Boolean result) {
-            if(result){
+            if(!result){
                 Toast.makeText(this.context, "No se ha podido seguir al usuario", Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this.context, "Has empezado a seguir a este usuario", Toast.LENGTH_LONG).show();
@@ -408,17 +441,22 @@ public class Perfil extends AppCompatActivity {
                 SoapPrimitive resSoap = (SoapPrimitive)envelope.getResponse();
 
             } catch (XmlPullParserException | IOException e) {
-                e.printStackTrace();
                 result = false;
             }
             return result;
         }
         protected void onPostExecute(Boolean result) {
-            if(result){
+            if(!result){
                 Toast.makeText(this.context, "No se ha podido dejar de seguir al usuario", Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this.context, "Has dejado de seguir a este usuario", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 }

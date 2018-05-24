@@ -13,7 +13,7 @@ import java.net.URL;
 public class HTTPCargarImagen extends AsyncTask<String, Integer, Bitmap> {
     URL imageUrl = null;
     HttpURLConnection conn = null;
-    private String imageHttpAddress = "http://jonsegador.com/wp-content/apezz.png";
+    private String imageHttpAddress = "";
     private Context mContext;
     private Bitmap loadedImage;
 
@@ -23,10 +23,9 @@ public class HTTPCargarImagen extends AsyncTask<String, Integer, Bitmap> {
     }
 
     @Override
-    protected Bitmap doInBackground(String... voids) {
-        URL imageUrl = null;
+    protected Bitmap doInBackground(String... imgUrl) {
             try {
-                imageUrl = new URL(imageHttpAddress);
+                imageUrl = new URL(imgUrl[0]);
                 HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                 conn.connect();
 

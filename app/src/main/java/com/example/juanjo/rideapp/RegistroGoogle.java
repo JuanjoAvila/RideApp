@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 import org.ksoap2.SoapEnvelope;

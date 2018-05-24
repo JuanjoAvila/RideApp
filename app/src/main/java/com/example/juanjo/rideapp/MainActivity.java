@@ -2,6 +2,7 @@ package com.example.juanjo.rideapp;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -205,21 +207,17 @@ public class MainActivity extends AppCompatActivity
             Bitmap bitmap;
             if(foto!=null && foto!=""){
                 FTPManager ftpManager = new FTPManager(this);
-                try {
-                    bitmap = ftpManager.FTPCargarImagen(foto);
-                    if(bitmap!=null){
-                        imagenUsuarioMenu.setImageBitmap(bitmap);
-                    }else{
-                        imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
-                    }
-                } catch (ExecutionException | InterruptedException e) {
+                byte[] decodeValue = Base64.decode(foto, Base64.DEFAULT);
+                bitmap = BitmapFactory.decodeByteArray(decodeValue, 0, decodeValue.length);
+
+                if(bitmap!=null){
+                    imagenUsuarioMenu.setImageBitmap(bitmap);
+                }else{
                     imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
                 }
             }else{
                 imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
             }
-
-
         }
     }
 
@@ -265,6 +263,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_perfil) {
             Intent i = new Intent(this, Perfil.class );
+            i.putExtra("usuario", Login.getUsuari().getIdUsuario());
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_rutas) {

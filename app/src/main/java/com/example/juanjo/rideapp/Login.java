@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -21,7 +22,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.example.juanjo.rideapp.UsuarioDTO;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -100,7 +100,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             handleSignInResult(result);
         }
     }
-    public UsuarioDTO getUsuari(){
+    public static UsuarioDTO getUsuari(){
         return user;
     }
     private void handleSignInResult(GoogleSignInResult result) {
