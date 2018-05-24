@@ -14,6 +14,6 @@
     <item
         android:id="@+id/rutas_mas_dificiles"
         android:icon="@drawable/ic_terrain_black_24dp"
-        android:title="@string/dificultad_alta" />
+        android:title="@string/top_valoraciones" />
 
 </menu>
