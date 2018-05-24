@@ -6,12 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.UsuarioDTO;
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;

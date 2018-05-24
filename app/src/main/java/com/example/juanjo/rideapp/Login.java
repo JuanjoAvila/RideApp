@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.Toast;
+
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -49,7 +51,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public CheckBox guarda;
 
     //Esta variable permite guardar el usuario actual para luego en otras clases utilizarlo
-    public static com.example.juanjo.rideapp.UsuarioDTO user = null;
+    public static UsuarioDTO user = null;
 
     //Permite saber si es un usuario google o un usuario de la propia aplicacion.
     public static boolean usuarioGoogle;
@@ -101,6 +103,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             }
         });
     }
+
+
 
     /* Esta funcion permite obtener si es la primera vez que entra el usuario a la aplicacion para dejar los campos vacios de usuario y contraseña
     * Esto permite que que cuando el usuario le de al boton del checkBox , la siguiente vez que aparezca en el login detectara que esta apretado
@@ -185,7 +189,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      * cuando se necesite acceder al usuario actual.
      * @return Devuelve el usuario actual de la aplicacion al loguear.
      */
-    public static com.example.juanjo.rideapp.UsuarioDTO getUsuari(){
+    public static UsuarioDTO getUsuari(){
         return user;
     }
 
@@ -315,7 +319,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
             // Elimina caracteres de control '%00'. Tambien elimina espacios a la hora de introducir la contraseña.
             String pass = resSoap.getPropertyAsString(2).replaceAll("\\W", "");
-            user = new com.example.juanjo.rideapp.UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
+            user = new UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
                     resSoap.getPropertyAsString(4), resSoap.getPropertyAsString(5), resSoap.getPropertyAsString(6), resSoap.getPropertyAsString(7));
 
         } catch (Exception e) {
