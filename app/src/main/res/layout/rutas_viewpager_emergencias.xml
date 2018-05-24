@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="50dp"
-            app:srcCompat="@drawable/rutas_emergencia" />
+            app:srcCompat="@drawable/emergencycall" />
 
         <TextView
             android:id="@+id/textView4"

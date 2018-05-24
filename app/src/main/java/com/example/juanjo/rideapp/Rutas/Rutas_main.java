@@ -18,6 +18,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 public class Rutas_main extends AppCompatActivity {
 
     private Button rutas_button1;
+    private Rutas_opciones_dialog prueba = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,55 +41,29 @@ public class Rutas_main extends AppCompatActivity {
         rutas_button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if(!señalGPS_On()){
-                        mostrar_gps_dialog();
-                    }else{
-                        mostrar_opciones_dialog();
-                    }
-                } catch (Settings.SettingNotFoundException e) {
-                    e.printStackTrace();
-                }
+                    mostrar_opciones_dialog();
             }
         });
     }
 
-    private void mostrar_gps_dialog() {
-        Rutas_gps_dialog prueba = null;
-        FragmentManager fm = getSupportFragmentManager();
-        prueba = Rutas_gps_dialog.newInstance("Some Title");
-        prueba.show(fm, "fragment_edit_name");
-    }
-
     private void mostrar_opciones_dialog() {
-        Rutas_opciones_dialog prueba = null;
         FragmentManager fm = getSupportFragmentManager();
         prueba = Rutas_opciones_dialog.newInstance("Some Title");
         prueba.show(fm, "fragment_edit_name");
     }
 
-    private boolean señalGPS_On() throws Settings.SettingNotFoundException {
-        int gpsSignal = Settings.Secure.getInt(getApplicationContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-        if(gpsSignal == 0){
-            return false;
-        }
-
-        return true;
-    }
-
     public void nuevaRuta(View view){
         Intent intent = new Intent(getApplicationContext(), Rutas_nueva_ruta.class);
         startActivity(intent);
+        prueba.dismiss();
+        this.finish();
     }
 
     public void cargarRuta(View view){
         Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);
         startActivity(intent);
+        prueba.dismiss();
+        this.finish();
     }
 
-    public void activarGps(View view){
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(intent);
-    }
 }

@@ -6,13 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/btn_rutas_salir4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tv_rutas_gps2"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/botonsign"
+        android:onClick="salir_sin_guardar"
+        android:text="Salir"
+        android:textColor="@color/blanco" />
+
     <TextView
         android:id="@+id/tv_rutas_gps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Imposible continuar"
+        android:text="Campos incorrectos"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -22,35 +37,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_rutas_gps"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
-        android:text="Es necesario activar la señal GPS." />
+        android:text="Comprueba los campos en rojo para poder continuar." />
 
     <Button
-        android:id="@+id/btn_rutas_activar"
+        android:id="@+id/btn_rutas_corregir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_rutas_salir"
-        android:layout_alignBottom="@+id/btn_rutas_salir"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/btn_rutas_salir"
+        android:layout_alignBaseline="@+id/btn_rutas_salir4"
+        android:layout_alignBottom="@+id/btn_rutas_salir4"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@+id/btn_rutas_salir4"
         android:background="@drawable/botonsign"
-        android:onClick="activarGps"
-        android:text="Activar"
+        android:onClick="corregir"
+        android:text="Corregir"
         android:textColor="@color/blanco" />
 
-    <Button
-        android:id="@+id/btn_rutas_salir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_rutas_gps2"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/botonsign"
-        android:onClick="returnMain"
-        android:text="Salir"
-        android:textColor="@color/blanco" />
 </RelativeLayout>

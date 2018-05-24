@@ -11,4 +11,7 @@
     <color name="blanco">#ffffff</color>
     <color name="black">#000000</color>
     <color name="registrarse">#243e16</color>
+    <color name="rutas_guardar">#64ff0000</color>
+    <color name="ratingBar1">#ffee00</color>
+    <color name="ratingBar2">#b9ad00</color>
 </resources>
