@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -60,7 +61,8 @@ public class Rutas_main extends AppCompatActivity {
     }
 
     public void cargarRuta(View view){
-        Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);
+        Intent intent = new Intent(getApplicationContext(), Rutas_mostrar_rutas.class);
+        intent.putExtra("idUsuario", Login.getUsuari().getIdUsuario());
         startActivity(intent);
         prueba.dismiss();
         this.finish();

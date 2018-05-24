@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp.Rutas;
+package com.example.juanjo.rideapp.DTO;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
