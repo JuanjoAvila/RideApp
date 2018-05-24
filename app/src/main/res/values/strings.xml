@@ -55,7 +55,7 @@
     <string name="registro_boton">Registrarse</string>
     <string name="ultimas_rutas">Ultimas Rutas</string>
     <string name="top_rutas">Top Rutas</string>
-    <string name="dificultad_alta">Dificultad Alta</string>
+    <string name="top_valoraciones">Top Valoraciones</string>
     <string name="rutas_obtenidas">Rutas obtenidas</string>
     <string name="perfil_usuario_creador_de_rutas">Perfil Usuario</string>
     <string name="ruta_ejemplo_uno">Ruta por Montserrat</string>
@@ -68,4 +68,9 @@
     <string name="nombre_menu_lateral">Android Studio</string>
     <string name="correo_menu_lateral">android.studio@android.com</string>
     <string name="titulo">Titulo</string>
+    <string name="opcion_cambiar">Cambiar</string>
+    <string name="nombre_edicion_perfil">Nombre:</string>
+    <string name="datos_personales_perfil">Datos</string>
+    <string name="foto_de_perfil_actual_edicion_perfil">Foto de perfil Actual</string>
+    <string name="ruleta_para_cambiar_la_foto_edicion_perfil">Ruleta para cambiar la foto</string>
 </resources>

@@ -1,9 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juanjo.rideapp.Usuario.EdicionPerfil">
+    tools:context="com.example.juanjo.rideapp.Usuario.EdicionPerfil"
+    android:background="@color/fondoVentanaPrincipal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        tools:ignore="UselessParent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
 
-</android.support.constraint.ConstraintLayout>
+
+            ><ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/perfil_defecto_avatar_usuario"
+            android:contentDescription="@string/foto_de_perfil_actual_edicion_perfil"
+            />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/settings"
+                android:contentDescription="@string/ruleta_para_cambiar_la_foto_edicion_perfil"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40sp"
+                android:layout_marginStart="50dp"
+                android:layout_gravity="center"
+                android:text="@string/datos_personales_perfil"/>
+        </LinearLayout>
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:hint="@string/contrasena_registro"
+                android:textColorHint="@color/blanco"
+                android:background="@drawable/cuadrado_redondo_login_contrasena"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="50dp"
+                android:drawableStart="@mipmap/contrasenalogin"
+                android:textSize="14sp"
+                android:drawablePadding="5dp"
+                android:textColor="@color/blanco"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:inputType="textPassword"
+                android:id="@+id/contrasena_perfil"
+                android:layout_marginBottom="15dp"
+                />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <AutoCompleteTextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:hint="@string/repetir_contrasena_registro"
+                android:textColorHint="@color/blanco"
+                android:background="@drawable/cuadrado_redondo_login_contrasena"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableStart="@mipmap/contrasenalogin"
+                android:textSize="14sp"
+                android:drawablePadding="5dp"
+                android:textColor="@color/blanco"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:inputType="textPassword"
+                android:id="@+id/contrasena_repetida_perfil"
+                android:layout_marginBottom="15dp"/>
+            <TextView
+                android:id="@+id/cambiar_contrasena"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/opcion_cambiar"
+                android:textColor="@color/esloganColor" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <AutoCompleteTextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:hint="@string/nombre_registro"
+                android:background="@drawable/cuadrado_redondo_login_nombre"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableStart="@mipmap/usuariologin"
+                android:textSize="14sp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:id="@+id/nombre_perfil"
+                android:layout_marginBottom="15dp"
+                android:inputType="textPersonName"/>
+            <TextView
+                android:id="@+id/cambiar_nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/opcion_cambiar"
+                android:textColor="@color/esloganColor" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <AutoCompleteTextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:hint="@string/apellidos_registro"
+                android:background="@drawable/cuadrado_redondo_login_apellidos"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableStart="@mipmap/usuariologin"
+                android:textSize="14sp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:id="@+id/apellidos_perfil"
+                android:layout_marginBottom="15dp"/>
+            <TextView
+                android:id="@+id/cambiar_apellidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/opcion_cambiar"
+                android:textColor="@color/esloganColor" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <AutoCompleteTextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:hint="@string/correo_registro"
+                android:background="@drawable/cuadrado_redondo_login_correo"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:drawableStart="@mipmap/correo"
+                android:textSize="14sp"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:id="@+id/correo_perfil"
+                android:inputType="textEmailAddress"
+                android:layout_marginBottom="20dp"/>
+            <TextView
+                android:id="@+id/cambiar_correo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/opcion_cambiar"
+                android:textColor="@color/esloganColor" />
+        </LinearLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
