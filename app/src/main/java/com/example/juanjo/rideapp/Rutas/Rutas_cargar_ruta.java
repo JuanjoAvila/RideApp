@@ -31,9 +31,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.UsuarioDTO;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
