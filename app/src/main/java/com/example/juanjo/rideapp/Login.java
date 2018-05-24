@@ -1,6 +1,7 @@
 package com.example.juanjo.rideapp;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -155,6 +156,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      * función para facilitar las cosas.
      * @param result Devuelve un inicio de sesión satisfactorio o en contra un error al que no se puede iniciar sesión
      */
+    public static UsuarioDTO getUsuari(){
+        return user;
+    }
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
             GoogleSignInAccount account = result.getSignInAccount();

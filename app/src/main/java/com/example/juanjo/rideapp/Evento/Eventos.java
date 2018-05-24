@@ -7,6 +7,9 @@ import android.view.View;
 
 import com.example.juanjo.rideapp.R;
 
+/**
+ * Clase encargada de gestionar la ventana de la lista de eventos.
+ */
 public class Eventos extends AppCompatActivity {
 
     @Override

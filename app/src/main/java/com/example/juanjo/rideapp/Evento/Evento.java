@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import com.example.juanjo.rideapp.R;
 
+/**
+ * Clase encargada de gestionar la ventana de la vista de un evento
+ */
 public class Evento extends AppCompatActivity {
 
     @Override
