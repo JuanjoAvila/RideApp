@@ -1,6 +1,7 @@
 package com.example.juanjo.rideapp;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
