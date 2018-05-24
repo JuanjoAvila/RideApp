@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="190dp">
+
+        <ImageView
+            android:id="@+id/rutaMapa"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/rutas_obtenidas"
+            />
+
+        <ImageView
+            android:id="@+id/fotoUsuario"
+            android:layout_width="39dp"
+            android:layout_height="56dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/nombreRuta"
+            android:layout_marginStart="10dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/perfil_usuario_creador_de_rutas"/>
+
+        <TextView
+            android:id="@+id/nombreRuta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="20"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/fotoUsuario"
+            android:layout_alignBottom="@+id/rutaMapa"
+            android:layout_marginBottom="50dp"
+            android:text="@string/ruta_ejemplo_uno"
+            android:textAlignment="textStart"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/dislikesCarita"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignBottom="@+id/fotoUsuario"
+            android:layout_toEndOf="@id/likes"
+            android:layout_marginStart="20dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/dislikes"/>
+
+        <ImageView
+            android:id="@+id/likesCarita"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignBottom="@+id/fotoUsuario"
+            android:layout_alignStart="@+id/nombreRuta"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/likes"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/dislikes"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/fotoUsuario"
+            android:layout_toEndOf="@id/dislikesCarita"
+            android:layout_marginStart="5dp"
+            android:text="@string/ejemplo_dislikes" />
+
+        <TextView
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/fotoUsuario"
+            android:layout_toEndOf="@id/likesCarita"
+            android:layout_marginStart="5dp"
+            android:text="@string/ejemplo_likes" />
+
+        <TextView
+            android:id="@+id/fechaPublicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toStartOf="@+id/nombreRuta"
+            android:layout_alignTop="@+id/fotoUsuario"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
+            android:textSize="15sp"
+            android:text="@string/plantilla_fecha"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:ignore="RelativeOverlap" />
+
+        <RatingBar
+            android:id="@+id/puntuacionEstrellas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/fechaPublicacion"
+
+            android:layout_alignBottom="@+id/likes"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:scaleType="centerCrop"
+            android:stepSize="1.0"
+            style="@style/Widget.AppCompat.RatingBar.Small"/>
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

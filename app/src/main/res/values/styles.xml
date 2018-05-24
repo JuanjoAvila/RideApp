@@ -23,4 +23,12 @@
         <item name="colorControlActivated">@color/ratingBar2</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="Theme">tema_principal</style>
+
+    <style name="ThemeOverlay">tema_barra</style>
+
 </resources>

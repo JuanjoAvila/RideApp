@@ -21,6 +21,13 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_rutas">Map</string>
+    <string name="not_log_in_google">No se puede iniciar sesión</string>
+
+
+    <!--Strings de los tab-->
+    <string name="ultimas_novedades">Ultimas Rutas</string>
+    <string name="mejores_rutas">Top Rutas</string>
+    <string name="mayor_dificultad">Dificultad Alta</string>
 
     <!-- Rutas -->
     <string name="nueva_ruta">NUEVA_RUTA</string>
@@ -28,4 +35,37 @@
     <string name="emergencias">EMERGENCIAS</string>
     <string name="title_activity_rutas_nueva_ruta">Map</string>
     <string name="title_activity_rutas_cargar_ruta">Map</string>
+
+    <!--Cosas mucha mierda-->
+    <string name="eslogan">Comienza cuándo quieras y dónde quieras con RideApp</string>
+    <string name="hint_usuario">Usuario</string>
+    <string name="hint_contrasena">Contraseña</string>
+    <string name="recordar_usuario">Recuerdame</string>
+    <string name="eres_nuevo">Eres nuevo?</string>
+    <string name="sign_up">Registrate</string>
+    <string name="sign_in">Entra</string>
+    <string name="separacion">separacion</string>
+    <string name="inicio_registro">Necesitamos tus datos para poder comenzar</string>
+    <string name="registro_usuario">Usuario</string>
+    <string name="contrasena_registro">Contraseña</string>
+    <string name="repetir_contrasena_registro">Repetir Contraseña</string>
+    <string name="nombre_registro">Nombre</string>
+    <string name="apellidos_registro">Apellidos</string>
+    <string name="correo_registro">Correo Electrónico</string>
+    <string name="registro_boton">Registrarse</string>
+    <string name="ultimas_rutas">Ultimas Rutas</string>
+    <string name="top_rutas">Top Rutas</string>
+    <string name="dificultad_alta">Dificultad Alta</string>
+    <string name="rutas_obtenidas">Rutas obtenidas</string>
+    <string name="perfil_usuario_creador_de_rutas">Perfil Usuario</string>
+    <string name="ruta_ejemplo_uno">Ruta por Montserrat</string>
+    <string name="dislikes">Dislikes</string>
+    <string name="likes">Likes</string>
+    <string name="ejemplo_dislikes">20</string>
+    <string name="ejemplo_likes">20</string>
+    <string name="plantilla_fecha">DD/MM/YYYY</string>
+    <string name="perfil_menu_lateral">Perfil</string>
+    <string name="nombre_menu_lateral">Android Studio</string>
+    <string name="correo_menu_lateral">android.studio@android.com</string>
+    <string name="titulo">Titulo</string>
 </resources>
