@@ -11,6 +11,7 @@ import java.util.Hashtable;
 
 public class Ruta_infoDTO implements KvmSerializable{
 
+    private int idRuta;
     private String titulo;
     private String foto_ruta;
     private String fecha_ruta;
@@ -22,7 +23,8 @@ public class Ruta_infoDTO implements KvmSerializable{
     public Ruta_infoDTO() {
     }
 
-    public Ruta_infoDTO(String titulo, String foto_ruta, String fecha_ruta, int dificultad, int likes, int dislikes, String foto_usuario) {
+    public Ruta_infoDTO(int idRuta, String titulo, String foto_ruta, String fecha_ruta, int dificultad, int likes, int dislikes, String foto_usuario) {
+        this.idRuta = idRuta;
         this.titulo = titulo;
         this.foto_ruta = foto_ruta;
         this.fecha_ruta = fecha_ruta;
@@ -30,6 +32,14 @@ public class Ruta_infoDTO implements KvmSerializable{
         this.likes = likes;
         this.dislikes = dislikes;
         this.foto_usuario = foto_usuario;
+    }
+
+    public int getIdRuta() {
+        return idRuta;
+    }
+
+    public void setIdRuta(int idRuta) {
+        this.idRuta = idRuta;
     }
 
     public String getTitulo() {
@@ -93,18 +103,20 @@ public class Ruta_infoDTO implements KvmSerializable{
 
         switch(index){
             case 0:
-                return titulo;
+                return idRuta;
             case 1:
-                return foto_ruta;
+                return titulo;
             case 2:
-                return fecha_ruta;
+                return foto_ruta;
             case 3:
-                return dificultad;
+                return fecha_ruta;
             case 4:
-                return likes;
+                return dificultad;
             case 5:
-                return dislikes;
+                return likes;
             case 6:
+                return dislikes;
+            case 7:
                 return foto_usuario;
 
             default: break;
@@ -115,7 +127,7 @@ public class Ruta_infoDTO implements KvmSerializable{
 
     @Override
     public int getPropertyCount() {
-        return 7;
+        return 8;
     }
 
     @Override
@@ -123,23 +135,26 @@ public class Ruta_infoDTO implements KvmSerializable{
 
         switch(index){
             case 0:
-                titulo = value.toString();
+                idRuta = Integer.valueOf((int)value);
                 break;
             case 1:
-                foto_ruta = value.toString();
+                titulo = value.toString();
                 break;
             case 2:
-                fecha_ruta = value.toString();
+                foto_ruta = value.toString();
                 break;
             case 3:
-                dificultad = Integer.valueOf((int)value);
+                fecha_ruta = value.toString();
                 break;
             case 4:
-                likes = Integer.valueOf((int)value);
+                dificultad = Integer.valueOf((int)value);
+                break;
             case 5:
+                likes = Integer.valueOf((int)value);
+            case 6:
                 dislikes = Integer.valueOf((int)value);
                 break;
-            case 6:
+            case 7:
                 foto_usuario = value.toString();
                 break;
 
@@ -152,30 +167,34 @@ public class Ruta_infoDTO implements KvmSerializable{
 
         switch(index){
             case 0:
-                info.type = PropertyInfo.STRING_CLASS;
-                info.name = "titulo";
+                info.type = PropertyInfo.INTEGER_CLASS;
+                info.name = "idRuta";
                 break;
             case 1:
                 info.type = PropertyInfo.STRING_CLASS;
-                info.name = "foto_ruta";
+                info.name = "titulo";
                 break;
             case 2:
                 info.type = PropertyInfo.STRING_CLASS;
-                info.name = "fecha_ruta";
+                info.name = "foto_ruta";
                 break;
             case 3:
-                info.type = PropertyInfo.INTEGER_CLASS;
-                info.name = "dificultad";
+                info.type = PropertyInfo.STRING_CLASS;
+                info.name = "fecha_ruta";
                 break;
             case 4:
                 info.type = PropertyInfo.INTEGER_CLASS;
-                info.name = "likes";
+                info.name = "dificultad";
                 break;
             case 5:
                 info.type = PropertyInfo.INTEGER_CLASS;
-                info.name = "dislikes";
+                info.name = "likes";
                 break;
             case 6:
+                info.type = PropertyInfo.INTEGER_CLASS;
+                info.name = "dislikes";
+                break;
+            case 7:
                 info.type = PropertyInfo.STRING_CLASS;
                 info.name = "foto_usuario";
                 break;

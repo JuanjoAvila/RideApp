@@ -670,8 +670,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         if(start.isChecked()){
             mostrar_guardar_dialog();
         }else{
-            Intent i = new Intent(this, Rutas_main.class);
+            Intent i = new Intent(this, Rutas_mostrar_rutas.class);
+            i.putExtra("idUsuario", Login.getUsuari().getIdUsuario());
             startActivity(i);
+            this.finish();
         }
     }
 

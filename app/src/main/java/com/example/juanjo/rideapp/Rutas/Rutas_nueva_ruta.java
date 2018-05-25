@@ -675,6 +675,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }else{
             Intent i = new Intent(this, Rutas_main.class);
             startActivity(i);
+            this.finish();
         }
     }
 
