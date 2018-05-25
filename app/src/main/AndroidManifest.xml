@@ -79,7 +79,23 @@
         <activity
             android:name=".Rutas.Rutas_guardar_ruta"
             android:screenOrientation="portrait" />
-        <activity android:name=".Rutas.Rutas_mostrar_rutas"></activity>
+        <activity android:name=".Rutas.Rutas_mostrar_rutas"
+            android:screenOrientation="portrait"></activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.mvc.imagepicker.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource"/>
+        </provider>
+
+
     </application>
+
 
 </manifest>

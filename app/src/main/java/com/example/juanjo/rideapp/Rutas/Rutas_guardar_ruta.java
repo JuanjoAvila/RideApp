@@ -3,20 +3,26 @@ package com.example.juanjo.rideapp.Rutas;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.esafirm.imagepicker.features.ImagePicker;
 import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
+import com.example.juanjo.rideapp.PickImage.SelectorImagen;
 import com.example.juanjo.rideapp.R;
+import com.mvc.imagepicker.ImagePicker;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -26,6 +32,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -38,6 +45,7 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
     public static final String SOAP_ACTION2 = "http://tempuri.org/borrarRuta";
     public static final String METHOD_NAME3 = "modificarRuta";
     public static final String SOAP_ACTION3 = "http://tempuri.org/modificarRuta";
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
     private Rutas_guardar2_dialog prueba = null;
@@ -50,6 +58,9 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
 
     private RatingBar rutas_ratingBar;
 
+    private ImageView imagen_ruta;
+    private SelectorImagen selectorImagen;
+    private String imagen_rutaBASE64;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,10 +68,13 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
 
         getSupportActionBar().hide();
 
+        ImagePicker.setMinQuality(300, 150);
+
         rutas_titulo = (EditText)findViewById(R.id.rutas_titulo);
         rutas_descripcion = (EditText)findViewById(R.id.rutas_descripcion);
         rutas_ratingBar = (RatingBar)findViewById(R.id.rutas_ratingBar);
         rutas_fecha = (TextView)findViewById(R.id.rutas_fecha);
+        imagen_ruta = (ImageView)findViewById(R.id.img_guardar_ruta);
 
         if(Rutas_nueva_ruta.ultimaRuta != null){
             ruta = Rutas_nueva_ruta.ultimaRuta;
@@ -106,7 +120,7 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
         Toast.makeText(this, "Elige la dificultad de la ruta.", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
+    /*@Override
     protected void onPause() {
         boolean saved = getIntent().getExtras().getBoolean("guardado");
         if(!saved){
@@ -117,7 +131,7 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
         this.finish();
 
         super.onPause();
-    }
+    }*/
 
     private class borrar_ruta extends AsyncTask<Integer,Void,Boolean> {
 
@@ -174,7 +188,7 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
             ruta.setDescripcion(rutas_descripcion.getText().toString());
             ruta.setMapa("ruta" + ruta.getIdRuta() + ".gpx");
             ruta.setDificultad((int)rutas_ratingBar.getRating());
-            //TODO: Falta nombre foto
+            ruta.setFoto(imagen_rutaBASE64);
 
             new modificarRuta(this, this).execute(ruta);
 
@@ -287,12 +301,63 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
         }
     }
 
-    public void abrirGaleria(View view){
-        ImagePicker.create(this)
-                .limit(1) // max images can be selected (99 by default)
-                .showCamera(true) // show camera or not (true by default)
-                .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
-                .start(); // start image picker activity with request code // start image picker activity with request code
+    public void cargarImagen(View view){
+        selectorImagen = new SelectorImagen(this);
+        selectorImagen.takeImage();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Bundle extras = data.getExtras();
+        encodeFoto(extras);
+
+        //  camara
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (extras != null) {
+                try {
+                    imagen_ruta.setImageBitmap(Bitmap.createScaledBitmap((Bitmap) extras.get("data"), 300, 150, false));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            //  galeria
+            try {
+                imagen_ruta.setImageBitmap(ImagePicker.getImageFromResult(this, requestCode, resultCode, data));
+            } catch (Exception e) {
+                Log.i("LOG", "onActivityResult: " + e);
+            }
+        }
+    }
+
+    private void encodeFoto(Bundle extras) {
+    /*
+    Se codifica la foto a BASE64
+    */
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Bitmap bitmap = Bitmap.createScaledBitmap((Bitmap) extras.get("data"), 300, 150, false);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        imagen_rutaBASE64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_IMAGE_CAPTURE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    selectorImagen.openCamera();
+                } else {
+
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }
