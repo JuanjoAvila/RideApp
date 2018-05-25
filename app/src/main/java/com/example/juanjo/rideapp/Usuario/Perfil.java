@@ -1,6 +1,7 @@
 package com.example.juanjo.rideapp.Usuario;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.MainActivity;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
@@ -72,6 +74,7 @@ public class Perfil extends AppCompatActivity {
     private ArrayList<String> seguidosAvatares;
     private FTPManager ftpManager;
     private Context mContext;
+    private ImageView Perfil_configUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,15 +96,22 @@ public class Perfil extends AppCompatActivity {
         seguidosUsuarios = new ArrayList<String>();
         seguidosNombres = new ArrayList<String>();
         seguidosAvatares = new ArrayList<String>();
+        Log.d("Error","Obtengo usuario");
         usuarioActivo = Login.getUsuari();
         seguirUsuario = findViewById(R.id.Perfil_seguirUsuario);
         dejarseguirUsuario = findViewById(R.id.Perfil_dejarseguirUsuario);
+        Perfil_configUsuario = findViewById(R.id.Perfil_configUsuario);
         ftpManager = new FTPManager(this);
         try {
             iniciacionDatos();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void accederEdicionPerfil(View View){
+        Intent i = new Intent(this, EdicionPerfil.class );
+        startActivity(i);
     }
 
     /**
@@ -192,7 +202,7 @@ public class Perfil extends AppCompatActivity {
                 seguidosNombres.add(seguido.getNombre());
             }
         }
-        if(usuarioPerfilID!=usuarioActivo.getIdUsuario()){
+        if(!usuarioPerfilID.equals(usuarioActivo.getIdUsuario())){
             if(!seguidoresID.contains(usuarioActivo.getIdUsuario())){
                 seguirUsuario.setVisibility(View.VISIBLE);
             }

@@ -11,6 +11,7 @@
         android:orientation="vertical"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         tools:ignore="UselessParent">
@@ -51,7 +52,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:hint="@string/contrasena_registro"
-                android:textColorHint="@color/blanco"
+                android:textColorHint="#cccccc"
                 android:background="@drawable/cuadrado_redondo_login_contrasena"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="50dp"
@@ -74,7 +75,7 @@
                 android:layout_width="200dp"
                 android:layout_height="40dp"
                 android:hint="@string/repetir_contrasena_registro"
-                android:textColorHint="@color/blanco"
+                android:textColorHint="#cccccc"
                 android:background="@drawable/cuadrado_redondo_login_contrasena"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
@@ -87,10 +88,12 @@
                 android:inputType="textPassword"
                 android:id="@+id/contrasena_repetida_perfil"
                 android:layout_marginBottom="15dp"/>
+
             <TextView
                 android:id="@+id/cambiar_contrasena"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="update"
                 android:text="@string/opcion_cambiar"
                 android:textColor="@color/esloganColor" />
         </LinearLayout>
@@ -113,10 +116,12 @@
                 android:id="@+id/nombre_perfil"
                 android:layout_marginBottom="15dp"
                 android:inputType="textPersonName"/>
+
             <TextView
                 android:id="@+id/cambiar_nombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="update"
                 android:text="@string/opcion_cambiar"
                 android:textColor="@color/esloganColor" />
         </LinearLayout>
@@ -138,10 +143,12 @@
                 android:paddingEnd="10dp"
                 android:id="@+id/apellidos_perfil"
                 android:layout_marginBottom="15dp"/>
+
             <TextView
                 android:id="@+id/cambiar_apellidos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="update"
                 android:text="@string/opcion_cambiar"
                 android:textColor="@color/esloganColor" />
         </LinearLayout>
@@ -164,18 +171,51 @@
                 android:id="@+id/correo_perfil"
                 android:inputType="textEmailAddress"
                 android:layout_marginBottom="20dp"/>
+
             <TextView
                 android:id="@+id/cambiar_correo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="update"
                 android:text="@string/opcion_cambiar"
                 android:textColor="@color/esloganColor" />
         </LinearLayout>
 
 
+        <ScrollView
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <TextView
+                    android:id="@+id/cambiar_descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:onClick="update"
+                    android:text="@string/opcion_cambiar"
+                    android:textColor="@color/esloganColor"
+                    tools:ignore="RelativeOverlap" />
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/descripcion_perfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="110dp"
+                android:hint="@string/descripcion_edicion_perfil"
+                android:padding="10dp"
+                android:textSize="12sp"
+                android:background="@drawable/cuadrado_redondo_login_nombre"
+                />
+            </RelativeLayout>
+        </ScrollView>
 
     </LinearLayout>
 

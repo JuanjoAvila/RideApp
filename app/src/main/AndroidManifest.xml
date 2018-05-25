@@ -15,9 +15,9 @@
     <application
         android:windowSoftInputMode="adjustPan|stateVisible"
         android:allowBackup="true"
-        android:icon="@drawable/race_bike"
+        android:icon="@drawable/logo_ride_app"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/race_bike"
+        android:roundIcon="@drawable/logo_ride_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
