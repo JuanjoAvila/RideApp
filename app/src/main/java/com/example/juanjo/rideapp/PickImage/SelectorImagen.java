@@ -26,15 +26,14 @@ public class SelectorImagen {
     }
 
     public void takeImage() {
-        alert(mContext, "Escoge una opción", "Open with camera or take from gallery",
-                "Camera", new DialogInterface.OnClickListener() {
+        alert(mContext, "Escoge una opción", "Haz una foto o selecciona una de tu galería",
+                "Cámara", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                             if (ActivityCompat.shouldShowRequestPermissionRationale(mContext, Manifest.permission.CAMERA)) {
 
                             } else {
-                                //  LIBERA A PERMISSÃO SEM PEDIR NOVAMENTE
                                 ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.CAMERA}, REQUEST_IMAGE_CAPTURE);
                             }
                         } else {
@@ -42,14 +41,14 @@ public class SelectorImagen {
                         }
                     }
                 },
-                "Gallery", new DialogInterface.OnClickListener() {
+                "Galería", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            ImagePicker.pickImage(mContext, "Select your image:");
+                            ImagePicker.pickImage(mContext, "Selecciona la imagen:");
                         } catch (Exception e) {
-                            Toast.makeText(mContext, "Problem to open the gallery.\nUse the camera or try later.", Toast.LENGTH_SHORT).show();
-                            Log.e("LOG", "Erro: " + e);
+                            Toast.makeText(mContext, "Problemas al abrir la galería.\nUsa la cámara o prueba más tarde.", Toast.LENGTH_SHORT).show();
+                            Log.e("LOG", "Error: " + e);
                         }
                     }
                 });
@@ -61,7 +60,6 @@ public class SelectorImagen {
             mContext.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
 
-    //  =================================================================================
     public static void alert(Context c, String t, String m, String msgBtnPositive, DialogInterface.OnClickListener cliqueOk, String msgBtnNegative, DialogInterface.OnClickListener cliqueNegative) {
         AlertDialog.Builder a = new AlertDialog.Builder(c);
         a.setTitle(t);

@@ -31,7 +31,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
+import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -72,6 +74,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutionException;
 
 public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, Rutas_guardar_dialog.CallBack {
 
@@ -85,6 +88,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
     public static final String SOAP_ACTION2 = "http://tempuri.org/Select_ultimaRuta_usuario";
     public static final String METHOD_NAME4 = "Select_fecha";
     public static final String SOAP_ACTION4 = "http://tempuri.org/Select_fecha";
+
+    //
+    public static final String METHOD_NAME5 = "obtenerRuta";
+    public static final String SOAP_ACTION5 = "http://tempuri.org/obtenerRuta";
 
     //Estaticas para comprobar los permisos del usuario, y tambien para escribir en el log
     private static final String LOGTAG = "localizacion";
@@ -120,6 +127,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
     public static RutaDTO ultimaRuta = null;
     private Boolean obtenerUltimaRuta = true;
 
+    //
+    private int idRuta;
+    public static RutaDTO ruta_cargada = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +141,11 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
 
         start = (ToggleButton)findViewById(R.id.rutas_tBtn);
+
+        /*
+        Se recoge la id de la ruta pasada en la actividad anterior
+         */
+        idRuta = getIntent().getExtras().getInt("idRuta");
 
         /*
         Se declara el client de Google API, configurando una serie de parametros
@@ -178,7 +194,9 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
                         this, R.raw.formato_mapa));
 
         //Se enciende la actualización automatica para detecta la primera ubicación
-        enableLocationUpdates();
+        //enableLocationUpdates();
+
+        new obtener_ruta(this, this).execute(idRuta);
     }
 
     /*
@@ -669,8 +687,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         if(start.isChecked()){
             mostrar_guardar_dialog();
         }else{
-            Intent i = new Intent(this, Rutas_main.class);
+            Intent i = new Intent(this, Rutas_mostrar_rutas.class);
+            i.putExtra("idUsuario", Login.getUsuari().getIdUsuario());
             startActivity(i);
+            this.finish();
         }
     }
 
@@ -830,5 +850,60 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
 
         }
     }
+
+    /*
+    Utilizado para recoger los datos de una ruta
+     */
+
+    private class obtener_ruta extends AsyncTask<Integer,Void,Boolean> {
+
+        private Context context;
+        private Activity activity;
+
+        public obtener_ruta(Context context, Activity activity) {
+            this.context = context;
+            this.activity = activity;
+        }
+
+        protected Boolean doInBackground(Integer... params) {
+
+            Boolean result = true;
+
+            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME5);
+            request.addProperty("idRuta", params[0]);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(URL);
+
+            try {
+                transporte.call(SOAP_ACTION5,envelope);
+                SoapObject resSoap = (SoapObject)envelope.getResponse();
+                ruta_cargada = new RutaDTO(Integer.valueOf(resSoap.getPropertyAsString(0)),
+                        Integer.valueOf(resSoap.getPropertyAsString(1)),
+                        resSoap.getPropertyAsString(2), resSoap.getPropertyAsString(3),
+                        resSoap.getPropertyAsString(4), Integer.valueOf(resSoap.getPropertyAsString(5)),
+                        Integer.valueOf(resSoap.getPropertyAsString(6)),
+                        Integer.valueOf(resSoap.getPropertyAsString(7)), resSoap.getPropertyAsString(8));
+
+            } catch (Exception e) {
+                result = false;
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+
+            if(result){
+                FTPManager ftpManager = new FTPManager(getApplicationContext());
+
+            }
+        }
+    }
+
+
 
 }

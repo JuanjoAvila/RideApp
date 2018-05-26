@@ -31,8 +31,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
-import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -675,6 +675,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }else{
             Intent i = new Intent(this, Rutas_main.class);
             startActivity(i);
+            this.finish();
         }
     }
 

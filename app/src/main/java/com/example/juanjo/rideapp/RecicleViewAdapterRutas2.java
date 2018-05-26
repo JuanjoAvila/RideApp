@@ -5,15 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
+
 import java.util.List;
 
-public class RecicleViewAdapterRutas extends RecyclerView.Adapter<RecicleViewAdapterRutas.RutasViewHolder> {
-    private List<RutaRecicleView> items;
+public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAdapterRutas2.RutasViewHolder> {
+    private List<Ruta_infoDTO> items;
 
     public static class RutasViewHolder extends RecyclerView.ViewHolder {
         // Campos respectivos de un item
@@ -39,10 +40,11 @@ public class RecicleViewAdapterRutas extends RecyclerView.Adapter<RecicleViewAda
             dislikesCarita = v.findViewById(R.id.dislikesCarita);
             dislikes = v.findViewById(R.id.dislikes);
 
+            puntuacionEstrellas.setIsIndicator(true);
         }
     }
 
-    RecicleViewAdapterRutas(List<RutaRecicleView> items) {
+    public RecicleViewAdapterRutas2(List<Ruta_infoDTO> items) {
         this.items = items;
     }
 
@@ -61,14 +63,19 @@ public class RecicleViewAdapterRutas extends RecyclerView.Adapter<RecicleViewAda
 
     @Override
     public void onBindViewHolder (@NonNull RutasViewHolder viewHolder, int i){
-        viewHolder.fotoUsuario.setImageResource(items.get(i).getFotoUsuario());
-        viewHolder.nombreRuta.setText(items.get(i).getNombreRuta());
-        viewHolder.rutaMapa.setImageResource(items.get(i).getRutaMapa());
-        viewHolder.fechaPublicacion.setText(String.valueOf(items.get(i).getFechaPublicacion()));
-        viewHolder.puntuacionEstrellas.setRating(items.get(i).getPuntuacionEstrellas());
-        viewHolder.likesCarita.setImageResource(items.get(i).getLikesCarita());
+        //viewHolder.fotoUsuario.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+        viewHolder.nombreRuta.setText(items.get(i).getTitulo());
+        //viewHolder.rutaMapa.setImageResource(R.drawable.imagenrutaprueba);
+        viewHolder.fechaPublicacion.setText(items.get(i).getFecha_ruta());
+        viewHolder.puntuacionEstrellas.setRating(items.get(i).getDificultad());
+        viewHolder.likesCarita.setImageResource(R.drawable.happy);
         viewHolder.likes.setText(String.valueOf(items.get(i).getLikes()));
-        viewHolder.dislikesCarita.setImageResource(items.get(i).getDislikesCarita());
+        viewHolder.dislikesCarita.setImageResource(R.drawable.sad);
         viewHolder.dislikes.setText(String.valueOf(items.get(i).getDislikes()));
     }
+
+    public Ruta_infoDTO getItem(int position) {
+        return items.get(position);
+    }
 }
+
