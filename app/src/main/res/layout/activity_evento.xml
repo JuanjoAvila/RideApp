@@ -97,14 +97,6 @@
                     app:cardElevation="1dp"
                     app:cardMaxElevation="2dp">
 
-                    <TextView
-                        android:id="@+id/Evento_MeInteresa"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/me_interesa"
-                        android:textColor="@color/registrarse"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
             </LinearLayout>
 

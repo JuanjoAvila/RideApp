@@ -4,6 +4,116 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Evento.CrearEvento">
+    tools:context=".Evento.CrearEvento"
+    android:background="@color/fondoVentanaPrincipal">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            >
+
+            <TextView
+                android:id="@+id/CrearEvento_eventoTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:paddingTop="5dp"
+                android:text="Crear Evento"
+                android:textColor="@color/registrarse"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp">
+            <ImageView
+                android:id="@+id/CrearEvento_fechaIcono"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/crearevento_calendario" />
+            <TextView
+                android:id="@+id/CrearEvento_fechaTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="5dp"
+                android:text="Fecha:"
+                android:textColor="@color/registrarse"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+            <CalendarView
+                android:id="@+id/CrearEvento_calendarView"
+                android:layout_width="250dp"
+                android:layout_height="260dp"
+                android:layout_gravity="center_horizontal"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="29dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp">
+                <ImageView
+                    android:id="@+id/CrearEvento_rutaIcono"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/crearevento_ruta" />
+                <TextView
+                    android:id="@+id/CrearEvento_rutaTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:text="Ruta:"
+                    android:textColor="@color/registrarse"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/CrearEvento_spinner_ruta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp">
+
+                <ImageView
+                    android:id="@+id/CrearEvento_crearEvento"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/crearevento_crearevento" />
+
+                <ImageView
+                    android:id="@+id/CrearEvento_cancelarCrear"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="100dp"
+                    android:src="@drawable/crearevento_cancelarcrear" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>

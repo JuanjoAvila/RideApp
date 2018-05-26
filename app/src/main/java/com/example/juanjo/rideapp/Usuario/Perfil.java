@@ -9,14 +9,14 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Base64;
 
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
+import com.example.juanjo.rideapp.DTO.RelacionAmigoDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
@@ -40,8 +40,8 @@ import java.util.concurrent.ExecutionException;
  */
 public class Perfil extends AppCompatActivity {
     public static final String URL = "http://rideapp.somee.com/WebService.asmx";
-    public static final String METHOD_NAME_AMIGOS = "listaAmigos";
-    public static final String SOAP_ACTION_AMIGOS = "http://tempuri.org/listaAmigos";
+    public static final String METHOD_NAME_AMIGOS = "Select_amigos_usuarios";
+    public static final String SOAP_ACTION_AMIGOS = "http://tempuri.org/Select_amigos_usuarios";
     public static final String METHOD_NAME_USUARIO = "obtenerUsuario_byIdUsuario";
     public static final String SOAP_ACTION_USUARIO = "http://tempuri.org/obtenerUsuario_byIdUsuario";
     public static final String METHOD_NAME_FOLLOW = "nuevoAmigo";
@@ -61,7 +61,7 @@ public class Perfil extends AppCompatActivity {
     private RecyclerView seguidoresRecycler;
     private RecyclerView seguidosRecycler;
     private TextView descripcion;
-    private ArrayList<AmigoDTO> amigosDTO;
+    private ArrayList<RelacionAmigoDTO> amigosDTO;
     private ArrayList<Integer> seguidoresID;
     private ArrayList<Integer> seguidosID;
     private ArrayList<String> seguidoresUsuarios;
@@ -84,7 +84,7 @@ public class Perfil extends AppCompatActivity {
         seguidosRecycler = findViewById(R.id.Perfil_recyclerViewSeguidos);
         seguidoresRecycler = findViewById(R.id.Perfil_recyclerViewSeguidores);
         descripcion = findViewById(R.id.Perfil_descripcionUsuario);
-        amigosDTO = new ArrayList<AmigoDTO>();
+        amigosDTO = new ArrayList<RelacionAmigoDTO>();
         seguidoresID = new ArrayList<Integer>();
         seguidosID = new ArrayList<Integer>();
         seguidoresUsuarios = new ArrayList<String>();
@@ -175,21 +175,19 @@ public class Perfil extends AppCompatActivity {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    private void cargarRecyclerLists() throws ExecutionException, InterruptedException {
-        for(Integer id: seguidoresID){
-            UsuarioDTO seguidor = new ConsultaUsuario(this).execute(id).get();
-            if(seguidor!=null){
-                seguidoresAvatares.add(seguidor.getAvatar());
-                seguidoresUsuarios.add(seguidor.getUsuario());
-                seguidoresNombres.add(seguidor.getNombre());
+    private void cargarRecyclerLists(){
+        for(RelacionAmigoDTO amigo: amigosDTO){
+            if(amigo.getIdUsuario()== usuarioPerfil.getIdUsuario()){
+                seguidosID.add(amigo.getIdAmigo());
+                seguidosUsuarios.add(amigo.getUsuarioAmigo());
+                seguidosNombres.add(amigo.getNombreAmigo());
+                seguidosAvatares.add(amigo.getAvatarAmigo());
             }
-        }
-        for(Integer id: seguidosID){
-            UsuarioDTO seguido = new ConsultaUsuario(this).execute(id).get();
-            if(seguido!=null) {
-                seguidosAvatares.add(seguido.getAvatar());
-                seguidosUsuarios.add(seguido.getUsuario());
-                seguidosNombres.add(seguido.getNombre());
+            else if(amigo.getIdAmigo()== usuarioPerfil.getIdUsuario()){
+                seguidoresID.add(amigo.getIdUsuario());
+                seguidoresUsuarios.add(amigo.getUsuario());
+                seguidoresNombres.add(amigo.getNombreUsuario());
+                seguidoresAvatares.add(amigo.getAvatar());
             }
         }
         if(usuarioPerfilID!=usuarioActivo.getIdUsuario()){
@@ -212,6 +210,7 @@ public class Perfil extends AppCompatActivity {
         Perfil_RVAdapter adapter = new Perfil_RVAdapter(mContext, seguidoresUsuarios, seguidoresAvatares, seguidoresID, seguidoresNombres);
         seguidoresRecycler.setAdapter(adapter);
 
+
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         seguidosRecycler.setLayoutManager(layoutManager2);
         Perfil_RVAdapter adapter2 = new Perfil_RVAdapter(mContext, seguidosUsuarios, seguidosAvatares, seguidosID, seguidosNombres);
@@ -227,8 +226,17 @@ public class Perfil extends AppCompatActivity {
             e.printStackTrace();
         }
         if(exito) {
+            Handler uiHandlerRecyclerViews = new Handler(this.getMainLooper());
+            uiHandlerRecyclerViews.post(new Runnable() {
+                @Override
+                public void run() {
+                    ConsultaAmigos selectAmigos = new ConsultaAmigos(mContext);
+                    selectAmigos.execute();
+                }
+            });
             seguirUsuario.setVisibility(View.INVISIBLE);
             dejarseguirUsuario.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -241,6 +249,14 @@ public class Perfil extends AppCompatActivity {
             e.printStackTrace();
         }
         if(exito) {
+            Handler uiHandlerRecyclerViews = new Handler(this.getMainLooper());
+            uiHandlerRecyclerViews.post(new Runnable() {
+                @Override
+                public void run() {
+                    ConsultaAmigos selectAmigos = new ConsultaAmigos(mContext);
+                    selectAmigos.execute();
+                }
+            });
             seguirUsuario.setVisibility(View.VISIBLE);
             dejarseguirUsuario.setVisibility(View.INVISIBLE);
         }
@@ -258,6 +274,16 @@ public class Perfil extends AppCompatActivity {
 
         protected Boolean doInBackground(String... params) {
 
+            amigosDTO.clear();
+            seguidoresID.clear();
+            seguidosID.clear();
+            seguidoresUsuarios.clear();
+            seguidoresNombres.clear();
+            seguidoresAvatares.clear();
+            seguidosUsuarios.clear();
+            seguidosNombres.clear();
+            seguidosAvatares.clear();
+
             Boolean result = true;
 
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_AMIGOS);
@@ -274,13 +300,23 @@ public class Perfil extends AppCompatActivity {
                 for (int i = 0; i < resSoap.getPropertyCount(); i++){
                     SoapObject iu = (SoapObject)resSoap.getProperty(i);
                     iu.getPropertyAsString(0);
-                    Integer i1 = Integer.valueOf(iu.getPropertyAsString(0));
-                    Integer i2 = Integer.valueOf(iu.getPropertyAsString(1));
-                    Integer i3 = Integer.valueOf(iu.getPropertyAsString(2));
-                    AmigoDTO amigo = new AmigoDTO();
-                    amigo.setIdAmigo(i1);
-                    amigo.setidUsuario(i2);
-                    amigo.setamigo(i3);
+                    Integer IdUsuario = Integer.valueOf(iu.getPropertyAsString(0));
+                    String Usuario = iu.getPropertyAsString(1);
+                    String NombreUsuario = iu.getPropertyAsString(2);
+                    String Avatar = iu.getPropertyAsString(3);
+                    Integer IdAmigo = Integer.valueOf(iu.getPropertyAsString(4));
+                    String UsuarioAmigo = iu.getPropertyAsString(5);
+                    String NombreAmigo = iu.getPropertyAsString(6);
+                    String AvatarAmigo = iu.getPropertyAsString(7);
+                    RelacionAmigoDTO amigo = new RelacionAmigoDTO();
+                    amigo.setIdUsuario(IdUsuario);
+                    amigo.setUsuario(Usuario);
+                    amigo.setNombreUsuario(NombreUsuario);
+                    amigo.setAvatar(Avatar);
+                    amigo.setIdAmigo(IdAmigo);
+                    amigo.setUsuarioAmigo(UsuarioAmigo);
+                    amigo.setNombreAmigo(NombreAmigo);
+                    amigo.setAvatarAmigo(AvatarAmigo);
                     amigosDTO.add(amigo);
                 }
             } catch (Exception e) {
@@ -292,19 +328,7 @@ public class Perfil extends AppCompatActivity {
 
         protected void onPostExecute(Boolean result) {
             if(result){
-                for(AmigoDTO amigo: amigosDTO){
-                    if(amigo.getidUsuario()== usuarioPerfil.getIdUsuario()){
-                        seguidosID.add(amigo.getamigo());
-                    }
-                    else if(amigo.getamigo()== usuarioPerfil.getIdUsuario()){
-                        seguidoresID.add(amigo.getidUsuario());
-                    }
-                }
-                try {
-                    cargarRecyclerLists();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                cargarRecyclerLists();
             }else {
                 Toast.makeText(getApplicationContext(), "Error al cargar seguidoresID/seguidosID", Toast.LENGTH_SHORT).show();
             }
@@ -352,7 +376,6 @@ public class Perfil extends AppCompatActivity {
 
         protected void onPostExecute(Boolean result) {
             if(result){
-
             }else{
                 Toast.makeText(getApplicationContext(), "Usuario incorrecto", Toast.LENGTH_SHORT).show();
             }
@@ -434,6 +457,7 @@ public class Perfil extends AppCompatActivity {
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
 
+
             HttpTransportSE transporte = new HttpTransportSE(URL);
 
             try {
@@ -455,8 +479,16 @@ public class Perfil extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
+    public void onResume() {
+        super.onResume();
+        Handler uiHandlerRecyclerViews = new Handler(this.getMainLooper());
+        uiHandlerRecyclerViews.post(new Runnable() {
+            @Override
+            public void run() {
+                ConsultaAmigos selectAmigos = new ConsultaAmigos(mContext);
+                selectAmigos.execute();
+            }
+        });
     }
+
 }
