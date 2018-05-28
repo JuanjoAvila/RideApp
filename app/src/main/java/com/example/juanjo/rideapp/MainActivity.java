@@ -271,7 +271,9 @@ public class MainActivity extends AppCompatActivity
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_acerca_de) {
-            Toast.makeText(getApplicationContext(),"Acerca de",Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this,Acerca_de.class);
+            esPrincipal=false;
+            startActivity(i);
         } else if (id == R.id.nav_ayuda) {
             Toast.makeText(getApplicationContext(),"Ayuda",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {

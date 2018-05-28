@@ -37,6 +37,7 @@
         <activity android:name=".Usuario.EdicionPerfil" />
         <activity android:name=".Evento.Evento" />
         <activity android:name=".Evento.Eventos" />
+        <activity android:name=".Acerca_de"/>
         <activity android:name=".Usuario.Perfil" android:screenOrientation="portrait" />
         <activity android:name=".Registro"
             android:theme="@style/AppTheme.NoActionBar"/>
