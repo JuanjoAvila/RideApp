@@ -79,8 +79,9 @@
         <activity
             android:name=".Rutas.Rutas_guardar_ruta"
             android:screenOrientation="portrait" />
-        <activity android:name=".Rutas.Rutas_mostrar_rutas"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Rutas.Rutas_mostrar_rutas"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -91,11 +92,10 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
 
-
+        <activity android:name=".Acerca_de"></activity>
     </application>
-
 
 </manifest>

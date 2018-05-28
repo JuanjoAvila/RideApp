@@ -1,7 +1,9 @@
 package com.example.juanjo.rideapp;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -271,9 +273,16 @@ public class MainActivity extends AppCompatActivity
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_acerca_de) {
-            Toast.makeText(getApplicationContext(),"Acerca de",Toast.LENGTH_SHORT).show();
+            
         } else if (id == R.id.nav_ayuda) {
-            Toast.makeText(getApplicationContext(),"Ayuda",Toast.LENGTH_SHORT).show();
+           try {
+               Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "juanjo.avila.chavero@gmail.com"));
+               intent.putExtra(Intent.EXTRA_SUBJECT, "RideApp");
+               intent.putExtra(Intent.EXTRA_TEXT, "Introduce lo que quieres decir...");
+               startActivity(intent);
+           }catch (ActivityNotFoundException e){
+               Toast.makeText(getApplicationContext(),"No tienes el correo instalado en el dispositivo. \nPorfavor instale Gmail o una aplicacion de correo primero.",Toast.LENGTH_LONG).show();
+           }
         } else if (id == R.id.nav_logout) {
             if(Login.usuarioGoogle) {
                 Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
