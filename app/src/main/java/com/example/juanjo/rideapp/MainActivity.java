@@ -209,10 +209,10 @@ public class MainActivity extends AppCompatActivity
                 if(bitmap!=null){
                     imagenUsuarioMenu.setImageBitmap(bitmap);
                 }else{
-                    imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                    imagenUsuarioMenu.setImageResource(R.drawable.user_default);
                 }
             }else{
-                imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                imagenUsuarioMenu.setImageResource(R.drawable.user_default);
             }
         }
     }

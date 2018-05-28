@@ -58,8 +58,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public static boolean usuarioGoogle;
 
     //Api de google con lo que permite poder logear con google en la aplicacion
-    private GoogleApiClient googleApiClient;
-    public static final int  SIGN_IN_CODE =777;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 9001;
+
 
     public Boolean existeUsuario;
 
@@ -91,7 +92,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
          * utilizados anteriormente. Si ese no es el caso te abre una nueva actividad donde se te pedirá introducir el correo y la contraseña que tengas
          * en google con la que recabará los datos posteriormente en otra función , se validará y se accederá dentro de la aplicación.
          */
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -104,7 +105,28 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
                 startActivityForResult(intent,SIGN_IN_CODE);
             }
+        });*/
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signWithGoogle();
+            }
         });
+    }
+    private void signWithGoogle(){
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
@@ -144,7 +166,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode == SIGN_IN_CODE){
+        if(requestCode == RC_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
@@ -160,11 +182,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      */
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
+            final GoogleApiClient client = mGoogleApiClient;
             GoogleSignInAccount account = result.getSignInAccount();
 
-            assert account != null;
+            //obtiene el perfil de google
             ConsultaUsuario twsc = new ConsultaUsuario(this);
-
             existeUsuario = false;
             try {
                 twsc.execute(account.getId()+"google").get();
@@ -174,13 +196,30 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             if(existeUsuario){
                 goMainScreen();
             } else{
-                RegistroGoogle regGog = new RegistroGoogle(result, this);
-                regGog.anadir();
+                if(user.getNombre()==null){
+                    Toast.makeText(this, "Porfavor Vuelve a logear", Toast.LENGTH_SHORT).show();
+                    return;
+                }else {
+                    RegistroGoogle regGog = new RegistroGoogle(result, this);
+                    regGog.anadir();
+                    ConsultaUsuario consulta = new ConsultaUsuario(this);
+                    try {
+                        consulta.execute(account.getId() + "google").get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             goMainScreen();
         }else{
-            Toast.makeText(this, R.string.not_log_in_google,Toast.LENGTH_SHORT).show();
+            inicioSession();
         }
+    }
+
+
+    public void  inicioSession(){
+        ConsultaUsuario twsc = new ConsultaUsuario(this);
+        twsc.execute(String.valueOf(loginusuario.getText()));
     }
 
     /**
@@ -248,8 +287,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      * @param view Obtiene el boton que al darle obtendra el usuario y entrará en la ventana principal .
      */
     public void iniciarboton(View view){
-        ConsultaUsuario twsc = new ConsultaUsuario(this);
-        twsc.execute(String.valueOf(loginusuario.getText()));
+        inicioSession();
     }
 
 
