@@ -7,6 +7,9 @@ import com.example.juanjo.rideapp.R;
 
 import java.util.ArrayList;
 
+/**
+ * Clase encargada de gestionar la ventana de creacioón de un Evento
+ */
 public class CrearEvento extends AppCompatActivity {
 
     //vars

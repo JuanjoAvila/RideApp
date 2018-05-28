@@ -12,14 +12,16 @@
 
         />-->
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:id="@+id/logo"
         android:src="@drawable/rideapp_titulo"
         android:scaleType="fitCenter"
-        android:layout_marginBottom="30dp"
+
+        android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
-        android:contentDescription="@string/titulo"/>
+        android:contentDescription="@string/titulo"
+        />
 
 
 
@@ -28,8 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-
         android:layout_below="@+id/logo"
+        android:layout_marginBottom="10dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -118,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="0dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/botonsign"
                 android:onClick="iniciarboton"

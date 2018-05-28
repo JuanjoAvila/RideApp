@@ -63,7 +63,7 @@ public class Registro extends AppCompatActivity {
                     if (!logincontrasena.getText().toString().isEmpty()) {
                         if (!loginnombre.getText().toString().isEmpty()) {
                             if (!loginapellidos.getText().toString().isEmpty()) {
-                                if (loginusuario.length() > 5 && loginusuario.length() < 15) {
+                                if (loginusuario.length() >= 5 && loginusuario.length() <= 15) {
                                     if (logincontrasena.getText().toString().equals(loginrepetircontrasena.getText().toString())) {
                                         if (!validarEmail(correo2)) {
                                             logincorreo.setError("Email no válido");
@@ -160,7 +160,7 @@ public class Registro extends AppCompatActivity {
                 Toast.makeText(this.context, "Este usuario ya existe", Toast.LENGTH_LONG).show();
                 loginusuario.setError("");
             }else{
-                Toast.makeText(this.context, "Porfavor introduzca otro usuario", Toast.LENGTH_SHORT).show();
+
 
             }
         }
