@@ -1,33 +1,20 @@
 package com.example.juanjo.rideapp.Evento;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.juanjo.rideapp.DTO.EventosRutasDTO;
-import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
-import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.Usuario.Perfil;
-import com.example.juanjo.rideapp.Usuario.Perfil_RVAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RVEventos extends RecyclerView.Adapter<RVEventos.EventosViewHolder> {
     private List<EventosRutasDTO> items;

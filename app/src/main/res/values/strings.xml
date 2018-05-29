@@ -78,4 +78,5 @@
     <string name="asistir">Asistir</string>
     <string name="fecha">Fecha:</string>
     <string name="todo">TODO</string>
+    <string name="descripcion_edicion_perfil">Descripcion de prueba...</string>
 </resources>

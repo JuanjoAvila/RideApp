@@ -96,7 +96,6 @@ public class Perfil extends AppCompatActivity {
         seguidosUsuarios = new ArrayList<String>();
         seguidosNombres = new ArrayList<String>();
         seguidosAvatares = new ArrayList<String>();
-        Log.d("Error","Obtengo usuario");
         usuarioActivo = Login.getUsuari();
         seguirUsuario = findViewById(R.id.Perfil_seguirUsuario);
         dejarseguirUsuario = findViewById(R.id.Perfil_dejarseguirUsuario);
@@ -215,16 +214,27 @@ public class Perfil extends AppCompatActivity {
      * Carga los RecyclerList del perfil.
      */
     private void generarRecyclerLists(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        seguidoresRecycler.setLayoutManager(layoutManager);
-        Perfil_RVAdapter adapter = new Perfil_RVAdapter(mContext, seguidoresUsuarios, seguidoresAvatares, seguidoresID, seguidoresNombres);
-        seguidoresRecycler.setAdapter(adapter);
+        Handler uiHandlerRecyclerViewSeguidores = new Handler(this.getMainLooper());
+        uiHandlerRecyclerViewSeguidores.post(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                seguidoresRecycler.setLayoutManager(layoutManager);
+                Perfil_RVASeguidos adapter = new Perfil_RVASeguidos(mContext, seguidoresUsuarios, seguidoresAvatares, seguidoresID, seguidoresNombres);
+                seguidoresRecycler.setAdapter(adapter);
+            }
+        });
 
-
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        seguidosRecycler.setLayoutManager(layoutManager2);
-        Perfil_RVAdapter adapter2 = new Perfil_RVAdapter(mContext, seguidosUsuarios, seguidosAvatares, seguidosID, seguidosNombres);
-        seguidosRecycler.setAdapter(adapter2);
+        Handler uiHandlerRecyclerViewSeguidos = new Handler(this.getMainLooper());
+        uiHandlerRecyclerViewSeguidos.post(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayoutManager layoutManager2 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+                seguidosRecycler.setLayoutManager(layoutManager2);
+                Perfil_RVASeguidos adapter2 = new Perfil_RVASeguidos(mContext, seguidosUsuarios, seguidosAvatares, seguidosID, seguidosNombres);
+                seguidosRecycler.setAdapter(adapter2);
+            }
+        });
     }
 
     public void seguirUsuario(View view){

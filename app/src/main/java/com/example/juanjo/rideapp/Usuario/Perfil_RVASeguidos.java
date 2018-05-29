@@ -15,10 +15,8 @@ import android.widget.TextView;
 import android.os.*;
 
 import com.example.juanjo.rideapp.FTP.FTPManager;
-import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -29,9 +27,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Clase encargada de generar el adaptador del RecyclerView.
  */
 
-public class Perfil_RVAdapter extends RecyclerView.Adapter<Perfil_RVAdapter.ViewHolder> {
+public class Perfil_RVASeguidos extends RecyclerView.Adapter<Perfil_RVASeguidos.ViewHolder> {
 
-    private static final String TAG = "Perfil_RVAdapter";
+    private static final String TAG = "Perfil_RVASeguidos";
 
     //vars
     private ArrayList<String> mNombresUsuarios;
@@ -50,7 +48,7 @@ public class Perfil_RVAdapter extends RecyclerView.Adapter<Perfil_RVAdapter.View
      * @param idsUsers ID del seguidor o seguido, necesario para poder luego acceder a su perfil puslando en su avatar.
      * @param nombres Nombres de la cuenta de los usuarios, necesario para sustituir los Nombres de usuario de Google por sus nombres de la cuenta.
      */
-    public Perfil_RVAdapter(Context context, ArrayList<String> names, ArrayList<String> imageUrls, ArrayList<Integer> idsUsers, ArrayList<String> nombres) {
+    public Perfil_RVASeguidos(Context context, ArrayList<String> names, ArrayList<String> imageUrls, ArrayList<Integer> idsUsers, ArrayList<String> nombres) {
         mNombresUsuarios = names;
         mImagenesUsuarios = imageUrls;
         midsUsuarios = idsUsers;
@@ -99,17 +97,10 @@ public class Perfil_RVAdapter extends RecyclerView.Adapter<Perfil_RVAdapter.View
          *En caso de no tener ningun avatar asignado se le asigna uno por defecto integrado en la aplicación.
          */
         if(mImagenesUsuarios.get(position)!=null && mImagenesUsuarios.get(position)!="") {
-            // Creamos un Handler para agilizar la tarea de descarga de imagenes, creando uno por descarga.
-            Handler uiHandler = new Handler(mContext.getMainLooper());
-            uiHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    bitmap = descargarImagen(usuarioPosition, mNombresUsuarios.get(usuarioPosition));
-                    // Para los casos en los que la descarga falle, se le asignará el avatar por defecto.
-                    if(bitmap!=null)holder.image.setImageBitmap(bitmap);
-                    else holder.image.setImageResource(R.drawable.user_default);
-                    }
-            });
+            bitmap = descargarImagen(usuarioPosition, mNombresUsuarios.get(usuarioPosition));
+            // Para los casos en los que la descarga falle, se le asignará el avatar por defecto.
+            if(bitmap!=null)holder.image.setImageBitmap(bitmap);
+            else holder.image.setImageResource(R.drawable.user_default);
         }
         else{
             holder.image.setImageResource(R.drawable.user_default);

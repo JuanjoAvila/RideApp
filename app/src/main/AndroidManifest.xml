@@ -15,9 +15,9 @@
     <application
         android:windowSoftInputMode="adjustPan|stateVisible"
         android:allowBackup="true"
-        android:icon="@drawable/race_bike"
+        android:icon="@drawable/logo_ride_app"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/race_bike"
+        android:roundIcon="@drawable/logo_ride_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -42,6 +42,7 @@
         <activity android:name=".Usuario.Perfil" android:screenOrientation="portrait" />
         <activity android:name=".Usuario.Perfil_mostrar_rutas" android:screenOrientation="portrait" />
         <activity android:name=".Registro"
+            android:theme="@style/AppTheme.NoActionBar"/>
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <!--
@@ -64,51 +65,19 @@
             android:value="26.1.0"
             tools:replace="android:value" />
 
-        <activity
-            android:name=".Rutas.Rutas_main"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Rutas.Rutas_cargar_ruta"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Rutas.Rutas_nueva_ruta"
-            android:screenOrientation="portrait" />
+        <activity android:name=".Rutas.Rutas_main"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Rutas.Rutas_cargar_ruta"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Rutas.Rutas_nueva_ruta"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Evento.CrearEvento" />
         <activity android:name=".Rutas.Rutas_guardar_ruta"
             android:screenOrientation="portrait"/>
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.mvc.imagepicker.provider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
-        </provider>
-        <activity
-            android:name=".Rutas.Rutas_guardar_ruta"
-            android:screenOrientation="portrait" />
-        <activity android:name=".Rutas.Rutas_mostrar_rutas"
-            android:screenOrientation="portrait"></activity>
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.mvc.imagepicker.provider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
-        </provider>
-
-
     </application>
+
 
 </manifest>
