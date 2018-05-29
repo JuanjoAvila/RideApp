@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juanjo.rideapp.Evento.Evento">
+    tools:context="com.example.juanjo.rideapp.Evento.Evento"
+    android:background="@color/fondoVentanaPrincipal">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,25 +16,76 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
             >
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/Evento_eventoTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/evento"
+                    android:layout_gravity="center"
+                    android:textColor="@color/registrarse"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/Evento_creadaTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:paddingTop="5dp"
+                    android:text="Creado por:"
+                    android:layout_gravity="center"
+                    android:textColor="@color/registrarse"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+                    <RelativeLayout
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/Evento_UsuarioAvatar"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="5dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/user_default" />
+                        <TextView
+                            android:id="@+id/Evento_UsuarioNombre"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/Evento_UsuarioAvatar"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            android:autoSizeMaxTextSize="15sp"
+                            android:autoSizeMinTextSize="8sp"
+                            android:autoSizeTextType="uniform"
+                            android:gravity="center"
+                            android:text="Usuario"
+                            android:textColor="@color/black" />
+                    </RelativeLayout>
+            </LinearLayout>
             <TextView
-                android:id="@+id/Evento_eventoTitulo"
+                android:id="@+id/Evento_rutaTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
                 android:paddingTop="5dp"
-                android:text="@string/evento"
+                android:text="Ruta Nombre"
                 android:textColor="@color/registrarse"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="16sp"
+                android:textStyle="normal" />
 
             <ImageView
                 android:id="@+id/Evento_Imagen_Ruta"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginTop="5dp"
                 app:srcCompat="@drawable/mapa"
                 android:contentDescription="@string/todo" />
 
@@ -46,6 +98,8 @@
                     android:id="@+id/Evento_fechaTitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
                     android:text="@string/fecha"
                     android:textColor="@color/registrarse"
                     android:textSize="15sp"
@@ -55,6 +109,8 @@
                     android:id="@+id/Evento_fechaValor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
                     android:text="dd/mm/yyyy"
                     android:textColor="@color/registrarse"
                     android:textSize="12sp"
@@ -65,41 +121,57 @@
                 android:id="@+id/Evento_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:orientation="horizontal">
             </android.support.v7.widget.RecyclerView>
-            <LinearLayout
+            <TextView
+                android:paddingStart="5dp"
+                android:id="@+id/Evento_DescripcionTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/registrarse"
+                android:text="Descripción:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Evento_Descripcion"
+                android:paddingTop="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                >
-                <android.support.v7.widget.CardView
-                    android:layout_width="70dp"
-                    android:paddingTop="5dp"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardElevation="1dp"
-                    app:cardMaxElevation="2dp">
-                    <TextView
-                        android:id="@+id/Evento_Asistir"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/asistir"
-                        android:textColor="@color/registrarse"
-                        android:textSize="12sp"
-                        android:textStyle="bold"/>
-                </android.support.v7.widget.CardView>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:ems="10"
+                android:inputType="textMultiLine" />
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="70dp"
-                    android:paddingTop="5dp"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardElevation="1dp"
-                    app:cardMaxElevation="2dp">
+            <LinearLayout
+                android:id="@+id/Evento_Layout_Asistir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                android:onClick="asistirEvento"
+                android:orientation="horizontal">
 
-                </android.support.v7.widget.CardView>
+                <ImageView
+                    android:id="@+id/Evento_imagenAsistir"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/evento_asistir" />
+
+                <TextView
+                    android:id="@+id/Evento_textoAsistir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:text="@string/asistir"
+                    android:textColor="@color/registrarse"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

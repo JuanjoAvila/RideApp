@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="190dp">
+
+        <ImageView
+            android:id="@+id/Eventos_rutaMapa"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rutas_default"
+            android:contentDescription="@string/rutas_obtenidas"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/Eventos_fotoEvento"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/Eventos_nombreRuta"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/eventos_imagenevento"
+            android:contentDescription="@string/perfil_usuario_creador_de_rutas"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/Eventos_nombreRuta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rutaMapa"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/Eventos_fotoEvento"
+            android:maxLength="18"
+            android:text="@string/ruta_ejemplo_uno"
+            android:textAlignment="textStart"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Eventos_fechaPublicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/Eventos_fotoEvento"
+            android:layout_alignStart="@+id/Eventos_nombreRuta"
+            android:text="@string/plantilla_fecha"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="15sp"
+            tools:ignore="RelativeOverlap" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

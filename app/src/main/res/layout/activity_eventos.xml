@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.juanjo.rideapp.Evento.Eventos">
+    tools:context="com.example.juanjo.rideapp.Evento.Eventos"
+    android:background="@color/fondoVentanaPrincipal">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,12 +15,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             >
             <TextView
-                android:id="@+id/eventoTitulo"
+                android:id="@+id/Eventos_eventoTitulo"
                 android:paddingTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,7 +36,7 @@
                 android:textSize="18dp"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/addEvento"
+                android:id="@+id/Eventos_addEvento"
                 android:paddingTop="9dp"
                 android:paddingLeft="20dp"
                 android:layout_width="wrap_content"
@@ -44,7 +50,7 @@
                 android:textStyle="normal" />
 
             <ImageView
-                android:id="@+id/anadirBoton"
+                android:id="@+id/Eventos_anadirBoton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -53,6 +59,16 @@
                 app:srcCompat="@drawable/add"
                 tools:layout_editor_absoluteX="330dp"
                 tools:layout_editor_absoluteY="16dp" />
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/Eventos_ListaEventos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:scrollbars="vertical"/>
         </LinearLayout>
     </ScrollView>
 

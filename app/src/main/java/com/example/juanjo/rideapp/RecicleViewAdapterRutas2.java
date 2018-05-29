@@ -68,9 +68,9 @@ public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAd
         //viewHolder.rutaMapa.setImageResource(R.drawable.imagenrutaprueba);
         viewHolder.fechaPublicacion.setText(items.get(i).getFecha_ruta());
         viewHolder.puntuacionEstrellas.setRating(items.get(i).getDificultad());
-        viewHolder.likesCarita.setImageResource(R.drawable.happy);
+        viewHolder.likesCarita.setImageResource(R.drawable.caritasonriente);
         viewHolder.likes.setText(String.valueOf(items.get(i).getLikes()));
-        viewHolder.dislikesCarita.setImageResource(R.drawable.sad);
+        viewHolder.dislikesCarita.setImageResource(R.drawable.caritatriste);
         viewHolder.dislikes.setText(String.valueOf(items.get(i).getDislikes()));
     }
 

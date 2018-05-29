@@ -34,7 +34,7 @@
                     android:id="@+id/Perfil_usuarioAvatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@mipmap/perfil_defecto_avatar_usuario" />
+                    android:src="@drawable/user_default" />
 
                 <TextView
                     android:id="@+id/Perfil_usuarioID"
@@ -148,15 +148,17 @@
                 android:textStyle="normal"
                 android:background="@drawable/perfil_cuadrado_rutas"
                 />
+
             <Button
                 android:id="@+id/Perfil_botonRutas"
-                android:layout_marginTop="90dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
+                android:layout_marginTop="90dp"
                 android:background="@drawable/botonsign"
+                android:onClick="cargarRutas"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text="Ver Rutas"

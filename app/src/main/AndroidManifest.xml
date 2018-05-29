@@ -40,6 +40,7 @@
         <activity android:name=".Evento.Evento" android:screenOrientation="portrait"/>
         <activity android:name=".Evento.Eventos" android:screenOrientation="portrait"/>
         <activity android:name=".Usuario.Perfil" android:screenOrientation="portrait" />
+        <activity android:name=".Usuario.Perfil_mostrar_rutas" android:screenOrientation="portrait" />
         <activity android:name=".Registro"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>

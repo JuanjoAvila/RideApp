@@ -25,7 +25,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/perfil_defecto_avatar_usuario" />
+                android:src="@drawable/user_default" />
 
             <TextView
                 android:id="@+id/name"
@@ -38,7 +38,7 @@
                 android:autoSizeMinTextSize="8sp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center"
-                android:text="Canada"
+                android:text="Usuario"
                 android:textColor="@color/black" />
 
         </RelativeLayout>

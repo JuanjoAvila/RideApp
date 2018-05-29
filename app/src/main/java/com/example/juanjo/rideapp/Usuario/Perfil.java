@@ -1,6 +1,7 @@
 package com.example.juanjo.rideapp.Usuario;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -152,14 +153,14 @@ public class Perfil extends AppCompatActivity {
                             avatar.setImageBitmap(bitmapAvatar);
                         }
                         else{
-                            avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                            avatar.setImageResource(R.drawable.user_default);
                         }
                     } catch (ExecutionException | InterruptedException e) {
-                        avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                        avatar.setImageResource(R.drawable.user_default);
                     }
                 }
                 else{
-                    avatar.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                    avatar.setImageResource(R.drawable.user_default);
                 }
                 usuarioNombre.setText(usuarioPerfil.getNombre()+" "+usuarioPerfil.getApellidos());
                 descripcion.setText(usuarioPerfil.getDescripcion());
@@ -260,6 +261,12 @@ public class Perfil extends AppCompatActivity {
             seguirUsuario.setVisibility(View.VISIBLE);
             dejarseguirUsuario.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void cargarRutas(View view){
+        Intent i = new Intent(this, Perfil_mostrar_rutas.class );
+        i.putExtra("idPerfil", usuarioPerfilID);
+        startActivity(i);
     }
     /**
      * Tarea Asíncrona para llamar al WS de consulta en segundo plano para obtener todos los datos de la tabla Amigos de la BD.
@@ -456,7 +463,6 @@ public class Perfil extends AppCompatActivity {
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-
 
             HttpTransportSE transporte = new HttpTransportSE(URL);
 

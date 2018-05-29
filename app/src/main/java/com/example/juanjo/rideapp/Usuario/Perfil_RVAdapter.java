@@ -107,12 +107,12 @@ public class Perfil_RVAdapter extends RecyclerView.Adapter<Perfil_RVAdapter.View
                     bitmap = descargarImagen(usuarioPosition, mNombresUsuarios.get(usuarioPosition));
                     // Para los casos en los que la descarga falle, se le asignará el avatar por defecto.
                     if(bitmap!=null)holder.image.setImageBitmap(bitmap);
-                    else holder.image.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                    else holder.image.setImageResource(R.drawable.user_default);
                     }
             });
         }
         else{
-            holder.image.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+            holder.image.setImageResource(R.drawable.user_default);
         }
         // En los casos que la cuenta es de Google, se mostrará su nombre de la cuenta.
         if(mNombresUsuarios.get(usuarioPosition).endsWith("google")){
