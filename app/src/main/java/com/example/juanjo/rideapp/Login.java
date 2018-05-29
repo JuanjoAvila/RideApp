@@ -27,7 +27,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Esta actividad abre un login capaz de registrar a un usuario en la base de datos , dejar entrar a la aplicación
@@ -58,8 +58,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public static boolean usuarioGoogle;
 
     //Api de google con lo que permite poder logear con google en la aplicacion
-    private GoogleApiClient googleApiClient;
-    public static final int  SIGN_IN_CODE =777;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 9001;
+
+
+    public Boolean existeUsuario;
 
 
     @Override
@@ -86,10 +89,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         funcionDelCheckbox();
 
         /* Inicializa el mecanismo de logeo de google. Primeramente si ya esta logeado te abre una ventana emergente donde te muestra los correos
-        * utilizados anteriormente. Si ese no es el caso te abre una nueva actividad donde se te pedirá introducir el correo y la contraseña que tengas
-        * en google con la que recabará los datos posteriormente en otra función , se validará y se accederá dentro de la aplicación.
-        */
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+         * utilizados anteriormente. Si ese no es el caso te abre una nueva actividad donde se te pedirá introducir el correo y la contraseña que tengas
+         * en google con la que recabará los datos posteriormente en otra función , se validará y se accederá dentro de la aplicación.
+         */
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -102,15 +105,36 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
                 startActivityForResult(intent,SIGN_IN_CODE);
             }
+        });*/
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signWithGoogle();
+            }
         });
+    }
+    private void signWithGoogle(){
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 
 
     /* Esta funcion permite obtener si es la primera vez que entra el usuario a la aplicacion para dejar los campos vacios de usuario y contraseña
-    * Esto permite que que cuando el usuario le de al boton del checkBox , la siguiente vez que aparezca en el login detectara que esta apretado
-    * y ya no sera la primera vez que entre por lo tanto asignara en los campos el nombre y contraseña de usuario introducidos anteriormente.
-    */
+     * Esto permite que que cuando el usuario le de al boton del checkBox , la siguiente vez que aparezca en el login detectara que esta apretado
+     * y ya no sera la primera vez que entre por lo tanto asignara en los campos el nombre y contraseña de usuario introducidos anteriormente.
+     */
     private void funcionDelCheckbox() {
         if(!MainActivity.primeraVez || !MainActivity.otras) {
             MainActivity.primeraVez = false;
@@ -142,7 +166,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode == SIGN_IN_CODE){
+        if(requestCode == RC_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
@@ -158,18 +182,44 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      */
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
+            final GoogleApiClient client = mGoogleApiClient;
             GoogleSignInAccount account = result.getSignInAccount();
 
-            assert account != null;
-            if(existeUsuario(Objects.requireNonNull(account).getId()))goMainScreen();
-            else{
-                RegistroGoogle regGog = new RegistroGoogle(result, this);
-                regGog.anadir();
+            //obtiene el perfil de google
+            ConsultaUsuario twsc = new ConsultaUsuario(this);
+            existeUsuario = false;
+            try {
+                twsc.execute(account.getId()+"google").get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            if(existeUsuario){
+                goMainScreen();
+            } else{
+                if(user.getNombre()==null){
+                    Toast.makeText(this, "Porfavor Vuelve a logear", Toast.LENGTH_SHORT).show();
+                    return;
+                }else {
+                    RegistroGoogle regGog = new RegistroGoogle(result, this);
+                    regGog.anadir();
+                    ConsultaUsuario consulta = new ConsultaUsuario(this);
+                    try {
+                        consulta.execute(account.getId() + "google").get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             goMainScreen();
         }else{
-            Toast.makeText(this, R.string.not_log_in_google,Toast.LENGTH_SHORT).show();
+            inicioSession();
         }
+    }
+
+
+    public void  inicioSession(){
+        ConsultaUsuario twsc = new ConsultaUsuario(this);
+        twsc.execute(String.valueOf(loginusuario.getText()));
     }
 
     /**
@@ -193,6 +243,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public static UsuarioDTO getUsuari(){
         return user;
     }
+    public static void setUsuario(UsuarioDTO usuario){user=usuario;}
 
     /**
      * Esta funcion se activa al apretar el boton del checkBox recuerdame. Permite asignar el usuario y la contraseña en los
@@ -236,8 +287,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      * @param view Obtiene el boton que al darle obtendra el usuario y entrará en la ventana principal .
      */
     public void iniciarboton(View view){
-        TareaWSConsulta twsc = new TareaWSConsulta();
-        twsc.execute(String.valueOf(loginusuario.getText()));
+        inicioSession();
     }
 
 
@@ -246,17 +296,44 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      * por lo tanto no afectaria a la aplicacion para nada. Esta obtiene el usuario si existe en la base de datos o no .
      */
     @SuppressLint("StaticFieldLeak")
-    private class TareaWSConsulta extends AsyncTask<String,Void,Boolean> {
+    private class ConsultaUsuario extends AsyncTask<String,Void,Boolean> {
 
-        private TareaWSConsulta() {
+        private Context context;
+
+        public ConsultaUsuario(Context context) {
+            this.context = context;
         }
 
-        //Esta funcion la hace a trasfondo llamando a un metodo donde hace las comprobaciones si existe el usuario o no.
         protected Boolean doInBackground(String... params) {
 
-            return existeUsuario(params[0]);
-        }
+            Boolean result = true;
 
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("idUsuario", params[0]);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(URL);
+
+            try {
+                transporte.call(SOAP_ACTION, envelope);
+                SoapObject resSoap = (SoapObject) envelope.getResponse();
+
+                // Se corrige el password obtenido, eliminando caracteres de control '%00'. Acuerdate que tambien elimina espacios, VALIDAR PASS AL CREAR USUARIO
+                String pass = resSoap.getPropertyAsString(2).replaceAll("\\W", "");
+                user = new UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
+                        resSoap.getPropertyAsString(4), resSoap.getPropertyAsString(5), resSoap.getPropertyAsString(6), resSoap.getPropertyAsString(7));
+
+                existeUsuario = true;
+            } catch (Exception e) {
+                existeUsuario = false;
+                result = false;
+                e.printStackTrace();
+            }
+
+            return result;
+        }
         /**
          * Esta ultima funcion de la clase cogemos el resultado que nos devuelve booleano de si true existe o si es false no existe el usuario
          * de ahi , tratarlo con cada resultado.
@@ -276,8 +353,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 }
                 MainActivity.primeraVez = true;
                 /* Comprueba que la contraseña sea la correspondiente al usuario introducido para validarla si es asi entrará en la ventana principal mediante una funcion
-                * externa para facilitar las cosas. Sino saldra un mensaje de error de contraseña para el usuario .
-                */
+                 * externa para facilitar las cosas. Sino saldra un mensaje de error de contraseña para el usuario .
+                 */
                 if (user.getPassword().equals(String.valueOf(logincontrasena.getText()))) {
                     iniciar();
                 }else{
@@ -294,44 +371,6 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             }
         }
     }
-
-    /**
-     * En este funcion comprueba si existe el usuario o no mediante Soap.
-     * Hace una peticion al web service para la consulta , especificada en las variables declaradas al principio. Una de ellas
-     * obtenia el usuario mediante la consulta de base de datos.
-     * @param param
-     * @return Devuelve un boolean , si es true el usuario existe sino es que no esta en la base de datos y no existe.
-     */
-    @NonNull
-    private Boolean existeUsuario(String param) {
-        Boolean result = true;
-
-        SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
-        request.addProperty("idUsuario", param);
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-
-        HttpTransportSE transporte = new HttpTransportSE(URL);
-
-        try {
-            transporte.call(SOAP_ACTION,envelope);
-            SoapObject resSoap = (SoapObject)envelope.getResponse();
-
-            // Elimina caracteres de control '%00'. Tambien elimina espacios a la hora de introducir la contraseña.
-            String pass = resSoap.getPropertyAsString(2).replaceAll("\\W", "");
-            user = new UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
-                    resSoap.getPropertyAsString(4), resSoap.getPropertyAsString(5), resSoap.getPropertyAsString(6), resSoap.getPropertyAsString(7));
-
-        } catch (Exception e) {
-            result = false;
-            e.printStackTrace();
-        }
-
-
-        return result;
-    }
-
     /**
      * Esta funcion a diferencia de la anterior goMainScreen iniciará a la ventana principal igual que la otra pero con
      * el usuario del registro mediante la base de datos de la aplicación.
@@ -342,7 +381,4 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
         finish();
     }
-
-
-
 }

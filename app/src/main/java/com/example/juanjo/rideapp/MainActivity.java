@@ -18,6 +18,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -208,10 +209,10 @@ public class MainActivity extends AppCompatActivity
                 if(bitmap!=null){
                     imagenUsuarioMenu.setImageBitmap(bitmap);
                 }else{
-                    imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                    imagenUsuarioMenu.setImageResource(R.drawable.user_default);
                 }
             }else{
-                imagenUsuarioMenu.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+                imagenUsuarioMenu.setImageResource(R.drawable.user_default);
             }
         }
     }
@@ -270,7 +271,9 @@ public class MainActivity extends AppCompatActivity
             esPrincipal=false;
             startActivity(i);
         } else if (id == R.id.nav_acerca_de) {
-            Toast.makeText(getApplicationContext(),"Acerca de",Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this,Acerca_de.class);
+            esPrincipal=false;
+            startActivity(i);
         } else if (id == R.id.nav_ayuda) {
             Toast.makeText(getApplicationContext(),"Ayuda",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
