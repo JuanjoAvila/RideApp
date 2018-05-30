@@ -73,4 +73,10 @@
     <string name="datos_personales_perfil">Datos</string>
     <string name="foto_de_perfil_actual_edicion_perfil">Foto de perfil Actual</string>
     <string name="ruleta_para_cambiar_la_foto_edicion_perfil">Ruleta para cambiar la foto</string>
+    <string name="evento">Evento</string>
+    <string name="me_interesa">Me Interesa</string>
+    <string name="asistir">Asistir</string>
+    <string name="fecha">Fecha:</string>
+    <string name="todo">TODO</string>
+    <string name="descripcion_edicion_perfil">Descripcion de prueba...</string>
 </resources>

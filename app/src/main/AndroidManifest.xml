@@ -15,19 +15,20 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/race_bike"
+        android:icon="@drawable/logo_ride_app"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/race_bike"
+        android:roundIcon="@drawable/logo_ride_app"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:windowSoftInputMode="adjustPan|stateVisible">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreen"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,15 +36,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".Chat" />
-        <activity android:name=".Usuario.EdicionPerfil" />
-        <activity android:name=".Evento.Evento" />
-        <activity android:name=".Evento.Eventos" />
-        <activity android:name=".Usuario.Perfil" />
-        <activity
-            android:name=".Registro"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Usuario.Seguidores" />
-        <activity android:name=".Usuario.Seguidos" />
+        <activity android:name=".Usuario.EdicionPerfil" android:screenOrientation="portrait"/>
+        <activity android:name=".Evento.Evento" android:screenOrientation="portrait"/>
+        <activity android:name=".Evento.Eventos" android:screenOrientation="portrait"/>
+        <activity android:name=".Usuario.Perfil" android:screenOrientation="portrait" />
+        <activity android:name=".Usuario.Perfil_mostrar_rutas" android:screenOrientation="portrait" />
+        <activity android:name=".Registro"
+            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -64,15 +65,12 @@
             android:value="26.1.0"
             tools:replace="android:value" />
 
-        <activity
-            android:name=".Rutas.Rutas_main"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Rutas.Rutas_cargar_ruta"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Rutas.Rutas_nueva_ruta"
-            android:screenOrientation="portrait" />
+        <activity android:name=".Rutas.Rutas_main"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Rutas.Rutas_cargar_ruta"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Rutas.Rutas_nueva_ruta"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -98,5 +96,6 @@
 
         <activity android:name=".Amigos.Amigos_main"></activity>
     </application>
+
 
 </manifest>

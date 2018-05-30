@@ -10,7 +10,6 @@ import java.util.Hashtable;
  */
 
 public class Ruta_infoDTO implements KvmSerializable{
-
     private int idRuta;
     private String titulo;
     private String foto_ruta;

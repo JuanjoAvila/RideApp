@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="190dp">
+
+        <ImageView
+            android:id="@+id/Perfil_Rutas_rutaMapa"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rutas_default"
+            android:contentDescription="@string/rutas_obtenidas"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/Perfil_Rutas_fotoUsuario"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/Perfil_Rutas_nombreRuta"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/user_default"
+            android:contentDescription="@string/perfil_usuario_creador_de_rutas"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/Perfil_Rutas_nombreRuta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/Perfil_Rutas_rutaMapa"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/Perfil_Rutas_fotoUsuario"
+            android:maxLength="18"
+            android:text="@string/ruta_ejemplo_uno"
+            android:textAlignment="textStart"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/Perfil_Rutas_dislikesCarita"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignBottom="@+id/Perfil_Rutas_fotoUsuario"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/Perfil_Rutas_likes"
+            android:contentDescription="@string/dislikes"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/Perfil_Rutas_likesCarita"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignBottom="@+id/Perfil_Rutas_fotoUsuario"
+            android:layout_alignStart="@+id/Perfil_Rutas_nombreRuta"
+            android:contentDescription="@string/likes"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/Perfil_Rutas_dislikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/Perfil_Rutas_fotoUsuario"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/Perfil_Rutas_dislikesCarita"
+            android:text="@string/ejemplo_dislikes" />
+
+        <TextView
+            android:id="@+id/Perfil_Rutas_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/Perfil_Rutas_fotoUsuario"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/Perfil_Rutas_likesCarita"
+            android:text="@string/ejemplo_likes" />
+
+        <TextView
+            android:id="@+id/Perfil_Rutas_fechaPublicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/Perfil_Rutas_nombreRuta"
+            android:layout_alignBottom="@+id/Perfil_Rutas_nombreRuta"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="15dp"
+            android:text="@string/plantilla_fecha"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="15sp"
+            tools:ignore="RelativeOverlap" />
+
+        <ImageView
+            android:id="@+id/Perfil_Rutas_Borrar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/Perfil_Rutas_dislikesCarita"
+            android:layout_marginEnd="62dp"
+            android:visibility="invisible"
+            card_view:srcCompat="@drawable/perfil_borrar_ruta" />
+
+        <ImageView
+            android:id="@+id/Perfil_Rutas_Descargar"
+            android:layout_width="23dp"
+            android:layout_height="25dp"
+            android:layout_alignEnd="@+id/Perfil_Rutas_fechaPublicacion"
+            android:layout_alignTop="@+id/Perfil_Rutas_dislikesCarita"
+            android:visibility="invisible"
+            card_view:srcCompat="@drawable/perfil_descargar_ruta" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
