@@ -11,7 +11,9 @@ import android.view.WindowManager;
 import com.example.juanjo.rideapp.R;
 
 /**
- * Created by jesus on 17/05/18.
+ * @author RideApp
+ * @version Final
+ * Diálogo utilizado para mostrar al usuario que tipo de emergencia tiene
  */
 
 public class Rutas_sos_dialog extends DialogFragment {
@@ -36,12 +38,10 @@ public class Rutas_sos_dialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Fetch arguments from bundle and set title
         String title = getArguments().getString("title", "Enter Name");
         getDialog().setTitle(title);
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
     }
 
     @Override

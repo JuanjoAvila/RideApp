@@ -16,6 +16,11 @@ import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
 import com.viewpagerindicator.CirclePageIndicator;
 
+/**
+ * @author RideApp
+ * @version Final
+ * Actividad donde se inicia Rutas
+ */
 public class Rutas_main extends AppCompatActivity {
 
     private Button rutas_button1;
@@ -30,15 +35,22 @@ public class Rutas_main extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
+        /*
+        Se inicializa el ViewPager y se le asigna su adaptador
+         */
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new Rutas_page_adapter(this));
         viewPager.setCurrentItem(0);
 
+        /*
+        Sirve para indicar en que pagina del ViewPager nos encontramos
+         */
         CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         circlePageIndicator.setViewPager(viewPager);
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-
+        /*
+        Se le asigna un listener, cuando se clica aparece el dialogo de opciones
+         */
         rutas_button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,12 +59,19 @@ public class Rutas_main extends AppCompatActivity {
         });
     }
 
+    /**
+     * Dialogo utilizado para mostrar las opciones disponibles en Rutas
+     */
     private void mostrar_opciones_dialog() {
         FragmentManager fm = getSupportFragmentManager();
         prueba = Rutas_opciones_dialog.newInstance("Some Title");
         prueba.show(fm, "fragment_edit_name");
     }
 
+    /**
+     * Lanza la actividad Rutas_nueva_ruta
+     * @param view
+     */
     public void nuevaRuta(View view){
         Intent intent = new Intent(getApplicationContext(), Rutas_nueva_ruta.class);
         startActivity(intent);
@@ -60,6 +79,10 @@ public class Rutas_main extends AppCompatActivity {
         this.finish();
     }
 
+    /**
+     * Lanza la actividad Rutas_mostrar_rutas
+     * @param view
+     */
     public void cargarRuta(View view){
         Intent intent = new Intent(getApplicationContext(), Rutas_mostrar_rutas.class);
         intent.putExtra("idUsuario", Login.getUsuari().getIdUsuario());

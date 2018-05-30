@@ -21,7 +21,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,7 +28,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +41,6 @@ import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.RecicleViewAdapterRutas2;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -78,11 +75,6 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -91,7 +83,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,88 +90,70 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+/**
+ * @author RideApp
+ * @version Final
+ * Actividad que carga el recorrido escogido por el usuario, y le permite repetirlo y grabar un
+ * nuevo recorrido
+ */
+/*
+La clase implementa una serie de interfaces necesarias para el funcionamiento de las API de Google
+ */
 public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, Rutas_guardar_dialog.CallBack {
 
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
-    public static final String METHOD_NAME = "nuevaRuta";
-    public static final String SOAP_ACTION = "http://tempuri.org/nuevaRuta";
+    /*
+    Variables utilizadas para las consultas al WebService
+     */
+    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
     public static final String NAMESPACE = "http://tempuri.org/";
+    public static final String NUEVA_RUTA_METHOD = "nuevaRuta";
+    public static final String NUEVA_RUTA_ACTION = "http://tempuri.org/nuevaRuta";
+    public static final String ULTIMA_RUTA_USUARIO_METHOD = "Select_ultimaRuta_usuario";
+    public static final String ULTIMA_RUTA_USUARIO_ACTION = "http://tempuri.org/Select_ultimaRuta_usuario";
+    public static final String OBTENER_FECHA_METHOD = "Select_fecha";
+    public static final String OBTENER_FECHA_ACTION = "http://tempuri.org/Select_fecha";
+    public static final String OBTENER_RUTA_METHOD = "obtenerRuta";
+    public static final String OBTENER_RUTA_ACTION = "http://tempuri.org/obtenerRuta";
 
-    //
-    public static final String METHOD_NAME2 = "Select_ultimaRuta_usuario";
-    public static final String SOAP_ACTION2 = "http://tempuri.org/Select_ultimaRuta_usuario";
-    public static final String METHOD_NAME4 = "Select_fecha";
-    public static final String SOAP_ACTION4 = "http://tempuri.org/Select_fecha";
-
-    //
-    public static final String METHOD_NAME5 = "obtenerRuta";
-    public static final String SOAP_ACTION5 = "http://tempuri.org/obtenerRuta";
-
-    //Estaticas para comprobar los permisos del usuario, y tambien para escribir en el log
+    /*
+    Estaticas para comprobar los permisos del usuario, y tambien para escribir en el log
+     */
     private static final String LOGTAG = "localizacion";
     private static final int PETICION_PERMISO_LOCALIZACION = 101;
     private static final int PETICION_CONFIG_UBICACION = 201;
 
-    //Donde se almacena el mapa sobre el cual se está trabajando
     private GoogleMap mMap;
-    //Utilizada para acceder a los servicios de Google
     private GoogleApiClient apiClient;
-    //Utilizada para comprobar que el usuario cumple con los requisitos adecuados
     private LocationRequest locRequest;
-    //Utilizada para comprobar si está entrando al activity
     private boolean inicio = true;
-    //Botón de inicio/parada de ruta
     private ToggleButton start;
-    //Marcador utilizado para identificar a tiempo real la ubicación
     private Marker marker = null;
-    //Utilizada para guardar objetos LatLng con coordenadas
     private LinkedList<LatLng> latlngs = new LinkedList<LatLng>();
-    //Linea dibujada en el mapa, que recogemos aqui para poder removerla antes de volver a cargar de nuevo todas las coordenadas
     Polyline polyline1 = null;
-
-    //
     private boolean gps_noActivated = false;
     private Rutas_guardar_dialog prueba = null;
     private boolean finished = false;
-
-    //
     private Integer resultado_insertar_ruta = 0;
-
-    //
     public static RutaDTO ultimaRuta = null;
     private Boolean obtenerUltimaRuta = true;
-
-    //
     private int idRuta;
     public static RutaDTO ruta_cargada = null;
-
-    //
-
     private LinkedList<Location> coordenadas_ruta_cargada = new LinkedList<Location>();
     String addressInfo_inicioRuta;
     String addressInfo_posicionActual;
-
     Rutas_adresses_dialog address_dialog = null;
-
-    //
     LatLng posicionCorregida = null;
-
     private ImageButton rutas_btn_sos;
-
     private Rutas_sos_failed_dialog sos_failed_Dialog = null;
-
     Rutas_sos_dialog sosDialog = null;
 
     @Override
@@ -190,6 +163,7 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         // Se obtiene el fragment del mapa, y se obtiene el mapa asincronamente
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         start = (ToggleButton)findViewById(R.id.rutas_tBtn);
         rutas_btn_sos = (ImageButton)findViewById(R.id.rutas_btn_sos);
@@ -198,8 +172,6 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         Se recoge la id de la ruta pasada en la actividad anterior
          */
         idRuta = getIntent().getExtras().getInt("idRuta");
-
-        mapFragment.getMapAsync(this);
 
         /*
         Se declara el client de Google API, configurando una serie de parametros
@@ -231,6 +203,9 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        /*
+        Listener para el botón de emergencia, que muestra el dialogo adecuado
+         */
         rutas_btn_sos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,44 +215,38 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    public void generarMensajeSOS(int codigo){
-        if(start.isChecked()){
-            String mensaje = codigo + "\n" + Login.getUsuari().getNombre() + ", " + Login.getUsuari().getApellidos() + "\n\n" +
-                    "Latitud: " + posicionCorregida.latitude + "\nLongitud: " + posicionCorregida.longitude +
-                    "\nDirección: " + getAddressInfoForSMS(posicionCorregida);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + 679436200));
-            intent.putExtra("sms_body", mensaje);
-            startActivity(intent);
+    /**
+     * Utilizado para que al volver de comprobar la activación de permisos, en el caso de no activarse
+     * vuelve a mostrar el dialogo, sino empieza a recibir actualizaciones de ubicación
+     */
+    @Override
+    protected void onResume() {
+        if(gps_noActivated){
+            try {
+                if(!señalGPS_On()){
+                    mostrar_gps_dialog();
+                }else{
+                    gps_noActivated = false;
+                    enableLocationUpdates();
+                }
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
         }else{
-            mostrar_sos_failed_dialog();
-        }
-    }
-
-    public void mostrar_sos_dialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
-        sosDialog.show(fm, "fragment_edit_name");
-    }
-
-    private String getAddressInfoForSMS(LatLng coordenadas) {
-        Geocoder geocoder;
-        List<Address> addresses = null;
-        geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+            if(finished){
+                enableLocationUpdates();
+                start.setChecked(true);
+                finished = false;
+            }
         }
 
-        String address = addresses.get(0).getAddressLine(0);
-
-        return address;
+        super.onResume();
     }
 
-    /*
-    Metodo que implementa la interfaz OnMapReadyCallback, es llamado cuando el mapa esta
-    listo para ser utilizado
+    /**
+     * Metodo que implementa la interfaz OnMapReadyCallback, es llamado cuando el mapa esta
+     listo para ser utilizado
+     * @param googleMap
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -290,13 +259,268 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
                 MapStyleOptions.loadRawResourceStyle(
                         this, R.raw.formato_mapa));
 
+
         new obtener_ruta(this, this).execute(idRuta);
 
     }
 
-    /*
-    Metodo encargado de configurar los requisitos para actualizar la ubicación,
-    que más tarde serán comparados con los del usuario
+
+    /**
+     * Encargado de activar o mostrar el dialogo de gps en caso de que la petición de permisos
+     * vaya bien o mal
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PETICION_CONFIG_UBICACION:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        startLocationUpdates();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        start.setChecked(false);
+                        mostrar_gps_dialog();
+                        gps_noActivated = true;
+                        Log.i(LOGTAG, "El usuario no ha realizado los cambios de configuración necesarios");
+                        break;
+                }
+                break;
+        }
+    }
+
+    /**
+     * Utilizado para gestionar la conexión fallida con los servicios de Google
+     * @param connectionResult
+     */
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        //Se ha producido un error que no se puede resolver automáticamente
+        //y la conexión con los Google Play Services no se ha establecido.
+
+        Log.e(LOGTAG, "Error grave al conectar con Google Play Services");
+        Toast.makeText(this, "Se están produciendo errores de conexión..", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Se pide permisos al usuario
+     * @param bundle
+     */
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PETICION_PERMISO_LOCALIZACION);
+        } else {
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+        }
+    }
+
+    /**
+     * Gestiona la interrupción de los servicios de Google
+     * @param i
+     */
+    @Override
+    public void onConnectionSuspended(int i) {
+
+        //Se ha interrumpido la conexión con Google Play Services
+        Toast.makeText(this, "Se ha interrumpido la conexión..", Toast.LENGTH_SHORT).show();
+        Log.e(LOGTAG, "Se ha interrumpido la conexión con Google Play Services");
+    }
+
+    /**
+     * Recoge el resultado de la petición de permisos
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PETICION_PERMISO_LOCALIZACION) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            } else {
+                Log.e(LOGTAG, "Permiso denegado");
+            }
+        }
+    }
+
+    /**
+     * Gestiona cada nueva ubicación
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i(LOGTAG, "Recibida nueva ubicación!");
+        MarkerOptions options;
+
+        /*
+        Si la booleana inicio es true (el usuario acaba de entrar a la sección de rutas),
+        se recoge la localización y se posiciona la camara, además se añade un marcador
+        personalizado, con la foto del usuario actualmente logueado
+         */
+        if(inicio){
+
+            //Se recoge la posición actual
+            LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
+
+            addressInfo_posicionActual = getAddressInfo(posicionActual);
+
+            boolean addressEquals = comprobarDirecciones(addressInfo_inicioRuta, addressInfo_posicionActual);
+
+            if(!addressEquals){
+                String text = "<b>Posición actual:</b> " + addressInfo_posicionActual + "<br><br><b>Inicio de ruta: </b>" +
+                        addressInfo_inicioRuta + "<br><br>Te encuentras lejos del inicio de ruta, clica el <b>marcador rojo</b>, y utiliza " +
+                        "las funciones de <b>GoogleMaps</b> para ubicarte en la misma calle.";
+                mostrar_addresses_dialog(text);
+                disableLocationUpdates();
+                start.setChecked(false);
+            }else{
+
+                /*
+                Llama a la Roads API de Google, para enviar una coordenada y recibir la misma pero ajustada
+                 */
+                try {
+                    new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                //Se crea un nuevo marcador, se le pasa la posición
+                options = new MarkerOptions().position(posicionCorregida);
+
+                //Se crea la imagen en formato Bitmap con la función definida más abajo
+                Bitmap bitmap = createUserBitmap();
+                if(bitmap!=null) {
+                    options.title("Nombre de usuario");
+                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    options.anchor(0.5f, 0.907f);
+                    marker = mMap.addMarker(options);
+                }
+
+                //Se crea la nueva posición de la camara
+                CameraPosition camera = new CameraPosition.Builder()
+                        .target(posicionCorregida)
+                        .zoom(18)
+                        .bearing(45)
+                        .tilt(70)
+                        .build();
+
+                //Se inicia el cambio de posición de la camara
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
+
+                //Se pone la booleana a false y se apaga la actualización de ubicaciones automaticas,
+                //la proxima vez cuando comience a grabar la ruta, la booleana estará a false y
+                // si que recibirá actualizaciones sin parar
+                inicio = false;
+                //disableLocationUpdates();
+            }
+
+
+        }else{
+            //Se remueven el marcador y las lineas cada vez que se entra, para que no se repitan
+            if(marker != null){
+                marker.remove();
+            }
+
+            if(polyline1 != null){
+                polyline1.remove();
+            }
+
+            //Se recoge la posición actual
+            LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
+
+            /*
+              Llama a la Roads API de Google, para enviar una coordenada y recibir la misma pero ajustada
+            */
+            try {
+                new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            //Se crea un nuevo marcador, se le pasa la posición
+            options = new MarkerOptions().position(posicionCorregida);
+
+            //Se crea la imagen en formato Bitmap con la función definida más abajo
+            Bitmap bitmap = createUserBitmap();
+            if(bitmap!=null) {
+                options.title("Nombre de usuario");
+                options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                options.anchor(0.5f, 0.907f);
+                marker = mMap.addMarker(options);
+            }
+
+            //Se crea la nueva posición de la camara
+            CameraPosition camera = new CameraPosition.Builder()
+                    .target(posicionCorregida)
+                    .zoom(19)
+                    .bearing(45)
+                    .tilt(70)
+                    .build();
+
+            //Se inicia el cambio de posición de la camara
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
+
+            //Se van añadiendo las coordenadas en una lista
+            latlngs.add(new LatLng(posicionActual.latitude, posicionActual.longitude));
+
+            /*
+            Se configura como se van a dibujar las lineas
+             */
+            PolylineOptions polyoptions = new PolylineOptions()
+                    .clickable(true)
+                    .color(getApplicationContext().getResources().getColor(R.color.colorPrimary))
+                    .width(40)
+                    .startCap(new RoundCap())
+                    .endCap(new RoundCap());
+
+            //Se añaden todas las coordenadas
+            for (LatLng i: latlngs){
+                polyoptions.add(i);
+            }
+
+            //Se dibujan en el mapa
+            polyline1 = mMap.addPolyline(polyoptions);
+
+        }
+
+    }
+
+    /**
+     * Encargado de empezar con la actualización de ubicaciones
+     */
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(Rutas_cargar_ruta.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            //Ojo: estamos suponiendo que ya tenemos concedido el permiso.
+            //Sería recomendable implementar la posible petición en caso de no tenerlo.
+
+            Log.i(LOGTAG, "Inicio de recepción de ubicaciones");
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    apiClient, locRequest, Rutas_cargar_ruta.this);
+        }
+    }
+
+    /**
+     * Metodo encargado de configurar los requisitos para actualizar la ubicación,
+        que más tarde serán comparados con los del usuario
      */
     private void enableLocationUpdates() {
 
@@ -368,245 +592,58 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case PETICION_CONFIG_UBICACION:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        startLocationUpdates();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        start.setChecked(false);
-                        mostrar_gps_dialog();
-                        gps_noActivated = true;
-                        Log.i(LOGTAG, "El usuario no ha realizado los cambios de configuración necesarios");
-                        break;
-                }
-                break;
-        }
-    }
-
-    private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(Rutas_cargar_ruta.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            //Ojo: estamos suponiendo que ya tenemos concedido el permiso.
-            //Sería recomendable implementar la posible petición en caso de no tenerlo.
-
-            Log.i(LOGTAG, "Inicio de recepción de ubicaciones");
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    apiClient, locRequest, Rutas_cargar_ruta.this);
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //Se ha producido un error que no se puede resolver automáticamente
-        //y la conexión con los Google Play Services no se ha establecido.
-
-        Log.e(LOGTAG, "Error grave al conectar con Google Play Services");
-        Toast.makeText(this, "Se están produciendo errores de conexión..", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PETICION_PERMISO_LOCALIZACION);
-        } else {
-
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-
-        }
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-        //Se ha interrumpido la conexión con Google Play Services
-        Toast.makeText(this, "Se ha interrumpido la conexiçon..", Toast.LENGTH_SHORT).show();
-        Log.e(LOGTAG, "Se ha interrumpido la conexión con Google Play Services");
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PETICION_PERMISO_LOCALIZACION) {
-            if (grantResults.length == 1
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                //Permiso concedido
-
-                @SuppressWarnings("MissingPermission")
-                Location lastLocation =
-                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
-
-            } else {
-                //Permiso denegado:
-                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
-
-                Log.e(LOGTAG, "Permiso denegado");
-            }
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.i(LOGTAG, "Recibida nueva ubicación!");
-        MarkerOptions options;
-
-        /*
-        Si la booleana inicio es true (el usuario acaba de entrar a la sección de rutas),
-        se recoge la localización y se posiciona la camara, además se añade un marcador
-        personalizado, con la foto del usuario actualmente logueado
-         */
-        if(inicio){
-
-            //Se recoge la posición actual
-            LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
-
-            addressInfo_posicionActual = getAddressInfo(posicionActual);
-
-            boolean addressEquals = comprobarDirecciones(addressInfo_inicioRuta, addressInfo_posicionActual);
-
-            if(!addressEquals){
-                String text = "<b>Posición actual:</b> " + addressInfo_posicionActual + "<br><br><b>Inicio de ruta: </b>" +
-                        addressInfo_inicioRuta + "<br><br>Te encuentras lejos del inicio de ruta, clica el <b>marcador rojo</b>, y utiliza " +
-                        "las funciones de <b>GoogleMaps</b> para ubicarte en la misma calle.";
-                mostrar_addresses_dialog(text);
-                disableLocationUpdates();
-                start.setChecked(false);
-            }else{
-
-                //Prueba API Request
-                try {
-                    new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-                //Se crea un nuevo marcador, se le pasa la posición
-                options = new MarkerOptions().position(posicionCorregida);
-
-                //Se crea la imagen en formato Bitmap con la función definida más abajo
-                Bitmap bitmap = createUserBitmap();
-                if(bitmap!=null) {
-                    options.title("Nombre de usuario");
-                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                    options.anchor(0.5f, 0.907f);
-                    marker = mMap.addMarker(options);
-                }
-
-                //Se crea la nueva posición de la camara
-                CameraPosition camera = new CameraPosition.Builder()
-                        .target(posicionCorregida)
-                        .zoom(18)
-                        .bearing(45)
-                        .tilt(70)
-                        .build();
-
-                //Se inicia el cambio de posición de la camara
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
-
-                //Se pone la booleana a false y se apaga la actualización de ubicaciones automaticas,
-                //la proxima vez cuando comience a grabar la ruta, la booleana estará a false y
-                // si que recibirá actualizaciones sin parar
-                inicio = false;
-                //disableLocationUpdates();
-            }
-
-
-        }else{
-            //Se remueven el marcador y las lineas cada vez que se entra, para que no se repitan
-            if(marker != null){
-                marker.remove();
-            }
-
-            if(polyline1 != null){
-                polyline1.remove();
-            }
-
-            //Se recoge la posición actual
-            LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
-
-            //Prueba API Request
-            try {
-                new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            //Se crea un nuevo marcador, se le pasa la posición
-            options = new MarkerOptions().position(posicionCorregida);
-
-            //Se crea la imagen en formato Bitmap con la función definida más abajo
-            Bitmap bitmap = createUserBitmap();
-            if(bitmap!=null) {
-                options.title("Nombre de usuario");
-                options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                options.anchor(0.5f, 0.907f);
-                marker = mMap.addMarker(options);
-            }
-
-            //Se crea la nueva posición de la camara
-            CameraPosition camera = new CameraPosition.Builder()
-                    .target(posicionCorregida)
-                    .zoom(19)
-                    .bearing(45)
-                    .tilt(70)
-                    .build();
-
-            //Se inicia el cambio de posición de la camara
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
-
-            //Se van añadiendo las coordenadas en una lista
-            latlngs.add(new LatLng(posicionActual.latitude, posicionActual.longitude));
-
-            /*
-            Se configura como se van a dibujar las lineas
-             */
-            PolylineOptions polyoptions = new PolylineOptions()
-                    .clickable(true)
-                    .color(getApplicationContext().getResources().getColor(R.color.colorPrimary))
-                    .width(40)
-                    .startCap(new RoundCap())
-                    .endCap(new RoundCap());
-
-            //Se añaden todas las coordenadas
-            for (LatLng i: latlngs){
-                polyoptions.add(i);
-            }
-
-            //Se dibujan en el mapa
-            polyline1 = mMap.addPolyline(polyoptions);
-
-        }
-
-    }
-
-    /*
-    Utilizado para desactivar la localización automatica
+    /**
+     * Utilizado para desactivar la localización automatica
      */
     private void disableLocationUpdates() {
 
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 apiClient, this);
-
     }
 
-    /*
-    TODO: Falta conectar con el usuario actual
-    Metodo utilizado para crear un Bitmap con la imagen de perfil
+    /**
+     * Utilizado para generar un mensaje automático a los servicios de emergencia
+     * @param codigo Número que se obtiene según la emergencia elegida, según lo que le ocurra al
+     *               usuario, se envia un mensaje o otro a los servicios de emergencia
+     */
+    public void generarMensajeSOS(int codigo){
+        if(start.isChecked()){
+            String mensaje = codigo + "\n" + Login.getUsuari().getNombre() + ", " + Login.getUsuari().getApellidos() + "\n\n" +
+                    "Latitud: " + posicionCorregida.latitude + "\nLongitud: " + posicionCorregida.longitude +
+                    "\nDirección: " + getAddressInfoForSMS(posicionCorregida);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + 679436200));
+            intent.putExtra("sms_body", mensaje);
+            startActivity(intent);
+        }else{
+            mostrar_sos_failed_dialog();
+        }
+    }
+
+    /**
+     * Recoge la información necesaria respecto a la ubicación para generar el SMS a los servicios
+     * de emergencia
+     * @param coordenadas
+     * @return
+     */
+    private String getAddressInfoForSMS(LatLng coordenadas) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0);
+
+        return address;
+    }
+
+    /**
+     * Metodo utilizado para crear un Bitmap con la imagen de perfil
+     * @return El bitmap generado
      */
     private Bitmap createUserBitmap() {
         Bitmap result = null;
@@ -651,8 +688,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         return result;
     }
 
-    /*
-    Utilizado para ajustar la imagen con la densidad del telefono
+    /**
+     * Utilizado para ajustar la imagen con la densidad del telefono
+     * @param value
+     * @return
      */
     public int dp(float value) {
         if (value == 0) {
@@ -661,40 +700,17 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         return (int) Math.ceil(getResources().getDisplayMetrics().density * value);
     }
 
-    /*
-    Utilizado para mostrar el dialogo de señal gps
-     */
-    private void mostrar_gps_dialog() {
-        Rutas_gps_dialog prueba = null;
-        FragmentManager fm = getSupportFragmentManager();
-        prueba = Rutas_gps_dialog.newInstance("Some Title");
-        prueba.show(fm, "fragment_edit_name");
-    }
-
-    private void mostrar_guardar_dialog() {
-        prueba = null;
-        FragmentManager fm = getSupportFragmentManager();
-        prueba = Rutas_guardar_dialog.newInstance("Some Title");
-        prueba.show(fm, "fragment_edit_name");
-        finished = true;
-    }
-
-    private void mostrar_addresses_dialog(String text) {
-        FragmentManager fm = getSupportFragmentManager();
-        address_dialog = Rutas_adresses_dialog.newInstance("Some Title", text);
-        address_dialog.show(fm, "fragment_edit_name");
-        finished = true;
-    }
-
-    /*
-    Utilizado para mostrar el dialogo de permisos y comenzar con las actualizaciones automaticas
+    /**
+     * Utilizado para mostrar el dialogo de permisos y comenzar con las actualizaciones automaticas
+     * @param view
      */
     public void activarGps(View view){
         enableLocationUpdates();
     }
 
-    /*
-    Utilizado para volver a la actividad principal de rutas
+    /**
+     * Utilizado para volver a la actividad principal de rutas
+     * @param view
      */
     public void returnMain(View view){
         Intent intent = new Intent(this, Rutas_main.class);
@@ -702,8 +718,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         this.finish();
     }
 
-    /*
-    Utilizado para comprobar la señal GPS
+    /**
+     * Utilizado para comprobar la señal GPS
+     * @return
+     * @throws Settings.SettingNotFoundException
      */
     private boolean señalGPS_On() throws Settings.SettingNotFoundException {
         int gpsSignal = Settings.Secure.getInt(getApplicationContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
@@ -715,36 +733,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         return true;
     }
 
-    /*
-    Utilizado para que al volver de comprobar la activación de permisos, en el caso de no activarse
-    vuelve a mostrar el dialogo, sino empieza a recibir actualizaciones de ubicación
+    /**
+     * Utilizado para reanudar la grabación al pulsar el botón atrás del dialogo de STOP
+     * @param view
      */
-    @Override
-    protected void onResume() {
-        if(gps_noActivated){
-            try {
-                if(!señalGPS_On()){
-                    mostrar_gps_dialog();
-                }else{
-                    gps_noActivated = false;
-                    enableLocationUpdates();
-                }
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-            }
-        }else{
-            if(finished){
-                enableLocationUpdates();
-                start.setChecked(true);
-                finished = false;
-            }
-        }
-
-        super.onResume();
-    }
-
-
-
     public void atras(View view){
         if(prueba != null){
             prueba.dismiss();
@@ -753,25 +745,20 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         }
     }
 
+    /**
+     * Utilizado para cerrar el dialogo cuando sale el dialogo de ruta lejana
+     * @param view
+     */
     public void rutaLejana(View view){
         if(address_dialog != null){
             address_dialog.dismiss();
         }
     }
 
-    public void mostrar_sos_failed_dialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        sos_failed_Dialog = Rutas_sos_failed_dialog.newInstance("Some Title");
-        sos_failed_Dialog.show(fm, "fragment_edit_name");
-    }
-
-    public void sos_failed_dialog_atras(View view){
-        if(sos_failed_Dialog != null){
-            sos_failed_Dialog.dismiss();
-            sosDialog.dismiss();
-        }
-    }
-
+    /**
+     * Utilizado para insertar un registro si el usuario decide guardar
+     * @param view
+     */
     public void guardar(View view){
 
         //Se recoge el usuario actual
@@ -785,6 +772,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
 
     }
 
+    /**
+     * Utilizado para generar el archivo gpx con las coordenadas recogidas
+     * @param idRuta Identificador de la ruta, necesario para que el archivo sea único
+     */
     private void generarGPX(int idRuta) {
         String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n" +
                 "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"byHand\" version=\"1.1\"\n" +
@@ -831,254 +822,10 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    @Override
-    public void onMyDialogFragmentDetached() {
-        start.setChecked(true);
-        enableLocationUpdates();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(start.isChecked()){
-            mostrar_guardar_dialog();
-        }else{
-            Intent i = new Intent(this, Rutas_mostrar_rutas.class);
-            i.putExtra("idUsuario", Login.getUsuari().getIdUsuario());
-            startActivity(i);
-            this.finish();
-        }
-    }
-
-    /*
-    Utilizado para insertar un nuevo registro de 'Ruta' en bd
+    /**
+     * Utilizado para leer y cargar las coordenadas de un fichero gpx
+     * @param ruta Fichero de ruta
      */
-    private class insertarRuta extends AsyncTask<Integer,Void,Integer> {
-
-        private Activity activity;
-        private Context context;
-
-        public insertarRuta(Context context, Activity activity) {
-            this.context = context;
-            this.activity = activity;
-        }
-
-        protected Integer doInBackground(Integer... params) {
-
-            Integer result = 0;
-
-            RutaDTO ruta = new RutaDTO(params[0], "", "", "", 0, 0, 0, "");
-
-            PropertyInfo pi = new PropertyInfo();
-            pi.setName("ruta");
-            pi.setValue(ruta);
-            pi.setType(ruta.getClass());
-
-            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
-            request.addProperty(pi);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            envelope.addMapping(NAMESPACE, "RutaDTO", ruta.getClass());
-
-            HttpTransportSE transporte = new HttpTransportSE(URL);
-
-            try {
-                transporte.call(SOAP_ACTION,envelope);
-                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-                result = Integer.parseInt(response.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        protected void onPostExecute(Integer result) {
-            if(result != 0){
-                //Se recoge el usuario actual
-                UsuarioDTO usuario_actual = Login.getUsuari();
-
-                /*
-                Se recoge la ultima ruta, para tener el ultimo idRuta, y asi poder trabajar en la
-                siguiente activity
-                 */
-                new obtener_ultima_ruta(getApplicationContext(), activity).execute(usuario_actual.getIdUsuario());
-            }
-        }
-    }
-
-    /*
-    Utilizado para obtener la ultima ruta insertada por el usuario
-     */
-    private class obtener_ultima_ruta extends AsyncTask<Integer,Void,Boolean> {
-
-        private Activity activity;
-        private Context context;
-
-        public obtener_ultima_ruta(Context context, Activity activity) {
-            this.context = context;
-            this.activity = activity;
-        }
-
-        protected Boolean doInBackground(Integer... params) {
-
-            Boolean result = true;
-
-            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME2);
-            request.addProperty("idUsuario", params[0]);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-
-            HttpTransportSE transporte = new HttpTransportSE(URL);
-
-            try {
-                transporte.call(SOAP_ACTION2,envelope);
-                SoapObject resSoap = (SoapObject)envelope.getResponse();
-                ultimaRuta = new RutaDTO(Integer.valueOf(resSoap.getPropertyAsString(0)),
-                        Integer.valueOf(resSoap.getPropertyAsString(1)),
-                        resSoap.getPropertyAsString(2), resSoap.getPropertyAsString(3),
-                        resSoap.getPropertyAsString(4), Integer.valueOf(resSoap.getPropertyAsString(5)),
-                        Integer.valueOf(resSoap.getPropertyAsString(6)),
-                        Integer.valueOf(resSoap.getPropertyAsString(7)), resSoap.getPropertyAsString(8));
-            } catch (Exception e) {
-                result = false;
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        protected void onPostExecute(Boolean result) {
-            if(result){
-                generarGPX(ultimaRuta.getIdRuta());
-                new obtener_fecha(context, activity).execute(ultimaRuta.getIdRuta());
-                Intent i = new Intent(getApplicationContext(), Rutas_guardar_ruta.class);
-                i.putExtra("idRuta", ultimaRuta.getIdRuta());
-                i.putExtra("guardado", false);
-
-            }
-        }
-    }
-
-    private class obtener_fecha extends AsyncTask<Integer,Void,Boolean> {
-
-        private Context context;
-        private Activity activity;
-
-        public obtener_fecha(Context context, Activity activity) {
-            this.context = context;
-            this.activity = activity;
-        }
-
-        protected Boolean doInBackground(Integer... params) {
-
-            Boolean result = true;
-
-            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME4);
-            request.addProperty("idRuta", params[0]);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-
-            HttpTransportSE transporte = new HttpTransportSE(URL);
-
-            try {
-                transporte.call(SOAP_ACTION4,envelope);
-                SoapPrimitive resSoap = (SoapPrimitive) envelope.getResponse();
-                Intent i = new Intent(context, Rutas_guardar_ruta.class);
-                i.putExtra("fecha", resSoap.toString());
-                startActivity(i);
-                activity.finish();
-
-            } catch (Exception e) {
-                result = false;
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        protected void onPostExecute(Boolean result) {
-
-        }
-    }
-
-    /*
-    Utilizado para recoger los datos de una ruta
-     */
-
-    private class obtener_ruta extends AsyncTask<Integer,Void,Boolean> {
-
-        private Context context;
-        private Activity activity;
-
-        public obtener_ruta(Context context, Activity activity) {
-            this.context = context;
-            this.activity = activity;
-        }
-
-        protected Boolean doInBackground(Integer... params) {
-
-            Boolean result = true;
-
-            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME5);
-            request.addProperty("ruta", params[0]);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-
-            HttpTransportSE transporte = new HttpTransportSE(URL);
-
-            try {
-                transporte.call(SOAP_ACTION5,envelope);
-                SoapObject resSoap = (SoapObject)envelope.getResponse();
-                ruta_cargada = new RutaDTO(Integer.valueOf(resSoap.getPropertyAsString(0)),
-                        Integer.valueOf(resSoap.getPropertyAsString(1)),
-                        resSoap.getPropertyAsString(2), resSoap.getPropertyAsString(3),
-                        resSoap.getPropertyAsString(4), Integer.valueOf(resSoap.getPropertyAsString(5)),
-                        Integer.valueOf(resSoap.getPropertyAsString(6)),
-                        Integer.valueOf(resSoap.getPropertyAsString(7)), resSoap.getPropertyAsString(8));
-
-            } catch (Exception e) {
-                result = false;
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        protected void onPostExecute(Boolean result) {
-
-            boolean cargado = false;
-
-            if(result){
-                FTPManager ftpManager = new FTPManager(getApplicationContext());
-                try {
-                    cargado = ftpManager.FTPDescargar(ruta_cargada.getMapa());
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if(cargado){
-                    String ruta = "/" + ruta_cargada.getMapa();
-                    decodeGPX(ruta);
-                    dibujarRutaCargada();
-
-                }else{
-                    //TODO: No se ha podido descargar la ruta
-                }
-
-            }else{
-                //TODO: No se ha podido consultar la ruta
-            }
-        }
-    }
-
     private void decodeGPX(String ruta){
         File file = new File(getApplicationContext().getFilesDir() + ruta);
 
@@ -1108,6 +855,9 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
 
     }
 
+    /**
+     * Utilizada para recorrer el fichero gpx, que en realidad es un xml, y recoger los datos necesarios
+     */
     public class SAX_Handler extends DefaultHandler{
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -1128,36 +878,9 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         }
     }
 
-    private String readFromFile() {
-
-        String ret = "";
-
-        try {
-            InputStream inputStream = getApplicationContext().openFileInput("ruta174.gpx");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-
-        return ret;
-    }
-
+    /**
+     * Dibuja la ruta elegida por el usuario
+     */
     private void dibujarRutaCargada() {
         //Se recoge la primera posición de la ruta para posicionar la camara
         Location primeraCoordenada = coordenadas_ruta_cargada.get(0);
@@ -1203,6 +926,11 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
 
     }
 
+    /**
+     * Recoge información sobre la dirección
+     * @param coordenadas
+     * @return
+     */
     private String getAddressInfo(LatLng coordenadas) {
         Geocoder geocoder;
         List<Address> addresses = null;
@@ -1221,6 +949,12 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         return direccion;
     }
 
+    /**
+     * Compara dos ubicaciones
+     * @param inicioRuta
+     * @param posicionActual
+     * @return
+     */
     private boolean comprobarDirecciones(String inicioRuta, String posicionActual){
         if(inicioRuta.equals(posicionActual)){
             return true;
@@ -1229,6 +963,316 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         return false;
     }
 
+    @Override
+    public void onMyDialogFragmentDetached() {
+        start.setChecked(true);
+        enableLocationUpdates();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(start.isChecked()){
+            mostrar_guardar_dialog();
+        }else{
+            Intent i = new Intent(this, Rutas_mostrar_rutas.class);
+            i.putExtra("idUsuario", Login.getUsuari().getIdUsuario());
+            startActivity(i);
+            this.finish();
+        }
+    }
+
+    /**
+     * Utilizado para mostrar el dialogo de que es imposible enviar una alerta a los servicios
+     * de emergencia
+     */
+    public void mostrar_sos_failed_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sos_failed_Dialog = Rutas_sos_failed_dialog.newInstance("Some Title");
+        sos_failed_Dialog.show(fm, "fragment_edit_name");
+    }
+
+    /**
+     * Utilizado para volver atrás cuando no permite enviar un mensaje a los servicios de emergencia
+     * @param view
+     */
+    public void sos_failed_dialog_atras(View view){
+        if(sos_failed_Dialog != null){
+            sos_failed_Dialog.dismiss();
+            sosDialog.dismiss();
+        }
+    }
+
+    /**
+     * Muestra el dialogo de emergencia
+     */
+    public void mostrar_sos_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
+        sosDialog.show(fm, "fragment_edit_name");
+    }
+
+    /**
+     * Utilizado para mostrar el dialogo de señal gps
+     */
+    private void mostrar_gps_dialog() {
+        Rutas_gps_dialog prueba = null;
+        FragmentManager fm = getSupportFragmentManager();
+        prueba = Rutas_gps_dialog.newInstance("Some Title");
+        prueba.show(fm, "fragment_edit_name");
+    }
+
+    /**
+     * Utilizado para mostrar el dialogo de guardado
+     */
+    private void mostrar_guardar_dialog() {
+        prueba = null;
+        FragmentManager fm = getSupportFragmentManager();
+        prueba = Rutas_guardar_dialog.newInstance("Some Title");
+        prueba.show(fm, "fragment_edit_name");
+        finished = true;
+    }
+
+    /**
+     * Utilizado para mostrar el dialogo de ruta lejana
+     * @param text
+     */
+    private void mostrar_addresses_dialog(String text) {
+        FragmentManager fm = getSupportFragmentManager();
+        address_dialog = Rutas_adresses_dialog.newInstance("Some Title", text);
+        address_dialog.show(fm, "fragment_edit_name");
+        finished = true;
+    }
+
+    /**
+     * Tarea asincrona utilizada para insertar una nueva ruta
+     */
+    private class insertarRuta extends AsyncTask<Integer,Void,Integer> {
+
+        private Activity activity;
+        private Context context;
+
+        public insertarRuta(Context context, Activity activity) {
+            this.context = context;
+            this.activity = activity;
+        }
+
+        protected Integer doInBackground(Integer... params) {
+
+            Integer result = 0;
+
+            RutaDTO ruta = new RutaDTO(params[0], "", "", "", 0, 0, 0, "");
+
+            PropertyInfo pi = new PropertyInfo();
+            pi.setName("ruta");
+            pi.setValue(ruta);
+            pi.setType(ruta.getClass());
+
+            SoapObject request = new SoapObject(NAMESPACE, NUEVA_RUTA_METHOD);
+            request.addProperty(pi);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+            envelope.addMapping(NAMESPACE, "RutaDTO", ruta.getClass());
+
+            HttpTransportSE transporte = new HttpTransportSE(WS_URL);
+
+            try {
+                transporte.call(NUEVA_RUTA_ACTION,envelope);
+                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+                result = Integer.parseInt(response.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(Integer result) {
+            if(result != 0){
+                //Se recoge el usuario actual
+                UsuarioDTO usuario_actual = Login.getUsuari();
+
+                /*
+                Se recoge la ultima ruta, para tener el ultimo idRuta, y asi poder trabajar en la
+                siguiente activity
+                 */
+                new obtener_ultima_ruta(getApplicationContext(), activity).execute(usuario_actual.getIdUsuario());
+            }
+        }
+    }
+
+    /**
+     * Tarea asincrona utilizada para obtener la última ruta
+     */
+    private class obtener_ultima_ruta extends AsyncTask<Integer,Void,Boolean> {
+
+        private Activity activity;
+        private Context context;
+
+        public obtener_ultima_ruta(Context context, Activity activity) {
+            this.context = context;
+            this.activity = activity;
+        }
+
+        protected Boolean doInBackground(Integer... params) {
+
+            Boolean result = true;
+
+            SoapObject request = new SoapObject(NAMESPACE, ULTIMA_RUTA_USUARIO_METHOD);
+            request.addProperty("idUsuario", params[0]);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(WS_URL);
+
+            try {
+                transporte.call(ULTIMA_RUTA_USUARIO_ACTION,envelope);
+                SoapObject resSoap = (SoapObject)envelope.getResponse();
+                ultimaRuta = new RutaDTO(Integer.valueOf(resSoap.getPropertyAsString(0)),
+                        Integer.valueOf(resSoap.getPropertyAsString(1)),
+                        resSoap.getPropertyAsString(2), resSoap.getPropertyAsString(3),
+                        resSoap.getPropertyAsString(4), Integer.valueOf(resSoap.getPropertyAsString(5)),
+                        Integer.valueOf(resSoap.getPropertyAsString(6)),
+                        Integer.valueOf(resSoap.getPropertyAsString(7)), resSoap.getPropertyAsString(8));
+            } catch (Exception e) {
+                result = false;
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+            if(result){
+                generarGPX(ultimaRuta.getIdRuta());
+                new obtener_fecha(context, activity).execute(ultimaRuta.getIdRuta());
+                Intent i = new Intent(getApplicationContext(), Rutas_guardar_ruta.class);
+                i.putExtra("idRuta", ultimaRuta.getIdRuta());
+                i.putExtra("guardado", false);
+
+            }
+        }
+    }
+
+    /**
+     * Tarea asincrona utilizada para obtener la fecha de una ruta en concreto
+     */
+    private class obtener_fecha extends AsyncTask<Integer,Void,Boolean> {
+
+        private Context context;
+        private Activity activity;
+
+        public obtener_fecha(Context context, Activity activity) {
+            this.context = context;
+            this.activity = activity;
+        }
+
+        protected Boolean doInBackground(Integer... params) {
+
+            Boolean result = true;
+
+            SoapObject request = new SoapObject(NAMESPACE, OBTENER_FECHA_METHOD);
+            request.addProperty("idRuta", params[0]);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(WS_URL);
+
+            try {
+                transporte.call(OBTENER_FECHA_ACTION,envelope);
+                SoapPrimitive resSoap = (SoapPrimitive) envelope.getResponse();
+                Intent i = new Intent(context, Rutas_guardar_ruta.class);
+                i.putExtra("fecha", resSoap.toString());
+                startActivity(i);
+                activity.finish();
+
+            } catch (Exception e) {
+                result = false;
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+
+        }
+    }
+
+    /**
+     * Tarea asincrona utilizada para obtener una ruta
+     */
+    private class obtener_ruta extends AsyncTask<Integer,Void,Boolean> {
+
+        private Context context;
+        private Activity activity;
+
+        public obtener_ruta(Context context, Activity activity) {
+            this.context = context;
+            this.activity = activity;
+        }
+
+        protected Boolean doInBackground(Integer... params) {
+
+            Boolean result = true;
+
+            SoapObject request = new SoapObject(NAMESPACE, OBTENER_RUTA_METHOD);
+            request.addProperty("ruta", params[0]);
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE transporte = new HttpTransportSE(WS_URL);
+
+            try {
+                transporte.call(OBTENER_RUTA_ACTION,envelope);
+                SoapObject resSoap = (SoapObject)envelope.getResponse();
+                ruta_cargada = new RutaDTO(Integer.valueOf(resSoap.getPropertyAsString(0)),
+                        Integer.valueOf(resSoap.getPropertyAsString(1)),
+                        resSoap.getPropertyAsString(2), resSoap.getPropertyAsString(3),
+                        resSoap.getPropertyAsString(4), Integer.valueOf(resSoap.getPropertyAsString(5)),
+                        Integer.valueOf(resSoap.getPropertyAsString(6)),
+                        Integer.valueOf(resSoap.getPropertyAsString(7)), resSoap.getPropertyAsString(8));
+
+            } catch (Exception e) {
+                result = false;
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+
+            boolean cargado = false;
+
+            if(result){
+                FTPManager ftpManager = new FTPManager(getApplicationContext());
+                try {
+                    cargado = ftpManager.FTPDescargar(ruta_cargada.getMapa());
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if(cargado){
+                    String ruta = "/" + ruta_cargada.getMapa();
+                    decodeGPX(ruta);
+                    dibujarRutaCargada();
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Tarea asíncrona para enviar coordenadas a la Roads API
+     */
     public class CallAPI extends AsyncTask<String, String, String> {
 
         private Context context;

@@ -18,9 +18,10 @@
         android:id="@+id/rutas_btn_sos"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/rutas_btn_emergencia"
         android:src="@drawable/rutas_sos_2"
         android:visibility="visible" />

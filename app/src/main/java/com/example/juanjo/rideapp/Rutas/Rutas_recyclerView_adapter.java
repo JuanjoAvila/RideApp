@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Rutas;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,14 +13,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
+import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.R;
 
 import java.util.List;
 
-public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAdapterRutas2.RutasViewHolder> {
+/**
+ * @author RideApp
+ * @version Final
+ * Adaptador utilizado para cargar datos en el RecyclerView de Rutas
+ */
+public class Rutas_recyclerView_adapter extends RecyclerView.Adapter<Rutas_recyclerView_adapter.RutasViewHolder> {
     private List<Ruta_infoDTO> items;
 
     public static class RutasViewHolder extends RecyclerView.ViewHolder {
-        // Campos respectivos de un item
         public ImageView fotoUsuario;
         public TextView nombreRuta;
         public ImageView rutaMapa;
@@ -47,7 +53,7 @@ public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAd
         }
     }
 
-    public RecicleViewAdapterRutas2(List<Ruta_infoDTO> items) {
+    public Rutas_recyclerView_adapter(List<Ruta_infoDTO> items) {
         this.items = items;
     }
 
@@ -66,6 +72,9 @@ public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAd
 
     @Override
     public void onBindViewHolder (@NonNull RutasViewHolder viewHolder, int i){
+        /*
+        Se carga la imagen del usuario
+         */
         if(!items.get(i).getFoto_usuario().equals(null)){
             byte[] decodedString = Base64.decode(Login.getUsuari().getAvatar(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -74,18 +83,23 @@ public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAd
             viewHolder.fotoUsuario.setImageResource(R.drawable.user_default);
         }
         viewHolder.nombreRuta.setText(items.get(i).getTitulo());
+        /*
+        Se carga la imagen de la ruta
+         */
         if(!items.get(i).getFoto_ruta().equals(null)){
             byte[] decodedString = Base64.decode(items.get(i).getFoto_ruta(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
             viewHolder.rutaMapa.setImageBitmap(bitmap);
         }
-        //viewHolder.rutaMapa.setImageResource(R.drawable.imagenrutaprueba);
+        /*
+        Se cargan el resto de datos
+         */
         viewHolder.fechaPublicacion.setText(items.get(i).getFecha_ruta());
         viewHolder.puntuacionEstrellas.setRating(items.get(i).getDificultad());
-        viewHolder.likesCarita.setImageResource(R.drawable.caritasonriente);
+        viewHolder.likesCarita.setImageResource(R.drawable.happy);
         viewHolder.likes.setText(String.valueOf(items.get(i).getLikes()));
-        viewHolder.dislikesCarita.setImageResource(R.drawable.caritatriste);
+        viewHolder.dislikesCarita.setImageResource(R.drawable.sad);
         viewHolder.dislikes.setText(String.valueOf(items.get(i).getDislikes()));
     }
 

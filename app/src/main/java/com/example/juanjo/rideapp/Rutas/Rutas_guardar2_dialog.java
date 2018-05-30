@@ -12,7 +12,9 @@ import android.view.WindowManager;
 import com.example.juanjo.rideapp.R;
 
 /**
- * Created by jesus on 17/05/18.
+ * @author RideApp
+ * @version Final
+ * Diálogo utilizado para informar al usuario de si esta seguro que desea salir
  */
 
 public class Rutas_guardar2_dialog extends DialogFragment {

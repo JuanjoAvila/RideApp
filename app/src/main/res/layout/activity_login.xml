@@ -14,12 +14,12 @@
     <ImageView
         android:id="@+id/logo"
         android:layout_width="400dp"
-        android:layout_height="150dp"
+        android:layout_height="165dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
 
         android:contentDescription="@string/titulo"
-        android:scaleType="centerCrop"
+        android:scaleType="center"
         android:src="@drawable/logo" />
 
 
@@ -32,56 +32,61 @@
         android:layout_below="@+id/logo"
         android:layout_marginBottom="10dp"
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rectangulo_transparente"
-            android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            >
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rectangulo_transparente"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
                 android:text="@string/eslogan"
                 android:textColor="@color/esloganColor"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="30dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="10dp"/>
+                android:textStyle="bold" />
+
             <AutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:hint="@string/hint_usuario"
-                android:background="@drawable/cuadrado_redondo_login_usuario"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:drawableStart="@mipmap/usuariologin"
-                android:textSize="14sp"
-                android:drawablePadding="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:id="@+id/loginusuario"
-                android:layout_marginBottom="15dp"/>
-            <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:hint="@string/hint_contrasena"
-                android:textColorHint="@color/blanco"
-                android:background="@drawable/cuadrado_redondo_login_contrasena"
-                android:layout_marginStart="30dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginEnd="30dp"
-                android:drawableStart="@mipmap/contrasenalogin"
-                android:textSize="14sp"
+                android:layout_marginStart="30dp"
+                android:background="@drawable/cuadrado_redondo_login_usuario"
                 android:drawablePadding="5dp"
-                android:textColor="@color/blanco"
-                android:paddingStart="10dp"
+                android:drawableStart="@mipmap/usuariologin"
+                android:hint="@string/hint_usuario"
                 android:paddingEnd="10dp"
-                android:inputType="textPassword"
+                android:paddingStart="10dp"
+                android:textSize="14sp" />
+
+            <AutoCompleteTextView
                 android:id="@+id/logincontraseña"
-                android:layout_marginBottom="30dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="30dp"
+                android:background="@drawable/cuadrado_redondo_login_contrasena"
+                android:drawablePadding="5dp"
+                android:drawableStart="@mipmap/contrasenalogin"
+                android:hint="@string/hint_contrasena"
+                android:inputType="textPassword"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textColor="@color/blanco"
+                android:textColorHint="@color/blanco"
+                android:textSize="14sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -96,11 +101,12 @@
                     android:text="@string/recordar_usuario"
                     android:textColor="@color/remember"
                     android:textSize="12sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/eres_nuevo"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/textView2"
@@ -128,27 +134,28 @@
                 android:text="@string/sign_in"
                 android:textColor="@color/blanco"
                 android:textStyle="normal" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/linea"
-                android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:contentDescription="@string/separacion"/>
+                android:layout_marginStart="5dp"
+                android:contentDescription="@string/separacion"
+                android:src="@drawable/linea" />
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/signInButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="20dp"
                     android:layout_centerInParent="true"
-                    />
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="20dp" />
             </RelativeLayout>
 
 

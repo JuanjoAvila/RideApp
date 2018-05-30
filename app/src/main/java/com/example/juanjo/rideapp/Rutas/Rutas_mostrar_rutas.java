@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.RecicleViewAdapterRutas2;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -34,7 +33,7 @@ public class Rutas_mostrar_rutas extends AppCompatActivity {
 
     private LinkedList<Ruta_infoDTO> info_rutas = new LinkedList<Ruta_infoDTO>();
     private RecyclerView rView_mostrar_rutas;
-    private RecicleViewAdapterRutas2 adapter;
+    private Rutas_recyclerView_adapter adapter;
     private RecyclerView.LayoutManager lManager;
     private Activity activity;
 
@@ -58,7 +57,7 @@ public class Rutas_mostrar_rutas extends AppCompatActivity {
 
                 try {
                     new obtenerInfoRutas(getApplicationContext()).execute(idUsuario).get();
-                    adapter = new RecicleViewAdapterRutas2(info_rutas);
+                    adapter = new Rutas_recyclerView_adapter(info_rutas);
                     rView_mostrar_rutas.setAdapter(adapter);
                     rView_mostrar_rutas.setHasFixedSize(true);
 
@@ -73,7 +72,7 @@ public class Rutas_mostrar_rutas extends AppCompatActivity {
         });
 
         rView_mostrar_rutas.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), rView_mostrar_rutas,new RecyclerItemClickListener.OnItemClickListener() {
+                new Rutas_recyclerView_clickListener(getApplicationContext(), rView_mostrar_rutas,new Rutas_recyclerView_clickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         Ruta_infoDTO ruta = adapter.getItem(position);
                         Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);

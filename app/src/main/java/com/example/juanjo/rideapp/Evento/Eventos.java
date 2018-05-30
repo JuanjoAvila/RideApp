@@ -11,11 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.juanjo.rideapp.DTO.EventoDTO;
 import com.example.juanjo.rideapp.DTO.EventosRutasDTO;
-import com.example.juanjo.rideapp.DTO.RelacionAmigoDTO;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.Rutas.RecyclerItemClickListener;
+import com.example.juanjo.rideapp.Rutas.Rutas_recyclerView_clickListener;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -69,7 +67,7 @@ public class Eventos extends AppCompatActivity {
             }
         });
         eventosRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), eventosRecyclerView,new RecyclerItemClickListener.OnItemClickListener() {
+                new Rutas_recyclerView_clickListener(getApplicationContext(), eventosRecyclerView,new Rutas_recyclerView_clickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         EventosRutasDTO ruta = adapterEvento.getEvento(position);
                         Intent intent = new Intent(getApplicationContext(), Evento.class);

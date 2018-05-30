@@ -3,7 +3,9 @@ package com.example.juanjo.rideapp.Rutas;
 import com.example.juanjo.rideapp.R;
 
 /**
- * Created by jesus on 16/05/18.
+ * @author RideApp
+ * @version Final
+ * Se guardan los valores necesarios para inflar las vistas del ViewPager
  */
 
 public enum Rutas_viewpager_enum {
