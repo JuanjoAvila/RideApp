@@ -629,7 +629,7 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             byte[] decodedString = Base64.decode(Login.getUsuari().getAvatar(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rutas_avatar2);
-            //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*URL*/
+            //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*WS_URL*/
             if (bitmap != null) {
                 BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
                 Matrix matrix = new Matrix();

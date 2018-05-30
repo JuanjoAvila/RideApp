@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.Hashtable;
 
 /**
- * Created by jesus on 22/05/18.
+ * @author RideApp
+ * @version Final
+ * Data transfer object
  */
 
 public class RutaDTO implements KvmSerializable{

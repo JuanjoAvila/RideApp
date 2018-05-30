@@ -8,11 +8,14 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
-        android:layout_width="316dp"
+        android:layout_width="0dp"
         android:layout_height="100dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
         android:background="@color/blanco"
-        tools:layout_editor_absoluteX="22dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fotoUsuario"

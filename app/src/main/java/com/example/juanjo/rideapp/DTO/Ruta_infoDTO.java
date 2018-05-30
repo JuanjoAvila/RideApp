@@ -6,9 +6,10 @@ import org.ksoap2.serialization.PropertyInfo;
 import java.util.Hashtable;
 
 /**
- * Created by jesus on 24/05/18.
+ * @author RideApp
+ * @version Final
+ * Data transfer object
  */
-
 public class Ruta_infoDTO implements KvmSerializable{
     private int idRuta;
     private String titulo;

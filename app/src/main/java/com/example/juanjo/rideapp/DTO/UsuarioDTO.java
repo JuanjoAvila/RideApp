@@ -6,7 +6,9 @@ import org.ksoap2.serialization.PropertyInfo;
 import java.util.Hashtable;
 
 /**
- * Created by jesus on 12/05/18.
+ * @author RideApp
+ * @version Final
+ * Data transfer object
  */
 
 public class UsuarioDTO implements KvmSerializable{

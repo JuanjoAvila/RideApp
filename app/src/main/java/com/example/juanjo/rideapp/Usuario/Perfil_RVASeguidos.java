@@ -44,7 +44,7 @@ public class Perfil_RVASeguidos extends RecyclerView.Adapter<Perfil_RVASeguidos.
      * Constructor del adaptador para generar el RecyclerView.
      * @param context Contexto de la actividad donde se va a ubicar el RecyclerView.
      * @param names Nombres de usuario de los seguidores o seguidos.
-     * @param imageUrls URL o nombre de los avatares de los seguidores o seguidos.
+     * @param imageUrls WS_URL o nombre de los avatares de los seguidores o seguidos.
      * @param idsUsers ID del seguidor o seguido, necesario para poder luego acceder a su perfil puslando en su avatar.
      * @param nombres Nombres de la cuenta de los usuarios, necesario para sustituir los Nombres de usuario de Google por sus nombres de la cuenta.
      */
@@ -60,8 +60,8 @@ public class Perfil_RVASeguidos extends RecyclerView.Adapter<Perfil_RVASeguidos.
     /**
      * Descarga una imagen a través del FTP o por HTTP según si el usuario es propio de la aplicación,
      * entonces tiene su avatar en el FTP o según si el usuario se registró con cuenta de Google,
-     * que entonces cogerá la foto de avatar de la URL de Google.
-     * @param imgPosition Posición en la que se encuentra el String con el nombre o el URL de la imágen en el ArrayList del adaptador.
+     * que entonces cogerá la foto de avatar de la WS_URL de Google.
+     * @param imgPosition Posición en la que se encuentra el String con el nombre o el WS_URL de la imágen en el ArrayList del adaptador.
      * @param usuarioNombre Nombre del usuario para poder identificar si es usuario de Google o propio de la aplicación.
      * @return Devuelve un Bitmap con el avatar del usuario.
      */

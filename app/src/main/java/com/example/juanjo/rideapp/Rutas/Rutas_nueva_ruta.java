@@ -592,7 +592,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
             //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rutas_avatar2);
             //Bitmap bitmap = manager.FTPCargarImagen(Login.getUsuari().getAvatar());
-            //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*URL*/
+            //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*WS_URL*/
             if (bitmap != null) {
                 BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
                 Matrix matrix = new Matrix();

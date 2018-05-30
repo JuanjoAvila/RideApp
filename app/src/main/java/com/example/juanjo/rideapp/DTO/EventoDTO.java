@@ -5,6 +5,11 @@ import org.ksoap2.serialization.PropertyInfo;
 
 import java.util.Hashtable;
 
+/**
+ * @author RideApp
+ * @version Final
+ * Data transfer object
+ */
 public class EventoDTO implements KvmSerializable {
     private int IdEvento;
     private int Ruta;

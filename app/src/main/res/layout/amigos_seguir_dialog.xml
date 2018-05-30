@@ -6,28 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_rutas_salir2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_rutas_farRoute"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/botonsign"
-        android:onClick="returnMain"
-        android:text="Salir"
-        android:textColor="@color/blanco" />
-
     <TextView
         android:id="@+id/tv_rutas_gps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="¿Deseas terminar?"
+        android:text="¡Genial!"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -39,33 +24,18 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="Puedes guardar el recorrido si lo deseas." />
-
-    <Button
-        android:id="@+id/btn_rutas_guardar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_rutas_atras"
-        android:layout_alignBottom="@+id/btn_rutas_atras"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_toEndOf="@+id/btn_rutas_atras"
-        android:background="@drawable/botonsign"
-        android:onClick="guardar"
-        android:text="Guardar"
-        android:textColor="@color/blanco" />
+        android:text="Ahora sois amigos, a partir de ahora podrás consultar sus rutas desde la pestaña 'Perfil' situada en el menú de la página principal." />
 
     <Button
         android:id="@+id/btn_rutas_atras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_rutas_farRoute"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/btn_rutas_salir2"
+        android:layout_marginTop="5dp"
         android:background="@drawable/botonsign"
-        android:onClick="atras"
-        android:text="Atrás"
+        android:onClick="seguir"
+        android:text="De acuerdo"
         android:textColor="@color/blanco" />
 </RelativeLayout>

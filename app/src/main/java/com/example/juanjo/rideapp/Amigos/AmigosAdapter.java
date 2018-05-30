@@ -10,13 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
-import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.DTO.Usuario_adapter;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
@@ -31,32 +28,38 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by jesus on 11/04/18.
+ * @author RideApp
+ * @version Final
+ * Adaptador para el ListView utilizado en Amigos
  */
-
 public class AmigosAdapter extends BaseAdapter {
 
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
-    public static final String METHOD_NAME = "borrarAmigo";
-    public static final String SOAP_ACTION = "http://tempuri.org/borrarAmigo";
+    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
     public static final String NAMESPACE = "http://tempuri.org/";
-    public static final String SOAP_ACTION2 = "http://tempuri.org/nuevoAmigo";
-    public static final String METHOD_NAME2 = "nuevoAmigo";
+    public static final String NUEVO_AMIGO_ACTION = "http://tempuri.org/nuevoAmigo";
+    public static final String NUEVO_AMIGO_METHOD = "nuevoAmigo";
 
     protected Context context;
     protected Activity activity;
     protected ArrayList<Integer> idAmigos;
     protected ArrayList<Usuario_adapter> usuarios;
+    //Lista duplicada para utilizarla en el filtro
+    protected ArrayList<Usuario_adapter> usuarios_for_filter;
+    //Necesario para ejecutar los dialogos en la actividad principal de Amigos
+    protected Amigos_main main;
 
-    public AmigosAdapter(Activity activity, ArrayList<Usuario_adapter> usuarios, ArrayList<Integer> idAmigos, Context context) {
+    public AmigosAdapter(Amigos_main main, Activity activity, ArrayList<Usuario_adapter> usuarios_for_filter, ArrayList<Usuario_adapter> usuarios, ArrayList<Integer> idAmigos, Context context) {
         this.activity = activity;
         this.usuarios = usuarios;
         this.idAmigos = idAmigos;
         this.context = context;
+        this.usuarios_for_filter = usuarios_for_filter;
+        this.main = main;
     }
 
     @Override
@@ -86,6 +89,9 @@ public class AmigosAdapter extends BaseAdapter {
 
         CircleImageView avatar = vi.findViewById(R.id.fotoUsuario);
 
+        /*
+        Se carga la foto de perfil
+         */
         if(!usuarios.get(position).getAvatar().equals(null) && !usuarios.get(position).getAvatar().equals("") && !usuarios.get(position).getAvatar().startsWith("http")){
             byte[] decodedString = Base64.decode(usuarios.get(position).getAvatar(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -95,12 +101,19 @@ public class AmigosAdapter extends BaseAdapter {
             avatar.setImageDrawable(activity.getResources().getDrawable(R.drawable.user_default));
         }
 
+        /*
+        Se cargan el nombre y apellidos
+         */
         TextView nombreUsuario = (TextView) vi.findViewById(R.id.tv_amigos_nombreUsuario);
         nombreUsuario.setText(usuarios.get(position).getNombre());
 
         TextView apellidosUsuario = (TextView) vi.findViewById(R.id.tv_amigos_apellidos);
         apellidosUsuario.setText(usuarios.get(position).getApellidos());
 
+        /*
+        Se comprueba que amigos tiene ya agregados para posicionar el ToogleButton de una manera
+        o otra
+         */
         final ToggleButton tb_amigos = vi.findViewById(R.id.tb_amigos);
         if(idAmigos.contains(usuarios.get(position).getIdUsuario())){
             tb_amigos.setChecked(true);
@@ -108,13 +121,18 @@ public class AmigosAdapter extends BaseAdapter {
             tb_amigos.setChecked(false);
         }
 
+        /*
+        Se inserta una nueva amistad, o se borra según la posición del ToogleButton
+         */
         tb_amigos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(tb_amigos.isChecked()){
-                    new insertarAmigo(context).execute(Login.getUsuari().getIdUsuario(), usuarios.get(position).getIdUsuario());
+                    new amigos_insertar(context).execute(Login.getUsuari().getIdUsuario(), usuarios.get(position).getIdUsuario());
                 }else{
-                    new borrarAmigo(context).execute(usuarios.get(position).getIdUsuario());
+                    main.usuario_actual = Login.getUsuari().getIdUsuario();
+                    main.usuario_a_borrar = usuarios.get(position).getIdUsuario();
+                    main.mostrar_no_seguir_dialog();
                 }
             }
         });
@@ -122,12 +140,34 @@ public class AmigosAdapter extends BaseAdapter {
         return vi;
     }
 
-    //Tarea Asíncrona para llamar al WS de consulta en segundo plano
-    private class insertarAmigo extends AsyncTask<Integer,Void,Integer> {
+    /**
+     * Método utilizado para filtar resultados por nombres y apellidos
+     * @param charText El texto introducido en la búsqueda
+     */
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        usuarios.clear();
+        if (charText.length() == 0) {
+            usuarios.addAll(usuarios_for_filter);
+        } else {
+            for (Usuario_adapter usuario : usuarios_for_filter) {
+                String nombre_apellidos = usuario.getNombre() + " " + usuario.getApellidos();
+                if (nombre_apellidos.toLowerCase(Locale.getDefault()).contains(charText)) {
+                    usuarios.add(usuario);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Tarea asincrona utilizada para la inserción de una nueva amistad
+     */
+    private class amigos_insertar extends AsyncTask<Integer,Void,Integer> {
 
         private Context context;
 
-        public insertarAmigo(Context context) {
+        public amigos_insertar(Context context) {
             this.context = context;
         }
 
@@ -144,19 +184,20 @@ public class AmigosAdapter extends BaseAdapter {
             pi.setValue(amigo);
             pi.setType(amigo.getClass());
 
-            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME2);
+            SoapObject request = new SoapObject(NAMESPACE, NUEVO_AMIGO_METHOD);
             request.addProperty(pi);
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
             envelope.addMapping(NAMESPACE, "AmigoDTO", amigo.getClass());
 
-            HttpTransportSE transporte = new HttpTransportSE(URL);
+            HttpTransportSE transporte = new HttpTransportSE(WS_URL);
 
             try {
-                transporte.call(SOAP_ACTION2,envelope);
+                transporte.call(NUEVO_AMIGO_ACTION,envelope);
                 SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
                 result = Integer.parseInt(response.toString());
+                idAmigos.add(params[1]);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (XmlPullParserException e) {
@@ -168,53 +209,13 @@ public class AmigosAdapter extends BaseAdapter {
         }
 
         protected void onPostExecute(Integer result) {
-            if(result.equals(new Integer(0))){
-                Toast.makeText(this.context, "No se ha insertado", Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(this.context, "Se ha creado correctamente", Toast.LENGTH_LONG).show();
+            if(!result.equals(new Integer(0))){
+                /*
+                Si el resultado es satisfactorio, se muestra que se ha agregado correctamente
+                 */
+                main.mostrar_seguir_dialog();
             }
         }
     }
 
-    //Tarea Asíncrona para llamar al WS de consulta en segundo plano
-    private class borrarAmigo extends AsyncTask<Integer,Void,Boolean> {
-
-        private Context context;
-
-        public borrarAmigo(Context context) {
-            this.context = context;
-        }
-
-        protected Boolean doInBackground(Integer... params) {
-
-            Boolean result = true;
-
-            SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
-            request.addProperty("amigo", params[0]);
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-
-            HttpTransportSE transporte = new HttpTransportSE(URL);
-
-            try {
-                transporte.call(SOAP_ACTION,envelope);
-                SoapPrimitive resSoap = (SoapPrimitive) envelope.getResponse();
-            } catch (Exception e) {
-                result = false;
-                e.printStackTrace();
-            }
-
-
-            return result;
-        }
-
-        protected void onPostExecute(Boolean result) {
-            if(result){
-                Toast.makeText(context, "El usuario ha sido borrado", Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(context, "No ha podido borrarse el usuario", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

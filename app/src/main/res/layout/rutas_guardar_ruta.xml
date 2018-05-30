@@ -76,7 +76,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp"
             android:stepSize="1"
-            android:theme="@style/RatingBar"/>/>
+            android:theme="@style/RatingBar" />/>
 
         <TextView
             android:id="@+id/textView6"

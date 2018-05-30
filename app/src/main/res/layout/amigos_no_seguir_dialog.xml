@@ -10,15 +10,13 @@
         android:id="@+id/btn_rutas_salir2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/tv_rutas_farRoute"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/botonsign"
-        android:onClick="returnMain"
-        android:text="Salir"
+        android:onClick="no_seguir"
+        android:text="Borrar"
         android:textColor="@color/blanco" />
 
     <TextView
@@ -27,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="¿Deseas terminar?"
+        android:text="¿Dejar de seguir?"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -39,33 +37,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="Puedes guardar el recorrido si lo deseas." />
+        android:text="Si dejas de seguir a este usuario, no podrás descargar sus rutas. ¿Estás seguro?" />
 
-    <Button
-        android:id="@+id/btn_rutas_guardar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_rutas_atras"
-        android:layout_alignBottom="@+id/btn_rutas_atras"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_toEndOf="@+id/btn_rutas_atras"
-        android:background="@drawable/botonsign"
-        android:onClick="guardar"
-        android:text="Guardar"
-        android:textColor="@color/blanco" />
-
-    <Button
-        android:id="@+id/btn_rutas_atras"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_rutas_farRoute"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/btn_rutas_salir2"
-        android:background="@drawable/botonsign"
-        android:onClick="atras"
-        android:text="Atrás"
-        android:textColor="@color/blanco" />
 </RelativeLayout>
