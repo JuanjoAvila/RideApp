@@ -16,8 +16,12 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,9 +29,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -36,6 +43,7 @@ import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
+import com.example.juanjo.rideapp.RecicleViewAdapterRutas2;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -61,20 +69,47 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, Rutas_guardar_dialog.CallBack {
 
@@ -131,6 +166,23 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
     private int idRuta;
     public static RutaDTO ruta_cargada = null;
 
+    //
+
+    private LinkedList<Location> coordenadas_ruta_cargada = new LinkedList<Location>();
+    String addressInfo_inicioRuta;
+    String addressInfo_posicionActual;
+
+    Rutas_adresses_dialog address_dialog = null;
+
+    //
+    LatLng posicionCorregida = null;
+
+    private ImageButton rutas_btn_sos;
+
+    private Rutas_sos_failed_dialog sos_failed_Dialog = null;
+
+    Rutas_sos_dialog sosDialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,14 +190,16 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         // Se obtiene el fragment del mapa, y se obtiene el mapa asincronamente
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
         start = (ToggleButton)findViewById(R.id.rutas_tBtn);
+        rutas_btn_sos = (ImageButton)findViewById(R.id.rutas_btn_sos);
 
         /*
         Se recoge la id de la ruta pasada en la actividad anterior
          */
         idRuta = getIntent().getExtras().getInt("idRuta");
+
+        mapFragment.getMapAsync(this);
 
         /*
         Se declara el client de Google API, configurando una serie de parametros
@@ -176,6 +230,49 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
                 }
             }
         });
+
+        rutas_btn_sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mostrar_sos_dialog();
+            }
+        });
+    }
+
+    public void generarMensajeSOS(int codigo){
+        if(start.isChecked()){
+            String mensaje = codigo + "\n" + Login.getUsuari().getNombre() + ", " + Login.getUsuari().getApellidos() + "\n\n" +
+                    "Latitud: " + posicionCorregida.latitude + "\nLongitud: " + posicionCorregida.longitude +
+                    "\nDirección: " + getAddressInfoForSMS(posicionCorregida);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + 679436200));
+            intent.putExtra("sms_body", mensaje);
+            startActivity(intent);
+        }else{
+            mostrar_sos_failed_dialog();
+        }
+    }
+
+    public void mostrar_sos_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
+        sosDialog.show(fm, "fragment_edit_name");
+    }
+
+    private String getAddressInfoForSMS(LatLng coordenadas) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0);
+
+        return address;
     }
 
     /*
@@ -193,10 +290,8 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
                 MapStyleOptions.loadRawResourceStyle(
                         this, R.raw.formato_mapa));
 
-        //Se enciende la actualización automatica para detecta la primera ubicación
-        //enableLocationUpdates();
-
         new obtener_ruta(this, this).execute(idRuta);
+
     }
 
     /*
@@ -352,8 +447,6 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
                 Location lastLocation =
                         LocationServices.FusedLocationApi.getLastLocation(apiClient);
 
-                Toast.makeText(this, String.valueOf(lastLocation.getLatitude()) + " " + String.valueOf(lastLocation.getLongitude()), Toast.LENGTH_LONG).show();
-
             } else {
                 //Permiso denegado:
                 //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
@@ -378,34 +471,59 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             //Se recoge la posición actual
             LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
 
-            //Se crea un nuevo marcador, se le pasa la posición
-            options = new MarkerOptions().position(posicionActual);
+            addressInfo_posicionActual = getAddressInfo(posicionActual);
 
-            //Se crea la imagen en formato Bitmap con la función definida más abajo
-            Bitmap bitmap = createUserBitmap();
-            if(bitmap!=null) {
-                options.title("Nombre de usuario");
-                options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                options.anchor(0.5f, 0.907f);
-                marker = mMap.addMarker(options);
+            boolean addressEquals = comprobarDirecciones(addressInfo_inicioRuta, addressInfo_posicionActual);
+
+            if(!addressEquals){
+                String text = "<b>Posición actual:</b> " + addressInfo_posicionActual + "<br><br><b>Inicio de ruta: </b>" +
+                        addressInfo_inicioRuta + "<br><br>Te encuentras lejos del inicio de ruta, clica el <b>marcador rojo</b>, y utiliza " +
+                        "las funciones de <b>GoogleMaps</b> para ubicarte en la misma calle.";
+                mostrar_addresses_dialog(text);
+                disableLocationUpdates();
+                start.setChecked(false);
+            }else{
+
+                //Prueba API Request
+                try {
+                    new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                //Se crea un nuevo marcador, se le pasa la posición
+                options = new MarkerOptions().position(posicionCorregida);
+
+                //Se crea la imagen en formato Bitmap con la función definida más abajo
+                Bitmap bitmap = createUserBitmap();
+                if(bitmap!=null) {
+                    options.title("Nombre de usuario");
+                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    options.anchor(0.5f, 0.907f);
+                    marker = mMap.addMarker(options);
+                }
+
+                //Se crea la nueva posición de la camara
+                CameraPosition camera = new CameraPosition.Builder()
+                        .target(posicionCorregida)
+                        .zoom(18)
+                        .bearing(45)
+                        .tilt(70)
+                        .build();
+
+                //Se inicia el cambio de posición de la camara
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
+
+                //Se pone la booleana a false y se apaga la actualización de ubicaciones automaticas,
+                //la proxima vez cuando comience a grabar la ruta, la booleana estará a false y
+                // si que recibirá actualizaciones sin parar
+                inicio = false;
+                //disableLocationUpdates();
             }
 
-            //Se crea la nueva posición de la camara
-            CameraPosition camera = new CameraPosition.Builder()
-                    .target(posicionActual)
-                    .zoom(18)
-                    .bearing(45)
-                    .tilt(70)
-                    .build();
 
-            //Se inicia el cambio de posición de la camara
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
-
-            //Se pone la booleana a false y se apaga la actualización de ubicaciones automaticas,
-            //la proxima vez cuando comience a grabar la ruta, la booleana estará a false y
-            // si que recibirá actualizaciones sin parar
-            inicio = false;
-            disableLocationUpdates();
         }else{
             //Se remueven el marcador y las lineas cada vez que se entra, para que no se repitan
             if(marker != null){
@@ -419,8 +537,17 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             //Se recoge la posición actual
             LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
 
+            //Prueba API Request
+            try {
+                new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             //Se crea un nuevo marcador, se le pasa la posición
-            options = new MarkerOptions().position(posicionActual);
+            options = new MarkerOptions().position(posicionCorregida);
 
             //Se crea la imagen en formato Bitmap con la función definida más abajo
             Bitmap bitmap = createUserBitmap();
@@ -433,7 +560,7 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
 
             //Se crea la nueva posición de la camara
             CameraPosition camera = new CameraPosition.Builder()
-                    .target(posicionActual)
+                    .target(posicionCorregida)
                     .zoom(19)
                     .bearing(45)
                     .tilt(70)
@@ -450,8 +577,8 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
              */
             PolylineOptions polyoptions = new PolylineOptions()
                     .clickable(true)
-                    .color(R.color.black)
-                    .width(50)
+                    .color(getApplicationContext().getResources().getColor(R.color.colorPrimary))
+                    .width(40)
                     .startCap(new RoundCap())
                     .endCap(new RoundCap());
 
@@ -499,7 +626,9 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             canvas.save();
 
             //Se crea otro bitmap con la imagen de perfil
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rutas_avatar2);
+            byte[] decodedString = Base64.decode(Login.getUsuari().getAvatar(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rutas_avatar2);
             //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*URL*/
             if (bitmap != null) {
                 BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
@@ -547,6 +676,13 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
         FragmentManager fm = getSupportFragmentManager();
         prueba = Rutas_guardar_dialog.newInstance("Some Title");
         prueba.show(fm, "fragment_edit_name");
+        finished = true;
+    }
+
+    private void mostrar_addresses_dialog(String text) {
+        FragmentManager fm = getSupportFragmentManager();
+        address_dialog = Rutas_adresses_dialog.newInstance("Some Title", text);
+        address_dialog.show(fm, "fragment_edit_name");
         finished = true;
     }
 
@@ -614,6 +750,25 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             prueba.dismiss();
             enableLocationUpdates();
             start.setChecked(true);
+        }
+    }
+
+    public void rutaLejana(View view){
+        if(address_dialog != null){
+            address_dialog.dismiss();
+        }
+    }
+
+    public void mostrar_sos_failed_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sos_failed_Dialog = Rutas_sos_failed_dialog.newInstance("Some Title");
+        sos_failed_Dialog.show(fm, "fragment_edit_name");
+    }
+
+    public void sos_failed_dialog_atras(View view){
+        if(sos_failed_Dialog != null){
+            sos_failed_Dialog.dismiss();
+            sosDialog.dismiss();
         }
     }
 
@@ -870,7 +1025,7 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
             Boolean result = true;
 
             SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME5);
-            request.addProperty("idRuta", params[0]);
+            request.addProperty("ruta", params[0]);
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
@@ -897,13 +1052,249 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
 
         protected void onPostExecute(Boolean result) {
 
+            boolean cargado = false;
+
             if(result){
                 FTPManager ftpManager = new FTPManager(getApplicationContext());
+                try {
+                    cargado = ftpManager.FTPDescargar(ruta_cargada.getMapa());
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+                if(cargado){
+                    String ruta = "/" + ruta_cargada.getMapa();
+                    decodeGPX(ruta);
+                    dibujarRutaCargada();
+
+                }else{
+                    //TODO: No se ha podido descargar la ruta
+                }
+
+            }else{
+                //TODO: No se ha podido consultar la ruta
             }
         }
     }
 
+    private void decodeGPX(String ruta){
+        File file = new File(getApplicationContext().getFilesDir() + ruta);
+
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            SAX_Handler mh = new SAX_Handler();
+            parser.parse(file, mh);
+
+            /*
+            Al finalizar se borra el archivo guardado en local
+             */
+            boolean deleted = file.delete();
+            if(deleted){
+                Log.e("Borrado:", "true");
+            }else{
+                Log.e("Borrado:", "false");
+            }
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public class SAX_Handler extends DefaultHandler{
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+            if(qName.equals("wpt")){
+                String newLatitude = attributes.getValue(attributes.getQName(0));
+                Double newLatitude_double = Double.parseDouble(newLatitude);
+
+                String newLongitude = attributes.getValue(attributes.getQName(1));
+                Double newLongitude_double = Double.parseDouble(newLongitude);
+
+                String newLocationName = newLatitude + ":" + newLongitude;
+                Location newLocation = new Location(newLocationName);
+                newLocation.setLatitude(newLatitude_double);
+                newLocation.setLongitude(newLongitude_double);
+
+                coordenadas_ruta_cargada.add(newLocation);
+            }
+        }
+    }
+
+    private String readFromFile() {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = getApplicationContext().openFileInput("ruta174.gpx");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
+    }
+
+    private void dibujarRutaCargada() {
+        //Se recoge la primera posición de la ruta para posicionar la camara
+        Location primeraCoordenada = coordenadas_ruta_cargada.get(0);
+        LatLng posicionRuta = new LatLng(primeraCoordenada.getLatitude(), primeraCoordenada.getLongitude());
+
+        //Se crea la nueva posición de la camara
+        CameraPosition camera = new CameraPosition.Builder()
+                .target(posicionRuta)
+                .zoom(19)
+                .bearing(45)
+                .tilt(70)
+                .build();
+
+        //Se inicia el cambio de posición de la camara
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
+
+        PolylineOptions polyoptions = new PolylineOptions()
+                .clickable(true)
+                .color(getApplicationContext().getResources().getColor(R.color.red))
+                .width(20)
+                .startCap(new RoundCap())
+                .endCap(new RoundCap());
+
+        //Se añaden todas las coordenadas
+        for (Location i: coordenadas_ruta_cargada){
+            LatLng coordenada = new LatLng(i.getLatitude(), i.getLongitude());
+            polyoptions.add(coordenada);
+        }
+
+        //Se dibujan en el mapa
+        mMap.addPolyline(polyoptions);
+
+        /*
+        Se añaden los marcadores de inicio y final de la ruta
+         */
+
+        Marker inicioRuta = mMap.addMarker(new MarkerOptions()
+                .position(posicionRuta)
+                .title("Inicio de la ruta"));
 
 
+        addressInfo_inicioRuta = getAddressInfo(posicionRuta);
+
+    }
+
+    private String getAddressInfo(LatLng coordenadas) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0);
+        String[] addressSplitted = address.split(",");
+        String direccion = addressSplitted[0] + ", " + addressSplitted[2];
+
+
+        return direccion;
+    }
+
+    private boolean comprobarDirecciones(String inicioRuta, String posicionActual){
+        if(inicioRuta.equals(posicionActual)){
+            return true;
+        }
+
+        return false;
+    }
+
+    public class CallAPI extends AsyncTask<String, String, String> {
+
+        private Context context;
+
+        public CallAPI(Context context){
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String data = params[0]; //data to post
+
+            String urlString = "https://roads.googleapis.com/v1/snapToRoads?path=" +
+                    data + "&interpolate=true&key=AIzaSyDi09dRhP4BFBECSqdnDZaHpGK2x78QbC8";
+
+            StringBuilder result = new StringBuilder();
+            HttpURLConnection urlConnection = null;
+            try {
+
+                java.net.URL url = new URL(urlString);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }finally {
+                if(urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            String finalResult = result.toString();
+
+            JSONObject jsonObject = null;
+            JSONArray snappedPoints = null;
+            try {
+                jsonObject = new JSONObject(finalResult);
+                snappedPoints = (JSONArray)jsonObject.get("snappedPoints");
+                JSONObject jsonObject2 = new JSONObject(snappedPoints.getJSONObject(0).getString("location"));
+                Double latitude = jsonObject2.getDouble("latitude");
+                Double longitude = jsonObject2.getDouble("longitude");
+
+                posicionCorregida = new LatLng(latitude, longitude);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            return result.toString();
+        }
+    }
 }

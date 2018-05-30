@@ -19,12 +19,11 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView3"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rutas_btn_emergencia"
-        android:visibility="visible"
-        android:src="@drawable/rutas_sos_2" />
+        android:src="@drawable/rutas_sos_2"
+        android:visibility="visible" />
 
     <ToggleButton
         android:id="@+id/rutas_tBtn"
@@ -36,18 +35,5 @@
         android:background="@drawable/rutas_toogle_selector"
         android:textOff=''
         android:textOn='' />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="125dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/rutas_info_background"
-        android:text="00:24:54"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
 
 </RelativeLayout>

@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="200dp"
-            android:text="¿Tienes una emergencia? Con solo pulsar el botón se enviará un mensaje al contacto que elijas en tu perfil."
+            android:text="¿Tienes una emergencia? Con solo pulsar el botón se generará un mensaje que podrás enviar a los servicios de emergencia."
             android:textSize="24sp"
             android:textStyle="bold" />
     </FrameLayout>

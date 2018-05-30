@@ -7,7 +7,7 @@
     <color name="fondoVentanaPrincipal">#dfedd6</color>
     <color name="colorMenu">#ffffff</color>
     <color name="esloganColor">#4e5516</color>
-    <color name="contrasenaContorno">#629c44</color>
+    <color name="contrasenaContorno">#96629c44</color>
     <color name="remember">#243e16</color>
     <color name="blanco">#ffffff</color>
     <color name="black">#000000</color>
@@ -15,4 +15,7 @@
     <color name="rutas_guardar">#64ff0000</color>
     <color name="ratingBar1">#ffee00</color>
     <color name="ratingBar2">#b9ad00</color>
+    <color name="red">#ff0000</color>
+    <color name="mostrarRutas">#96125400</color>
+    <color name="rutas_mostrarRutas_fondo">#c8aedd94</color>
 </resources>

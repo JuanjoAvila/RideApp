@@ -2,8 +2,11 @@ package com.example.juanjo.rideapp.Rutas;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,7 +19,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -25,9 +31,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.telephony.SmsManager;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -59,7 +69,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
+import com.google.maps.GeoApiContext;
+import com.google.maps.RoadsApi;
+import com.google.maps.model.SnappedPoint;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -68,13 +84,31 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, Rutas_guardar_dialog.CallBack {
+
+    private static final int MAX_SMS_MESSAGE_LENGTH = 160;
+    private static final String SMS_SENT = "my.app";
+    private static final int SMS_PORT = 8095;
+    private static final String SMS_DELIVERED = "";
 
     public static final String URL = "http://rideapp.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "nuevaRuta";
@@ -121,6 +155,15 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
     public static RutaDTO ultimaRuta = null;
     private Boolean obtenerUltimaRuta = true;
 
+    //
+    LatLng posicionCorregida = null;
+
+    //
+    ImageButton rutas_btn_sos;
+
+    Rutas_sos_failed_dialog sos_failed_Dialog = null;
+    Rutas_sos_dialog sosDialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +174,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
         start = (ToggleButton)findViewById(R.id.rutas_tBtn);
+        rutas_btn_sos = (ImageButton)findViewById(R.id.rutas_btn_sos);
 
         /*
         Se declara el client de Google API, configurando una serie de parametros
@@ -161,6 +205,52 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
                 }
             }
         });
+
+        rutas_btn_sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mostrar_sos_dialog();
+            }
+        });
+    }
+
+    public void generarMensajeSOS(int codigo){
+        if(start.isChecked()){
+            String mensaje = codigo + "\n" + Login.getUsuari().getNombre() + ", " + Login.getUsuari().getApellidos() + "\n\n" +
+                    "Latitud: " + posicionCorregida.latitude + "\nLongitud: " + posicionCorregida.longitude +
+                    "\nDirección: " + getAddressInfoForSMS(posicionCorregida);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + 679436200));
+            intent.putExtra("sms_body", mensaje);
+            startActivity(intent);
+        }else{
+            mostrar_sos_failed_dialog();
+        }
+    }
+
+    public void accidente(View view){
+        generarMensajeSOS(33);
+    }
+
+    public void averia(View view){
+        generarMensajeSOS(37);
+    }
+
+
+    private String getAddressInfoForSMS(LatLng coordenadas) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0);
+
+        return address;
     }
 
     /*
@@ -172,7 +262,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
 
         /*
-        Se añade el estilo en formato json creado en la web de Google
+        Se añade el estilo en formato JSON creado en la web de Google
          */
         mMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
@@ -335,8 +425,6 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
                 Location lastLocation =
                         LocationServices.FusedLocationApi.getLastLocation(apiClient);
 
-                Toast.makeText(this, String.valueOf(lastLocation.getLatitude()) + " " + String.valueOf(lastLocation.getLongitude()), Toast.LENGTH_LONG).show();
-
             } else {
                 //Permiso denegado:
                 //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
@@ -361,8 +449,17 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
             //Se recoge la posición actual
             LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
 
+            //Prueba API Request
+            try {
+                new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             //Se crea un nuevo marcador, se le pasa la posición
-            options = new MarkerOptions().position(posicionActual);
+            options = new MarkerOptions().position(posicionCorregida);
 
             //Se crea la imagen en formato Bitmap con la función definida más abajo
             Bitmap bitmap = createUserBitmap();
@@ -375,7 +472,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
             //Se crea la nueva posición de la camara
             CameraPosition camera = new CameraPosition.Builder()
-                    .target(posicionActual)
+                    .target(posicionCorregida)
                     .zoom(18)
                     .bearing(45)
                     .tilt(70)
@@ -402,8 +499,17 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
             //Se recoge la posición actual
             LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
 
+            //Prueba API Request
+            try {
+                new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             //Se crea un nuevo marcador, se le pasa la posición
-            options = new MarkerOptions().position(posicionActual);
+            options = new MarkerOptions().position(posicionCorregida);
 
             //Se crea la imagen en formato Bitmap con la función definida más abajo
             Bitmap bitmap = createUserBitmap();
@@ -416,7 +522,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
             //Se crea la nueva posición de la camara
             CameraPosition camera = new CameraPosition.Builder()
-                    .target(posicionActual)
+                    .target(posicionCorregida)
                     .zoom(19)
                     .bearing(45)
                     .tilt(70)
@@ -426,15 +532,15 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
 
             //Se van añadiendo las coordenadas en una lista
-            latlngs.add(new LatLng(posicionActual.latitude, posicionActual.longitude));
+            latlngs.add(posicionCorregida);
 
             /*
             Se configura como se van a dibujar las lineas
              */
             PolylineOptions polyoptions = new PolylineOptions()
                     .clickable(true)
-                    .color(R.color.black)
-                    .width(50)
+                    .color(getApplicationContext().getResources().getColor(R.color.colorPrimary))
+                    .width(40)
                     .startCap(new RoundCap())
                     .endCap(new RoundCap());
 
@@ -481,10 +587,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
             RectF bitmapRect = new RectF();
             canvas.save();
 
-            //Se carga el bitmap del usuario descargandolo del FTP
-            //FTPManager manager = new FTPManager(this);
+            byte[] decodedString = Base64.decode(Login.getUsuari().getAvatar(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rutas_avatar2);
+            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rutas_avatar2);
             //Bitmap bitmap = manager.FTPCargarImagen(Login.getUsuari().getAvatar());
             //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*URL*/
             if (bitmap != null) {
@@ -534,6 +640,25 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         prueba = Rutas_guardar_dialog.newInstance("Some Title");
         prueba.show(fm, "fragment_edit_name");
         finished = true;
+    }
+
+    public void mostrar_sos_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
+        sosDialog.show(fm, "fragment_edit_name");
+    }
+
+    public void mostrar_sos_failed_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sos_failed_Dialog = Rutas_sos_failed_dialog.newInstance("Some Title");
+        sos_failed_Dialog.show(fm, "fragment_edit_name");
+    }
+
+    public void sos_failed_dialog_atras(View view){
+        if(sos_failed_Dialog != null){
+            sos_failed_Dialog.dismiss();
+            sosDialog.dismiss();
+        }
     }
 
     /*
@@ -617,10 +742,8 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
     }
 
     private void generarGPX(int idRuta) {
-        String header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n" +
-                "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"byHand\" version=\"1.1\"\n" +
-                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">\n";
+        String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<gpx version=\"1.0\">\n";
         String footer = "</gpx>";
 
 
@@ -639,7 +762,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
                 wpt += String.valueOf(coord.latitude);
                 wpt += "\" lon=\"";
                 wpt += String.valueOf(coord.longitude);
-                wpt += "\"></wpt>";
+                wpt += "\">\n</wpt>\n";
 
                 outputStreamWriter.write(wpt);
             }
@@ -836,4 +959,72 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    public class CallAPI extends AsyncTask<String, String, String> {
+
+        private Context context;
+
+        public CallAPI(Context context){
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String data = params[0]; //data to post
+
+            String urlString = "https://roads.googleapis.com/v1/snapToRoads?path=" +
+                    data + "&interpolate=true&key=AIzaSyDi09dRhP4BFBECSqdnDZaHpGK2x78QbC8";
+
+            StringBuilder result = new StringBuilder();
+            HttpURLConnection urlConnection = null;
+            try {
+
+                java.net.URL url = new URL(urlString);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }finally {
+                if(urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            String finalResult = result.toString();
+
+            JSONObject jsonObject = null;
+            JSONArray snappedPoints = null;
+            try {
+                jsonObject = new JSONObject(finalResult);
+                snappedPoints = (JSONArray)jsonObject.get("snappedPoints");
+                JSONObject jsonObject2 = new JSONObject(snappedPoints.getJSONObject(0).getString("location"));
+                Double latitude = jsonObject2.getDouble("latitude");
+                Double longitude = jsonObject2.getDouble("longitude");
+
+                posicionCorregida = new LatLng(latitude, longitude);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            return result.toString();
+        }
+    }
 }

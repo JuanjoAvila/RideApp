@@ -19,9 +19,9 @@ public class FTPManager {
         return bitmap;
     }
 
-    public Boolean FTPDescargar() throws ExecutionException, InterruptedException {
+    public Boolean FTPDescargar(String file) throws ExecutionException, InterruptedException {
         FTPDescargar ftpD = new FTPDescargar(mContext);
-        Boolean exito = ftpD.execute().get();
+        Boolean exito = ftpD.execute(file).get();
         return exito;
     }
 

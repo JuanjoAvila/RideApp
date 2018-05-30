@@ -120,19 +120,6 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
         Toast.makeText(this, "Elige la dificultad de la ruta.", Toast.LENGTH_SHORT).show();
     }
 
-    /*@Override
-    protected void onPause() {
-        boolean saved = getIntent().getExtras().getBoolean("guardado");
-        if(!saved){
-            new borrar_ruta(this).execute(ruta.getIdRuta());
-            //TODO: borrar fotos y ruta del FTP
-        }
-
-        this.finish();
-
-        super.onPause();
-    }*/
-
     private class borrar_ruta extends AsyncTask<Integer,Void,Boolean> {
 
         private Context context;
@@ -175,8 +162,6 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
         Intent intent = new Intent(this, Rutas_main.class);
         startActivity(intent);
         this.finish();
-
-        //TODO: borrar fotos y ruta del FTP
     }
 
     public void guardar_ruta(View view){
@@ -317,7 +302,7 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             if (extras != null) {
                 try {
-                    imagen_ruta.setImageBitmap(Bitmap.createScaledBitmap((Bitmap) extras.get("data"), 300, 150, false));
+                    imagen_ruta.setImageBitmap(Bitmap.createScaledBitmap((Bitmap) extras.get("data"), 150, 80, false));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -338,7 +323,7 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
     */
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Bitmap bitmap = Bitmap.createScaledBitmap((Bitmap) extras.get("data"), 300, 150, false);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
         imagen_rutaBASE64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -358,6 +343,13 @@ public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guard
             default:
                 break;
         }
+    }
+
+    private void mostrar_sos_dialog() {
+        Rutas_sos_dialog sosDialog = null;
+        FragmentManager fm = getSupportFragmentManager();
+        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
+        sosDialog.show(fm, "fragment_edit_name");
     }
 
 }

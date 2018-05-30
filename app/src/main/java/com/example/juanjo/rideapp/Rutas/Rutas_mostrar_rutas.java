@@ -41,7 +41,7 @@ public class Rutas_mostrar_rutas extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rutas_mostrar_rutas);
+        setContentView(R.layout.rutas_mostrar_rutas);
 
         getSupportActionBar().hide();
 

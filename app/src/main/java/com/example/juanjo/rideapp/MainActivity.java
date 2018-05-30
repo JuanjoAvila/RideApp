@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.example.juanjo.rideapp.Amigos.Amigos_main;
 import com.example.juanjo.rideapp.Evento.Eventos;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Rutas.Rutas_main;
@@ -290,7 +291,9 @@ public class MainActivity extends AppCompatActivity
                 goLogInScreen();
             }
         }else if (id == R.id.nav_salir) {
-            this.finish();
+            //this.finish();
+            Intent amigos = new Intent(getApplicationContext(), Amigos_main.class);
+            startActivity(amigos);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

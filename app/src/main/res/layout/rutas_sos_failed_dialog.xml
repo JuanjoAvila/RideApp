@@ -13,12 +13,12 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tv_rutas_farRoute"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="55dp"
+        android:layout_marginLeft="100dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/botonsign"
-        android:onClick="salir_sin_guardar"
-        android:text="Salir"
+        android:onClick="sos_failed_dialog_atras"
+        android:text="De acuerdo"
         android:textColor="@color/blanco" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Campos incorrectos"
+        android:text="Llamada de emergencia"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -39,20 +39,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
-        android:text="Comprueba los campos en rojo para poder continuar." />
-
-    <Button
-        android:id="@+id/btn_rutas_corregir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_rutas_salir4"
-        android:layout_alignBottom="@+id/btn_rutas_salir4"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_toEndOf="@+id/btn_rutas_salir4"
-        android:background="@drawable/botonsign"
-        android:onClick="corregir"
-        android:text="Corregir"
-        android:textColor="@color/blanco" />
+        android:text="Imposible conectar con los servicios de emergencia si todavia no se ha iniciado el recorrido." />
 
 </RelativeLayout>

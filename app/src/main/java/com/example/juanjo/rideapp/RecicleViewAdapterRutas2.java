@@ -1,7 +1,10 @@
 package com.example.juanjo.rideapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,8 +66,20 @@ public class RecicleViewAdapterRutas2 extends RecyclerView.Adapter<RecicleViewAd
 
     @Override
     public void onBindViewHolder (@NonNull RutasViewHolder viewHolder, int i){
-        //viewHolder.fotoUsuario.setImageResource(R.mipmap.perfil_defecto_avatar_usuario);
+        if(!items.get(i).getFoto_usuario().equals(null)){
+            byte[] decodedString = Base64.decode(Login.getUsuari().getAvatar(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            viewHolder.fotoUsuario.setImageBitmap(bitmap);
+        }else{
+            viewHolder.fotoUsuario.setImageResource(R.drawable.user_default);
+        }
         viewHolder.nombreRuta.setText(items.get(i).getTitulo());
+        if(!items.get(i).getFoto_ruta().equals(null)){
+            byte[] decodedString = Base64.decode(items.get(i).getFoto_ruta(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+            viewHolder.rutaMapa.setImageBitmap(bitmap);
+        }
         //viewHolder.rutaMapa.setImageResource(R.drawable.imagenrutaprueba);
         viewHolder.fechaPublicacion.setText(items.get(i).getFecha_ruta());
         viewHolder.puntuacionEstrellas.setRating(items.get(i).getDificultad());

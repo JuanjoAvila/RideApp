@@ -1,24 +1,16 @@
 package com.example.juanjo.rideapp.FTP;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.Locale;
 
 public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     //Credenciales
@@ -27,11 +19,7 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     public static String PASS = "rideapp@M";			//Almacena la contraseña
 
     FTPClient ftpClient;            //Crea la conexión con el servidor
-    BufferedInputStream bufferIn;   //Crea una buffer de lectura
-    BufferedOutputStream bufferOut; //Crea una buffer de escritura
-    File rutaSd;                    //Almacena la ruta sd
-    File rutaCompleta;                //Almacena la ruta completa del archivo
-    Context context;                //Almacena el contexto de la aplicacion
+    Context mContext;                //Almacena el contexto de la aplicacion
 
     /**
      * Crea una instancia de FTP sin credenciales
@@ -40,12 +28,8 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
 
         //Inicialización de campos
         ftpClient = null;
-        bufferIn = null;
-        bufferOut = null;
-        rutaSd = null;
-        rutaCompleta = null;
 
-        this.context = context;
+        this.mContext = context;
     }
 
     /**
@@ -56,27 +40,20 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
      */
     public boolean login () throws IOException {
         //Establece conexión con el servidor
-        System.out.println("Conectando . . .");
         try{
             ftpClient = new FTPClient();
             ftpClient.connect(IP);
         }
         catch (Exception e){
             e.printStackTrace();
-            //Informa al usuario
-            System.out.println("Imposible conectar . . .");
             return false;	//En caso de que no sea posible la conexion
         }
         //Hace login en el servidor
 
         if (ftpClient.login(USUARIO, PASS)){
-            //Informa al usuario
-            System.out.println("Login correcto . . .");
             return true;	//En caso de login correcto
         }
         else{
-            //Informa al usuario
-            System.out.println("Login incorrecto . . .");
             return false;	//En caso de login incorrecto
         }
     }
@@ -95,53 +72,25 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
         //Cambia la carpeta Ftp
         if (ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/")){
             System.out.println(ftpClient.printWorkingDirectory());
-            //Informa al usuario
-            System.out.println("Carpeta ftp cambiada . . .");
 
-            //Obtiene la dirección de la ruta sd
-            //rutaSd = Environment.getExternalStorageDirectory();
-            System.out.println("Ruta SD obtenida . . .");
-            // externalStorage
-            String ExternalStorageDirectory = Environment.getExternalStorageDirectory() + File.separator;
-            //carpeta "imagenesguardadas"
-            String rutacarpeta = "RideApp/";
-            // nombre del nuevo png
-            String nombre = nombreArchivo;
-            // Compruebas si existe la carpeta "imagenesguardadas", sino, la crea
-            File directorioImagenes = new File(ExternalStorageDirectory + rutacarpeta);
-            if (!directorioImagenes.exists())
-                directorioImagenes.mkdirs();
-
-            //Obtiene la ruta completa donde se encuentra el archivo
-            rutaCompleta = new File(ExternalStorageDirectory + rutacarpeta + nombre);
-            System.out.println("Ruta completa archivo obtenida . . .");
-
+            //Genera fichero local.
+            File fichero = new File(mContext.getFilesDir() + "/" + nombreArchivo);
+            System.out.println(fichero.getAbsolutePath());
             //Crea un buffer hacia el servidor de subida
-            bufferOut = new BufferedOutputStream(new FileOutputStream(rutaCompleta));
+            FileOutputStream outputStream = new FileOutputStream(fichero);
 
-            if (ftpClient.retrieveFile(nombreArchivo, bufferOut)){
-                //Informa al usuario
-                System.out.println("Archivo bajado . . .");
-                bufferOut.close();		//Cierra el bufer
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Files.FileColumns.TITLE, "Descripción");
-                values.put(MediaStore.Files.FileColumns.DATE_ADDED, System.currentTimeMillis ());
-                values.put("_data", rutaCompleta.getAbsolutePath());
-                ContentResolver cr = context.getContentResolver();
-                //cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            //Descarga el fichero y vuelca el array de bytes en el fichero local.
+            if (ftpClient.retrieveFile(nombreArchivo, outputStream)){
+                System.out.println("Descarga hecha");
+                outputStream.close();		//Cierra el bufer
                 return true;		//Se ha bajado con éxito
             }
             else{
-                //Informa al usuario
-                System.out.println("Imposible bajar archivo . . .");
-                bufferOut.close();		//Cierra el bufer
+                outputStream.close();
                 return false;		//No se ha subido
             }
         }
         else{
-
-            //Informa al usuario
-            System.out.println("Carpeta ftp imposible cambiar . . .");
             return false;		//Imposible cambiar de directo en servidor ftp
         }
     }

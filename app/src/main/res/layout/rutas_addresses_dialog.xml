@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Imposible continuar"
+        android:text="Ruta lejana"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -22,35 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_rutas_gps"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
-        android:text="Es necesario activar la señal GPS." />
+        android:text="Te encuentras lejos del inicio de la ruta cargada, para desplazarte hacía el inicio, pulsa el marcador rojo, y pulsa el icono situado en la esquina inferior derecha" />
 
     <Button
-        android:id="@+id/btn_rutas_activar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_rutas_salir"
-        android:layout_alignBottom="@+id/btn_rutas_salir"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/btn_rutas_salir"
-        android:background="@drawable/botonsign"
-        android:onClick="activarGps"
-        android:text="Activar"
-        android:textColor="@color/blanco" />
-
-    <Button
-        android:id="@+id/btn_rutas_salir"
+        android:id="@+id/btn_rutas_corregir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tv_rutas_farRoute"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/botonsign"
-        android:onClick="returnMain"
-        android:text="Salir"
+        android:onClick="rutaLejana"
+        android:text="De acuerdo"
         android:textColor="@color/blanco" />
+
 </RelativeLayout>

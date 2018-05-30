@@ -43,7 +43,10 @@ dependencies {
     //import de Google Play Services Location
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.github.Mariovc:ImagePicker:1.2.2'
+    implementation 'com.google.maps.android:android-maps-utils:0.3.4'
+    implementation 'com.google.maps:google-maps-services:0.1.6'
 }
+
 
 
 configurations.all {
