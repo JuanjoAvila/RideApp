@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by jesus on 16/05/18.
+ * @author RideApp
+ * @version Final
+ * Adaptador utilizado para asignar las vistas al ViewPager de Rutas_main
  */
 
 public class Rutas_page_adapter extends PagerAdapter {

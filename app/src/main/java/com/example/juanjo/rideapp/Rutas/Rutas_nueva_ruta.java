@@ -103,19 +103,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author RideApp
+ * @version Final
+ * Actividad que permite al usuario grabar un nuevo recorrido desde cero
+ */
+/*
+La clase implementa una serie de interfaces necesarias para el funcionamiento de las API de Google
+ */
 public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, Rutas_guardar_dialog.CallBack {
 
-    private static final int MAX_SMS_MESSAGE_LENGTH = 160;
-    private static final String SMS_SENT = "my.app";
-    private static final int SMS_PORT = 8095;
-    private static final String SMS_DELIVERED = "";
-
+    /*
+    Variables utilizadas para las consultas al WebService
+     */
     public static final String URL = "http://rideapp.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "nuevaRuta";
     public static final String SOAP_ACTION = "http://tempuri.org/nuevaRuta";
     public static final String NAMESPACE = "http://tempuri.org/";
-
-    //
     public static final String METHOD_NAME2 = "Select_ultimaRuta_usuario";
     public static final String SOAP_ACTION2 = "http://tempuri.org/Select_ultimaRuta_usuario";
     public static final String METHOD_NAME4 = "Select_fecha";
@@ -126,41 +130,22 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
     private static final int PETICION_PERMISO_LOCALIZACION = 101;
     private static final int PETICION_CONFIG_UBICACION = 201;
 
-    //Donde se almacena el mapa sobre el cual se está trabajando
     private GoogleMap mMap;
-    //Utilizada para acceder a los servicios de Google
     private GoogleApiClient apiClient;
-    //Utilizada para comprobar que el usuario cumple con los requisitos adecuados
     private LocationRequest locRequest;
-    //Utilizada para comprobar si está entrando al activity
     private boolean inicio = true;
-    //Botón de inicio/parada de ruta
     private ToggleButton start;
-    //Marcador utilizado para identificar a tiempo real la ubicación
     private Marker marker = null;
-    //Utilizada para guardar objetos LatLng con coordenadas
     private LinkedList<LatLng> latlngs = new LinkedList<LatLng>();
-    //Linea dibujada en el mapa, que recogemos aqui para poder removerla antes de volver a cargar de nuevo todas las coordenadas
     Polyline polyline1 = null;
-
-    //
     private boolean gps_noActivated = false;
     private Rutas_guardar_dialog prueba = null;
     private boolean finished = false;
-
-    //
     private Integer resultado_insertar_ruta = 0;
-
-    //
     public static RutaDTO ultimaRuta = null;
     private Boolean obtenerUltimaRuta = true;
-
-    //
     LatLng posicionCorregida = null;
-
-    //
     ImageButton rutas_btn_sos;
-
     Rutas_sos_failed_dialog sos_failed_Dialog = null;
     Rutas_sos_dialog sosDialog = null;
 
@@ -215,47 +200,38 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         });
     }
 
-    public void generarMensajeSOS(int codigo){
-        if(start.isChecked()){
-            String mensaje = codigo + "\n" + Login.getUsuari().getNombre() + ", " + Login.getUsuari().getApellidos() + "\n\n" +
-                    "Latitud: " + posicionCorregida.latitude + "\nLongitud: " + posicionCorregida.longitude +
-                    "\nDirección: " + getAddressInfoForSMS(posicionCorregida);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + 679436200));
-            intent.putExtra("sms_body", mensaje);
-            startActivity(intent);
+    /**
+     * Utilizado para que al volver de comprobar la activación de permisos, en el caso de no activarse
+     * vuelve a mostrar el dialogo, sino empieza a recibir actualizaciones de ubicación
+     */
+    @Override
+    protected void onResume() {
+        if(gps_noActivated){
+            try {
+                if(!señalGPS_On()){
+                    mostrar_gps_dialog();
+                }else{
+                    gps_noActivated = false;
+                    enableLocationUpdates();
+                }
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
         }else{
-            mostrar_sos_failed_dialog();
-        }
-    }
-
-    public void accidente(View view){
-        generarMensajeSOS(33);
-    }
-
-    public void averia(View view){
-        generarMensajeSOS(37);
-    }
-
-
-    private String getAddressInfoForSMS(LatLng coordenadas) {
-        Geocoder geocoder;
-        List<Address> addresses = null;
-        geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+            if(finished){
+                enableLocationUpdates();
+                start.setChecked(true);
+                finished = false;
+            }
         }
 
-        String address = addresses.get(0).getAddressLine(0);
-
-        return address;
+        super.onResume();
     }
 
-    /*
-    Metodo que implementa la interfaz OnMapReadyCallback, es llamado cuando el mapa esta
-    listo para ser utilizado
+    /**
+     * Metodo que implementa la interfaz OnMapReadyCallback, es llamado cuando el mapa esta
+     listo para ser utilizado
+     * @param googleMap
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -272,9 +248,9 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         enableLocationUpdates();
     }
 
-    /*
-    Metodo encargado de configurar los requisitos para actualizar la ubicación,
-    que más tarde serán comparados con los del usuario
+    /**
+     * Metodo encargado de configurar los requisitos para actualizar la ubicación,
+     que más tarde serán comparados con los del usuario
      */
     private void enableLocationUpdates() {
 
@@ -346,6 +322,13 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         });
     }
 
+    /**
+     * Encargado de activar o mostrar el dialogo de gps en caso de que la petición de permisos
+     * vaya bien o mal
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -365,6 +348,9 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    /**
+     * Encargado de empezar con la actualización de ubicaciones
+     */
     private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(Rutas_nueva_ruta.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -379,6 +365,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    /**
+     * Utilizado para gestionar la conexión fallida con los servicios de Google
+     * @param connectionResult
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         //Se ha producido un error que no se puede resolver automáticamente
@@ -388,6 +378,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         Toast.makeText(this, "Se están produciendo errores de conexión..", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Se pide permisos al usuario
+     * @param bundle
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -405,6 +399,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    /**
+     * Gestiona la interrupción de los servicios de Google
+     * @param i
+     */
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -413,27 +411,31 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         Log.e(LOGTAG, "Se ha interrumpido la conexión con Google Play Services");
     }
 
+    /**
+     * Recoge el resultado de la petición de permisos
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PETICION_PERMISO_LOCALIZACION) {
             if (grantResults.length == 1
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                //Permiso concedido
-
                 @SuppressWarnings("MissingPermission")
                 Location lastLocation =
                         LocationServices.FusedLocationApi.getLastLocation(apiClient);
-
             } else {
-                //Permiso denegado:
-                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
-
                 Log.e(LOGTAG, "Permiso denegado");
             }
         }
     }
 
+    /**
+     * Gestiona cada nueva ubicación
+     * @param location
+     */
     @Override
     public void onLocationChanged(Location location) {
         Log.i(LOGTAG, "Recibida nueva ubicación!");
@@ -449,7 +451,9 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
             //Se recoge la posición actual
             LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
 
-            //Prueba API Request
+            /*
+             * Llama a la Roads API de Google, para enviar una coordenada y recibir la misma pero ajustada
+             */
             try {
                 new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
             } catch (InterruptedException e) {
@@ -499,7 +503,9 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
             //Se recoge la posición actual
             LatLng posicionActual = new LatLng(location.getLatitude(), location.getLongitude());
 
-            //Prueba API Request
+            /*
+              Llama a la Roads API de Google, para enviar una coordenada y recibir la misma pero ajustada
+            */
             try {
                 new CallAPI(getApplicationContext()).execute(posicionActual.latitude + "," + posicionActual.longitude).get();
             } catch (InterruptedException e) {
@@ -556,8 +562,8 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
     }
 
-    /*
-    Utilizado para desactivar la localización automatica
+    /**
+     * Utilizado para desactivar la localización automatica
      */
     private void disableLocationUpdates() {
 
@@ -566,9 +572,67 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
     }
 
-    /*
-    TODO: Falta conectar con el usuario actual
-    Metodo utilizado para crear un Bitmap con la imagen de perfil
+    /**
+     * Utilizado para generar un mensaje automático a los servicios de emergencia
+     * @param codigo Número que se obtiene según la emergencia elegida, según lo que le ocurra al
+     *               usuario, se envia un mensaje o otro a los servicios de emergencia
+     */
+    public void generarMensajeSOS(int codigo){
+        if(start.isChecked()){
+            String mensaje = codigo + "\n" + Login.getUsuari().getNombre() + ", " + Login.getUsuari().getApellidos() + "\n\n" +
+                    "Latitud: " + posicionCorregida.latitude + "\nLongitud: " + posicionCorregida.longitude +
+                    "\nDirección: " + getAddressInfoForSMS(posicionCorregida);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + 679436200));
+            intent.putExtra("sms_body", mensaje);
+            startActivity(intent);
+        }else{
+            mostrar_sos_failed_dialog();
+        }
+    }
+
+    /**
+     * Si el usuario clica el botón de accidente se envia el código 33 a los
+     * servicios de emergencia
+     * @param view
+     */
+    public void accidente(View view){
+        generarMensajeSOS(33);
+    }
+
+    /**
+     * Si el usuario clica el botón de accidente se envia el código 37 a los
+     * servicios de emergencia
+     * @param view
+     */
+    public void averia(View view){
+        generarMensajeSOS(37);
+    }
+
+    /**
+     * Recoge la información necesaria respecto a la ubicación para generar el SMS a los servicios
+     * de emergencia
+     * @param coordenadas
+     * @return
+     */
+    private String getAddressInfoForSMS(LatLng coordenadas) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(coordenadas.latitude, coordenadas.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0);
+
+        return address;
+    }
+
+    /**
+     * Metodo utilizado para crear un Bitmap con la imagen de perfil
+     * @return El bitmap generado
      */
     private Bitmap createUserBitmap() {
         Bitmap result = null;
@@ -614,8 +678,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         return result;
     }
 
-    /*
-    Utilizado para ajustar la imagen con la densidad del telefono
+    /**
+     * Utilizado para ajustar la imagen con la densidad del telefono
+     * @param value
+     * @return
      */
     public int dp(float value) {
         if (value == 0) {
@@ -624,52 +690,17 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         return (int) Math.ceil(getResources().getDisplayMetrics().density * value);
     }
 
-    /*
-    Utilizado para mostrar el dialogo de señal gps
-     */
-    private void mostrar_gps_dialog() {
-        Rutas_gps_dialog prueba = null;
-        FragmentManager fm = getSupportFragmentManager();
-        prueba = Rutas_gps_dialog.newInstance("Some Title");
-        prueba.show(fm, "fragment_edit_name");
-    }
-
-    private void mostrar_guardar_dialog() {
-        prueba = null;
-        FragmentManager fm = getSupportFragmentManager();
-        prueba = Rutas_guardar_dialog.newInstance("Some Title");
-        prueba.show(fm, "fragment_edit_name");
-        finished = true;
-    }
-
-    public void mostrar_sos_dialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
-        sosDialog.show(fm, "fragment_edit_name");
-    }
-
-    public void mostrar_sos_failed_dialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        sos_failed_Dialog = Rutas_sos_failed_dialog.newInstance("Some Title");
-        sos_failed_Dialog.show(fm, "fragment_edit_name");
-    }
-
-    public void sos_failed_dialog_atras(View view){
-        if(sos_failed_Dialog != null){
-            sos_failed_Dialog.dismiss();
-            sosDialog.dismiss();
-        }
-    }
-
-    /*
-    Utilizado para mostrar el dialogo de permisos y comenzar con las actualizaciones automaticas
+    /**
+     * Utilizado para mostrar el dialogo de permisos y comenzar con las actualizaciones automaticas
+     * @param view
      */
     public void activarGps(View view){
         enableLocationUpdates();
     }
 
-    /*
-    Utilizado para volver a la actividad principal de rutas
+    /**
+     * Utilizado para volver a la actividad principal de rutas
+     * @param view
      */
     public void returnMain(View view){
         Intent intent = new Intent(this, Rutas_main.class);
@@ -677,8 +708,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         this.finish();
     }
 
-    /*
-    Utilizado para comprobar la señal GPS
+    /**
+     * Utilizado para comprobar la señal GPS
+     * @return
+     * @throws Settings.SettingNotFoundException
      */
     private boolean señalGPS_On() throws Settings.SettingNotFoundException {
         int gpsSignal = Settings.Secure.getInt(getApplicationContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
@@ -690,36 +723,6 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         return true;
     }
 
-    /*
-    Utilizado para que al volver de comprobar la activación de permisos, en el caso de no activarse
-    vuelve a mostrar el dialogo, sino empieza a recibir actualizaciones de ubicación
-     */
-    @Override
-    protected void onResume() {
-        if(gps_noActivated){
-            try {
-                if(!señalGPS_On()){
-                    mostrar_gps_dialog();
-                }else{
-                    gps_noActivated = false;
-                    enableLocationUpdates();
-                }
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-            }
-        }else{
-            if(finished){
-                enableLocationUpdates();
-                start.setChecked(true);
-                finished = false;
-            }
-        }
-
-        super.onResume();
-    }
-
-
-
     public void atras(View view){
         if(prueba != null){
             prueba.dismiss();
@@ -728,6 +731,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    /**
+     * Utilizado para insertar un registro si el usuario decide guardar
+     * @param view
+     */
     public void guardar(View view){
 
         //Se recoge el usuario actual
@@ -741,6 +748,10 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    /**
+     * Utilizado para generar el archivo gpx con las coordenadas recogidas
+     * @param idRuta Identificador de la ruta, necesario para que el archivo sea único
+     */
     private void generarGPX(int idRuta) {
         String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<gpx version=\"1.0\">\n";
@@ -802,8 +813,59 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    /*
-    Utilizado para insertar un nuevo registro de 'Ruta' en bd
+    /**
+     * Utilizado para mostrar el dialogo de señal gps
+     */
+    private void mostrar_gps_dialog() {
+        Rutas_gps_dialog prueba = null;
+        FragmentManager fm = getSupportFragmentManager();
+        prueba = Rutas_gps_dialog.newInstance("Some Title");
+        prueba.show(fm, "fragment_edit_name");
+    }
+
+    /**
+     * Utilizado para mostrar el dialogo de guardado
+     */
+    private void mostrar_guardar_dialog() {
+        prueba = null;
+        FragmentManager fm = getSupportFragmentManager();
+        prueba = Rutas_guardar_dialog.newInstance("Some Title");
+        prueba.show(fm, "fragment_edit_name");
+        finished = true;
+    }
+
+    /**
+     * Muestra el dialogo de emergencia
+     */
+    public void mostrar_sos_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sosDialog = Rutas_sos_dialog.newInstance("Some Title");
+        sosDialog.show(fm, "fragment_edit_name");
+    }
+
+    /**
+     * Utilizado para mostrar el dialogo de que es imposible enviar una alerta a los servicios
+     * de emergencia
+     */
+    public void mostrar_sos_failed_dialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        sos_failed_Dialog = Rutas_sos_failed_dialog.newInstance("Some Title");
+        sos_failed_Dialog.show(fm, "fragment_edit_name");
+    }
+
+    /**
+     * Utilizado para volver atrás cuando no permite enviar un mensaje a los servicios de emergencia
+     * @param view
+     */
+    public void sos_failed_dialog_atras(View view){
+        if(sos_failed_Dialog != null){
+            sos_failed_Dialog.dismiss();
+            sosDialog.dismiss();
+        }
+    }
+
+    /**
+     * Tarea asincrona utilizada para insertar una nueva ruta
      */
     private class insertarRuta extends AsyncTask<Integer,Void,Integer> {
 
@@ -862,8 +924,8 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    /*
-    Utilizado para obtener la ultima ruta insertada por el usuario
+    /**
+     * Tarea asincrona utilizada para obtener la última ruta
      */
     private class obtener_ultima_ruta extends AsyncTask<Integer,Void,Boolean> {
 
@@ -916,6 +978,9 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    /**
+     * Tarea asincrona utilizada para obtener la fecha de una ruta en concreto
+     */
     private class obtener_fecha extends AsyncTask<Integer,Void,Boolean> {
 
         private Context context;
@@ -959,6 +1024,9 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
         }
     }
 
+    /**
+     * Tarea asíncrona para enviar coordenadas a la Roads API
+     */
     public class CallAPI extends AsyncTask<String, String, String> {
 
         private Context context;

@@ -14,7 +14,9 @@ import com.example.juanjo.rideapp.R;
 import java.util.ArrayList;
 
 /**
- * Created by jesus on 17/05/18.
+ * @author RideApp
+ * @version Final
+ * Diálogo utilizado para informar al usuario de las opciones de las que dispone al empezar Rutas
  */
 
 public class Rutas_opciones_dialog extends DialogFragment {
@@ -39,7 +41,6 @@ public class Rutas_opciones_dialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Fetch arguments from bundle and set title
         String title = getArguments().getString("title", "Enter Name");
         getDialog().setTitle(title);
         getDialog().getWindow().setSoftInputMode(

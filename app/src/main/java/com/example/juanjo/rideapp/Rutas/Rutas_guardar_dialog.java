@@ -15,7 +15,9 @@ import android.widget.ToggleButton;
 import com.example.juanjo.rideapp.R;
 
 /**
- * Created by jesus on 17/05/18.
+ * @author RideApp
+ * @version Final
+ * Diálogo utilizado para informar al usuario de las opciones que tiene al finalizar la ruta
  */
 
 public class Rutas_guardar_dialog extends DialogFragment {
