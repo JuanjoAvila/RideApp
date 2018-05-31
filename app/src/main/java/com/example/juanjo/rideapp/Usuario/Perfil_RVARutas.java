@@ -2,9 +2,12 @@ package com.example.juanjo.rideapp.Usuario;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +100,12 @@ public class Perfil_RVARutas extends RecyclerView.Adapter<Perfil_RVARutas.RutasV
     @Override
     public void onBindViewHolder (@NonNull final RutasViewHolder viewHolder, int i){
         final int POSICION = i;
+        byte[] bytesImagenRuta = Base64.decode(items.get(i).getFoto_ruta(), Base64.DEFAULT);
+        Bitmap bitmapFoto = BitmapFactory.decodeByteArray(bytesImagenRuta, 0, bytesImagenRuta.length);
+        if (bitmapFoto!=null)viewHolder.rutaMapa.setImageBitmap(bitmapFoto);
+        byte[] bytesImagenUsuario = Base64.decode(items.get(i).getFoto_usuario(), Base64.DEFAULT);
+        Bitmap bitmapFotoUsuario = BitmapFactory.decodeByteArray(bytesImagenUsuario, 0, bytesImagenUsuario.length);
+        if (bitmapFotoUsuario!=null)viewHolder.rutaMapa.setImageBitmap(bitmapFoto);viewHolder.fotoUsuario.setImageBitmap(bitmapFotoUsuario);
         viewHolder.nombreRuta.setText(items.get(i).getTitulo());
         viewHolder.fechaPublicacion.setText(items.get(i).getFecha_ruta());
         viewHolder.likesCarita.setImageResource(R.drawable.caritasonriente);

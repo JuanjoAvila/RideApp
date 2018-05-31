@@ -30,14 +30,14 @@
             android:src="@mipmap/perfil_defecto_avatar_usuario"
             android:contentDescription="@string/foto_de_perfil_actual_edicion_perfil"
             />
+
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/settings"
                 android:contentDescription="@string/ruleta_para_cambiar_la_foto_edicion_perfil"
-                />
+                android:src="@drawable/edicion_perfil_cambioavatar" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

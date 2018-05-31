@@ -54,7 +54,8 @@
                     android:id="@+id/Perfil_configUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/perfil_editarusuario" />
+                    android:src="@mipmap/perfil_editarusuario"
+                    android:visibility="invisible"/>
             </GridLayout>
             <TextView
                 android:id="@+id/Perfil_nombreCuenta"
@@ -156,7 +157,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="90dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/botonsign"
                 android:onClick="cargarRutas"
                 android:paddingLeft="5dp"
@@ -164,7 +165,8 @@
                 android:text="Ver Rutas"
                 android:textColor="@color/blanco"
                 android:textSize="14sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:visibility="invisible"/>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>
