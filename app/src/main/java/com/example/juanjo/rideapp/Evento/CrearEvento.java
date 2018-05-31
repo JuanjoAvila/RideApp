@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutionException;
  * Clase encargada de gestionar la ventana de creacioón de un Evento
  */
 public class CrearEvento extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_CREAREVENTOS = "nuevoEvento";
     public static final String SOAP_ACTION_CREAREVENTOS = "http://tempuri.org/nuevoEvento";
     public static final String METHOD_NAME_RUTAS = "listaRuta_info_byIdUsuario";

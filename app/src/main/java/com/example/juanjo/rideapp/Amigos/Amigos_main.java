@@ -33,7 +33,7 @@ public class Amigos_main extends AppCompatActivity implements SearchView.OnQuery
     /*
     Variables utilizadas para las consultas al WebService
      */
-    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String WS_URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String LISTA_USUARIOS_SIN_ACTUAL_METHOD = "listaUsuarios_sinUsuarioActual";
     public static final String LISTA_USUARIOS_SIN_ACTUAL_ACTION = "http://tempuri.org/listaUsuarios_sinUsuarioActual";
     public static final String NAMESPACE = "http://tempuri.org/";

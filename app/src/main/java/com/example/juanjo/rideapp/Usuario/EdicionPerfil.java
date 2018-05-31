@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class EdicionPerfil extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "modificarUsuario";
     public static final String SOAP_ACTION = "http://tempuri.org/modificarUsuario";
     public static final String NAMESPACE = "http://tempuri.org/";

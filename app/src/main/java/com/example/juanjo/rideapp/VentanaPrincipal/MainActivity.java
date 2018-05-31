@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient googleApiClient;
 
 
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "listaRuta_info";
     public static final String SOAP_ACTION = "http://tempuri.org/listaRuta_info";
     public static final String NAMESPACE = "http://tempuri.org/";

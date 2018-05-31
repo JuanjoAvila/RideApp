@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutionException;
  * Clase encargada de gestionar la ventana de la vista de un evento
  */
 public class Evento extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_EVENTOS = "Select_eventos_rutas_byIdEvento";
     public static final String SOAP_ACTION_EVENTOS = "http://tempuri.org/Select_eventos_rutas_byIdEvento";
     public static final String METHOD_NAME_USUARIO = "obtenerUsuario_byIdUsuario";

@@ -14,9 +14,9 @@ import java.net.SocketException;
 
 public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     //Credenciales
-    private static String IP =  "rideapp.somee.com";
-    public static  String USUARIO = "jesus93";				//Almacena el usuario
-    public static String PASS = "rideapp@M";			//Almacena la contraseña
+    private static String IP =  "rideapp2.somee.com";
+    public static  String USUARIO = "rideapp";				//Almacena el usuario
+    public static String PASS = "rideapp123A";			//Almacena la contraseña
 
     FTPClient ftpClient;            //Crea la conexión con el servidor
     Context mContext;                //Almacena el contexto de la aplicacion

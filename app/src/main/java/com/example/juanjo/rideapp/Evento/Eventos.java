@@ -3,9 +3,9 @@ package com.example.juanjo.rideapp.Evento;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  * Clase encargada de gestionar la ventana de la lista de eventos.
  */
 public class Eventos extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_EVENTOS = "Select_eventos_rutas";
     public static final String SOAP_ACTION_EVENTOS = "http://tempuri.org/Select_eventos_rutas";
     public static final String NAMESPACE = "http://tempuri.org/";

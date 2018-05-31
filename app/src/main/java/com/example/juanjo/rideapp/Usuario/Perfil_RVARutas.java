@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutionException;
 public class Perfil_RVARutas extends RecyclerView.Adapter<Perfil_RVARutas.RutasViewHolder> {
     private List<Ruta_infoDTO> items;
     private Integer idPerfil;
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_BORRARRUTA = "borrarRuta";
     public static final String SOAP_ACTION_BORRARRUTA = "http://tempuri.org/borrarRuta";
     public static final String METHOD_NAME_GUARDARRUTA = "nuevaRuta";

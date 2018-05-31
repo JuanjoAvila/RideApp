@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutionException;
  * En el perfil se muestran los datos del usuario, sus seguidores y sus seguidos además de un acceso a sus rutas
  */
 public class Perfil extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_AMIGOS = "Select_amigos_usuarios";
     public static final String SOAP_ACTION_AMIGOS = "http://tempuri.org/Select_amigos_usuarios";
     public static final String METHOD_NAME_USUARIO = "obtenerUsuario_byIdUsuario";
