@@ -14,7 +14,7 @@ import java.net.SocketException;
 
 public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
     //Credenciales
-    private static String IP =  "rideapp2.somee.com";
+    private static String IP = "rideapp2.somee.com";
     public static  String USUARIO = "rideapp";				//Almacena el usuario
     public static String PASS = "rideapp123A";			//Almacena la contraseña
 
@@ -70,7 +70,7 @@ public class FTPDescargar extends AsyncTask<String , Integer, Boolean> {
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
         //Cambia la carpeta Ftp
-        if (ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/")){
+        if (ftpClient.changeWorkingDirectory("./www.rideapp2.somee.com/Rutas/")){
             System.out.println(ftpClient.printWorkingDirectory());
 
             //Genera fichero local.

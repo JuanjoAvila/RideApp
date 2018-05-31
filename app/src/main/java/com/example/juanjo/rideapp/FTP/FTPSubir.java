@@ -17,7 +17,7 @@ import java.net.SocketException;
 public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
     private static final int SELECT_FILE = 1;
     //Credenciales
-    private String ip =  "rideapp2.somee.com";
+    private String ip = "rideapp2.somee.com";
     public static  String USUARIO = "rideapp";				//Almacena el usuario
     public static String PASS = "rideapp123A";			//Almacena la contraseña
 
@@ -83,10 +83,10 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
 
         //Cambia la carpeta Ftp
         if(rutaCompleta.getName().endsWith("gpx")){
-            ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/");
+            ftpClient.changeWorkingDirectory("./www.rideapp2.somee.com/Rutas/");
         }
         else{
-            ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/");
+            ftpClient.changeWorkingDirectory("./www.rideapp2.somee.com/Imagenes/");
         }
 
         //Crea un buffer hacia el servidor de subida
