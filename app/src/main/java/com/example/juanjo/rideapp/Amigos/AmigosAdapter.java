@@ -15,7 +15,7 @@ import android.widget.ToggleButton;
 
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.Usuario_adapter;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;

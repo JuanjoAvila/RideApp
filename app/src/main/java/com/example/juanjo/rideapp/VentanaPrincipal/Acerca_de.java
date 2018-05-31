@@ -1,13 +1,15 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.VentanaPrincipal;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.juanjo.rideapp.R;
 
 public class Acerca_de extends AppCompatActivity {
     private Button correo_juanjo;

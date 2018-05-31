@@ -1,7 +1,6 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Login;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
+import com.example.juanjo.rideapp.R;
+import com.example.juanjo.rideapp.VentanaPrincipal.MainActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -22,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -88,24 +90,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         //Funcion del checkbox
         funcionDelCheckbox();
 
-        /* Inicializa el mecanismo de logeo de google. Primeramente si ya esta logeado te abre una ventana emergente donde te muestra los correos
-         * utilizados anteriormente. Si ese no es el caso te abre una nueva actividad donde se te pedirá introducir el correo y la contraseña que tengas
-         * en google con la que recabará los datos posteriormente en otra función , se validará y se accederá dentro de la aplicación.
-         */
-        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
-                .build();
-        signInButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent,SIGN_IN_CODE);
-            }
-        });*/
+
+
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +99,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             }
         });
     }
+    /* Inicializa el mecanismo de logeo de google. Primeramente si ya esta logeado te abre una ventana emergente donde te muestra los correos
+     * utilizados anteriormente. Si ese no es el caso te abre una nueva actividad donde se te pedirá introducir el correo y la contraseña que tengas
+     * en google con la que recabará los datos posteriormente en otra función , se validará y se accederá dentro de la aplicación.
+     */
     private void signWithGoogle(){
         if(mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
@@ -182,13 +172,14 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
      */
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
-            final GoogleApiClient client = mGoogleApiClient;
+
             GoogleSignInAccount account = result.getSignInAccount();
 
             //obtiene el perfil de google
-            ConsultaUsuario twsc = new ConsultaUsuario(this);
+            ConsultaUsuario twsc = new ConsultaUsuario();
             existeUsuario = false;
             try {
+                assert account != null;
                 twsc.execute(account.getId()+"google").get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -196,13 +187,13 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
             if(existeUsuario){
                 goMainScreen();
             } else{
-                if(user.getNombre()==null){
+                if(account.getGivenName()==null){
                     Toast.makeText(this, "Porfavor Vuelve a logear", Toast.LENGTH_SHORT).show();
                     return;
                 }else {
                     RegistroGoogle regGog = new RegistroGoogle(result, this);
                     regGog.anadir();
-                    ConsultaUsuario consulta = new ConsultaUsuario(this);
+                    ConsultaUsuario consulta = new ConsultaUsuario();
                     try {
                         consulta.execute(account.getId() + "google").get();
                     } catch (InterruptedException | ExecutionException e) {
@@ -218,7 +209,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
 
 
     public void  inicioSession(){
-        ConsultaUsuario twsc = new ConsultaUsuario(this);
+        ConsultaUsuario twsc = new ConsultaUsuario();
         twsc.execute(String.valueOf(loginusuario.getText()));
     }
 
@@ -230,6 +221,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private void goMainScreen() {
         usuarioGoogle = true;
         Intent intent = new Intent(this,MainActivity.class);
+        intent.putExtra("idUsuario", user.getIdUsuario());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
@@ -298,10 +290,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     @SuppressLint("StaticFieldLeak")
     private class ConsultaUsuario extends AsyncTask<String,Void,Boolean> {
 
-        private Context context;
-
-        public ConsultaUsuario(Context context) {
-            this.context = context;
+        ConsultaUsuario() {
         }
 
         protected Boolean doInBackground(String... params) {
@@ -378,7 +367,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public void iniciar(){
         usuarioGoogle = false;
         startActivity(new Intent(getBaseContext(), MainActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP).putExtra("idUsuario", user.getIdUsuario()));
+
         finish();
     }
 }

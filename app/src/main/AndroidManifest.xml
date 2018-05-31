@@ -14,19 +14,20 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
+        android:windowSoftInputMode="adjustPan|stateVisible"
         android:allowBackup="true"
-        android:icon="@mipmap/logorideapp"
+        android:icon="@drawable/logo_ride_app"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logorideapp_round"
+        android:roundIcon="@drawable/logo_ride_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".VentanaPrincipal.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SplashScreen"
+            android:name=".Login.SplashScreen"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -35,13 +36,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Chat" />
         <activity android:name=".Usuario.EdicionPerfil" android:screenOrientation="portrait"/>
         <activity android:name=".Evento.Evento" android:screenOrientation="portrait"/>
         <activity android:name=".Evento.Eventos" android:screenOrientation="portrait"/>
         <activity android:name=".Usuario.Perfil" android:screenOrientation="portrait" />
         <activity android:name=".Usuario.Perfil_mostrar_rutas" android:screenOrientation="portrait" />
-        <activity android:name=".Registro"
+        <activity android:name=".Login.Registro"
             android:theme="@style/AppTheme.NoActionBar"/>
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
@@ -72,7 +72,7 @@
         <activity android:name=".Rutas.Rutas_nueva_ruta"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Login"
+            android:name=".Login.Login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Evento.CrearEvento" />
         <activity

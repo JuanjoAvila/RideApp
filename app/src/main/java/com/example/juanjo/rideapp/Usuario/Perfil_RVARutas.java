@@ -1,6 +1,5 @@
 package com.example.juanjo.rideapp.Usuario;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,10 +17,8 @@ import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
-import com.example.juanjo.rideapp.DTO.UsuarioDTO;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.Rutas.Rutas_nueva_ruta;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
