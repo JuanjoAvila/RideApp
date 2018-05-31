@@ -15,10 +15,8 @@ import android.widget.TextView;
 import android.os.*;
 
 import com.example.juanjo.rideapp.FTP.FTPManager;
-import com.example.juanjo.rideapp.Login;
 import com.example.juanjo.rideapp.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 

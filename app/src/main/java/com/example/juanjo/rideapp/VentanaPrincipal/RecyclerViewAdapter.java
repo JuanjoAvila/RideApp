@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.VentanaPrincipal;
 
 
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.juanjo.rideapp.R;
 
 import java.util.ArrayList;
 
@@ -21,16 +22,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by User on 2/12/2018.
  */
 
-public class RecyclerViewAdapter2 extends RecyclerView.Adapter<RecyclerViewAdapter2.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "RecyclerViewAdapter2";
+    private static final String TAG = "RecyclerViewAdapter";
 
     //vars
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImageUrls = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter2(Context context, ArrayList<String> names, ArrayList<String> imageUrls) {
+    public RecyclerViewAdapter(Context context, ArrayList<String> names, ArrayList<String> imageUrls) {
         mNames = names;
         mImageUrls = imageUrls;
         mContext = context;

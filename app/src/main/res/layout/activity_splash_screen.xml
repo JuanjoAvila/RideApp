@@ -4,5 +4,5 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    tools:context="com.example.juanjo.rideapp.SplashScreen">
+    tools:context="com.example.juanjo.rideapp.Login.SplashScreen">
 </android.support.constraint.ConstraintLayout>

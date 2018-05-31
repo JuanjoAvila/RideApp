@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Acerca_de"
+    tools:context=".VentanaPrincipal.Acerca_de"
     android:background="@color/fondoVentanaPrincipal">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="35dp">
+        tools:layout_editor_absoluteY="35dp"
+        tools:ignore="MissingConstraints">
 
         <ImageView
             android:id="@+id/logo_aplicacion"

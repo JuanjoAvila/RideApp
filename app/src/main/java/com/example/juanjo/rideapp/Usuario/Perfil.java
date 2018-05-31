@@ -20,8 +20,7 @@ import android.util.Base64;
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
-import com.example.juanjo.rideapp.Login;
-import com.example.juanjo.rideapp.MainActivity;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;

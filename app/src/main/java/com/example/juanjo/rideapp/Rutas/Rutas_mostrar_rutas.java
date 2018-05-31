@@ -13,7 +13,7 @@ import android.view.View;
 
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.RecicleViewAdapterRutas2;
+import com.example.juanjo.rideapp.VentanaPrincipal.RecicleViewAdapterRutas;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -34,7 +34,7 @@ public class Rutas_mostrar_rutas extends AppCompatActivity {
 
     private LinkedList<Ruta_infoDTO> info_rutas = new LinkedList<Ruta_infoDTO>();
     private RecyclerView rView_mostrar_rutas;
-    private RecicleViewAdapterRutas2 adapter;
+    private RecicleViewAdapterRutas adapter;
     private RecyclerView.LayoutManager lManager;
     private Activity activity;
 
@@ -58,7 +58,7 @@ public class Rutas_mostrar_rutas extends AppCompatActivity {
 
                 try {
                     new obtenerInfoRutas(getApplicationContext()).execute(idUsuario).get();
-                    adapter = new RecicleViewAdapterRutas2(info_rutas);
+                    adapter = new RecicleViewAdapterRutas(info_rutas);
                     rView_mostrar_rutas.setAdapter(adapter);
                     rView_mostrar_rutas.setHasFixedSize(true);
 

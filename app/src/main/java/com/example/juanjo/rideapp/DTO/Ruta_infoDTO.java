@@ -20,8 +20,7 @@ public class Ruta_infoDTO implements KvmSerializable{
     private int dislikes;
     private String foto_usuario;
 
-    public Ruta_infoDTO() {
-    }
+
 
     public Ruta_infoDTO(int idRuta, String titulo, String foto_ruta, String fecha_ruta, int dificultad, int likes, int dislikes, String foto_usuario) {
         this.idRuta = idRuta;

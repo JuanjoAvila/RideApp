@@ -34,7 +34,7 @@ import android.widget.ToggleButton;
 import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -74,7 +74,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
-import java.util.concurrent.ExecutionException;
 
 public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener, Rutas_guardar_dialog.CallBack {
 

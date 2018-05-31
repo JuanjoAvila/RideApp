@@ -21,11 +21,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".VentanaPrincipal.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SplashScreen"
+            android:name=".Login.SplashScreen"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,9 +37,9 @@
         <activity android:name=".Usuario.EdicionPerfil" />
         <activity android:name=".Evento.Evento" />
         <activity android:name=".Evento.Eventos" />
-        <activity android:name=".Acerca_de"/>
+        <activity android:name=".VentanaPrincipal.Acerca_de"/>
         <activity android:name=".Usuario.Perfil" android:screenOrientation="portrait" />
-        <activity android:name=".Registro"
+        <activity android:name=".Login.Registro"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Usuario.Seguidores" />
         <activity android:name=".Usuario.Seguidos" />
@@ -70,7 +70,7 @@
         <activity android:name=".Rutas.Rutas_nueva_ruta"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Login"
+            android:name=".Login.Login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Evento.CrearEvento" />
         <activity android:name=".Rutas.Rutas_guardar_ruta"

@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

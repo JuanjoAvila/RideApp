@@ -11,7 +11,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 

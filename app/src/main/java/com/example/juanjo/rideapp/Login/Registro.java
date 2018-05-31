@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
+import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
