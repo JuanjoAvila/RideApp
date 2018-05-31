@@ -372,7 +372,7 @@ public class Perfil extends AppCompatActivity {
                 Log.d("PRUEBAS", "DESPUÉS CONSULTA AMIGOS: "+System.currentTimeMillis());
                 cargarRecyclerLists();
             }else {
-                Toast.makeText(getApplicationContext(), "Error al cargar seguidoresID/seguidosID", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error al cargar los seguidores y seguidos.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -522,6 +522,7 @@ public class Perfil extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        cargarDatosPerfil();
         Handler uiHandlerRecyclerViews = new Handler(this.getMainLooper());
         uiHandlerRecyclerViews.post(new Runnable() {
             @Override
