@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class Registro extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "nuevoUsuario";
     public static final String SOAP_ACTION = "http://tempuri.org/nuevoUsuario";
     public static final String NAMESPACE = "http://tempuri.org/";

@@ -17,9 +17,9 @@ import java.net.SocketException;
 public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
     private static final int SELECT_FILE = 1;
     //Credenciales
-    private String ip =  "rideapp.somee.com";
-    public static  String USUARIO = "jesus93";				//Almacena el usuario
-    public static String PASS = "rideapp@M";			//Almacena la contraseña
+    private String ip =  "rideapp2.somee.com";
+    public static  String USUARIO = "rideapp";				//Almacena el usuario
+    public static String PASS = "rideapp123A";			//Almacena la contraseña
 
     FTPClient ftpClient;            //Crea la conexión con el servidor
     BufferedInputStream bufferIn;   //Crea una buffer de lectura

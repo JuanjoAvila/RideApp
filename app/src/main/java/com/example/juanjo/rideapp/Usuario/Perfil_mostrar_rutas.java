@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Perfil_mostrar_rutas extends AppCompatActivity {
 
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "listaRuta_info_byIdUsuario";
     public static final String SOAP_ACTION = "http://tempuri.org/listaRuta_info_byIdUsuario";
     public static final String NAMESPACE = "http://tempuri.org/";

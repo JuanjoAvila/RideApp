@@ -39,7 +39,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class Login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     //Estas cuatro variables final acceden al web service para las consultas ya creadas en la base de datos, daran la posiblidad de obtener el usuario.
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "obtenerUsuario";
     public static final String SOAP_ACTION = "http://tempuri.org/obtenerUsuario";
     public static final String NAMESPACE = "http://tempuri.org/";

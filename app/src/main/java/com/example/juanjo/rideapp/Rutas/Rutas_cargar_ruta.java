@@ -113,7 +113,7 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
     /*
     Variables utilizadas para las consultas al WebService
      */
-    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String WS_URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String NAMESPACE = "http://tempuri.org/";
     public static final String NUEVA_RUTA_METHOD = "nuevaRuta";
     public static final String NUEVA_RUTA_ACTION = "http://tempuri.org/nuevaRuta";

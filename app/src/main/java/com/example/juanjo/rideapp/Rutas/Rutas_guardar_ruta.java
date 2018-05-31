@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guardar2_dialog.CallBack, Rutas_guardar3_dialog.CallBack{
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "obtenerRuta";
     public static final String SOAP_ACTION = "http://tempuri.org/obtenerRuta";
     public static final String NAMESPACE = "http://tempuri.org/";

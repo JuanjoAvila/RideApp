@@ -116,7 +116,7 @@ public class Rutas_nueva_ruta extends FragmentActivity implements OnMapReadyCall
     /*
     Variables utilizadas para las consultas al WebService
      */
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "nuevaRuta";
     public static final String SOAP_ACTION = "http://tempuri.org/nuevaRuta";
     public static final String NAMESPACE = "http://tempuri.org/";
