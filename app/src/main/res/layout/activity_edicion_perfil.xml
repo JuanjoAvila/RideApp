@@ -5,47 +5,46 @@
     android:layout_height="match_parent"
     tools:context="com.example.juanjo.rideapp.Usuario.EdicionPerfil"
     android:background="@color/fondoVentanaPrincipal">
-    <LinearLayout
+    <ScrollView
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        tools:ignore="UselessParent">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            tools:ignore="UselessParent">
 
-
-            ><ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="10dp"
-            android:src="@mipmap/perfil_defecto_avatar_usuario"
-            android:contentDescription="@string/foto_de_perfil_actual_edicion_perfil"
-            />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="15dp"
-                android:contentDescription="@string/ruleta_para_cambiar_la_foto_edicion_perfil"
-                android:src="@drawable/edicion_perfil_cambioavatar" />
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="40sp"
-                android:layout_marginStart="50dp"
-                android:layout_gravity="center"
-                android:text="@string/datos_personales_perfil"/>
-        </LinearLayout>
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/Edicion_perfil_avatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="30dp"
+                    android:contentDescription="@string/foto_de_perfil_actual_edicion_perfil"
+                    android:src="@drawable/user_default" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="15dp"
+                    android:contentDescription="@string/ruleta_para_cambiar_la_foto_edicion_perfil"
+                    android:onClick="cambiarAvatar"
+                    android:src="@drawable/edicion_perfil_cambioavatar" />
+            </LinearLayout>
 
             <AutoCompleteTextView
                 android:layout_width="match_parent"
@@ -63,161 +62,147 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:inputType="textPassword"
-                android:id="@+id/contrasena_perfil"
+                android:id="@+id/Edicion_perfil_contrasena"
                 android:layout_marginBottom="15dp"
                 />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <AutoCompleteTextView
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:hint="@string/repetir_contrasena_registro"
-                android:textColorHint="#cccccc"
-                android:background="@drawable/cuadrado_redondo_login_contrasena"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:drawableStart="@mipmap/contrasenalogin"
-                android:textSize="14sp"
-                android:drawablePadding="5dp"
-                android:textColor="@color/blanco"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:inputType="textPassword"
-                android:id="@+id/contrasena_repetida_perfil"
-                android:layout_marginBottom="15dp"/>
-
-            <TextView
-                android:id="@+id/cambiar_contrasena"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="update"
-                android:text="@string/opcion_cambiar"
-                android:textColor="@color/esloganColor" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <AutoCompleteTextView
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:hint="@string/nombre_registro"
-                android:background="@drawable/cuadrado_redondo_login_nombre"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:drawableStart="@mipmap/usuariologin"
-                android:textSize="14sp"
-                android:drawablePadding="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:id="@+id/nombre_perfil"
-                android:layout_marginBottom="15dp"
-                android:inputType="textPersonName"/>
+                android:orientation="horizontal">
+                <AutoCompleteTextView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:hint="@string/repetir_contrasena_registro"
+                    android:textColorHint="#cccccc"
+                    android:background="@drawable/cuadrado_redondo_login_contrasena"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:drawableStart="@mipmap/contrasenalogin"
+                    android:textSize="14sp"
+                    android:drawablePadding="5dp"
+                    android:textColor="@color/blanco"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:inputType="textPassword"
+                    android:id="@+id/Edicion_perfil_contrasena_repetida"
+                    android:layout_marginBottom="15dp"/>
 
-            <TextView
-                android:id="@+id/cambiar_nombre"
-                android:layout_width="wrap_content"
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="update"
-                android:text="@string/opcion_cambiar"
-                android:textColor="@color/esloganColor" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <AutoCompleteTextView
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:hint="@string/apellidos_registro"
-                android:background="@drawable/cuadrado_redondo_login_apellidos"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:drawableStart="@mipmap/usuariologin"
-                android:textSize="14sp"
-                android:drawablePadding="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:id="@+id/apellidos_perfil"
-                android:layout_marginBottom="15dp"/>
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/cambiar_apellidos"
-                android:layout_width="wrap_content"
+                <AutoCompleteTextView
+                    android:id="@+id/Edicion_perfil_nombre"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="30dp"
+                    android:background="@drawable/cuadrado_redondo_login_nombre"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@mipmap/usuariologin"
+                    android:hint="@string/nombre_registro"
+                    android:inputType="textPersonName"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="10dp"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="update"
-                android:text="@string/opcion_cambiar"
-                android:textColor="@color/esloganColor" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <AutoCompleteTextView
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:hint="@string/correo_registro"
-                android:background="@drawable/cuadrado_redondo_login_correo"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:drawableStart="@mipmap/correo"
-                android:textSize="14sp"
-                android:drawablePadding="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:id="@+id/correo_perfil"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="20dp"/>
+                android:orientation="horizontal">
+                <AutoCompleteTextView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:hint="@string/apellidos_registro"
+                    android:background="@drawable/cuadrado_redondo_login_apellidos"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:drawableStart="@mipmap/usuariologin"
+                    android:textSize="14sp"
+                    android:drawablePadding="5dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:id="@+id/Edicion_perfil_apellidos"
+                    android:layout_marginBottom="15dp"/>
 
-            <TextView
-                android:id="@+id/cambiar_correo"
-                android:layout_width="wrap_content"
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="update"
-                android:text="@string/opcion_cambiar"
-                android:textColor="@color/esloganColor" />
-        </LinearLayout>
+                android:orientation="horizontal">
+                <AutoCompleteTextView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:hint="@string/correo_registro"
+                    android:background="@drawable/cuadrado_redondo_login_correo"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:drawableStart="@mipmap/correo"
+                    android:textSize="14sp"
+                    android:drawablePadding="5dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:id="@+id/Edicion_perfil_correo"
+                    android:inputType="textEmailAddress"
+                    android:layout_marginBottom="20dp"/>
+            </LinearLayout>
 
 
-        <ScrollView
+            <ScrollView
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/cambiar_descripcion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginEnd="30dp"
-                    android:onClick="update"
-                    android:text="@string/opcion_cambiar"
-                    android:textColor="@color/esloganColor"
-                    tools:ignore="RelativeOverlap" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <MultiAutoCompleteTextView
-                android:id="@+id/descripcion_perfil"
+
+                    <MultiAutoCompleteTextView
+                        android:id="@+id/Edicion_perfil_descripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginStart="30dp"
+                        android:background="@drawable/cuadrado_redondo_login_nombre"
+                        android:hint="@string/descripcion_edicion_perfil"
+                        android:padding="10dp"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </ScrollView>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="110dp"
-                android:hint="@string/descripcion_edicion_perfil"
-                android:padding="10dp"
-                android:textSize="12sp"
-                android:background="@drawable/cuadrado_redondo_login_nombre"
-                />
-            </RelativeLayout>
-        </ScrollView>
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/Edicion_perfil_editar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="40dp"
+                    android:onClick="updateUsuario"
+                    android:src="@drawable/edicio_perfil_editar" />
+
+                <ImageView
+                    android:id="@+id/Edicion_perfil_atras"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="130dp"
+                    android:onClick="atrasEdicion"
+                    android:src="@drawable/edicion_perfil_atras" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 
 
 </RelativeLayout>

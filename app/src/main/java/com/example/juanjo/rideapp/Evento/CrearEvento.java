@@ -113,6 +113,10 @@ public class CrearEvento extends AppCompatActivity {
         });
     }
 
+    public void cancelarGuardar(View view){
+        this.finish();
+    }
+
     private class InsertarEvento extends AsyncTask<Integer,Void,Integer> {
 
         private Context context;

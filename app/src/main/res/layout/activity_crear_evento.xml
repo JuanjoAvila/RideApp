@@ -142,6 +142,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="130dp"
+                    android:onClick="cancelarGuardar"
                     android:src="@drawable/crearevento_cancelarcrear" />
             </LinearLayout>
         </LinearLayout>
