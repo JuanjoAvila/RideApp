@@ -197,6 +197,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="130dp"
+                    android:onClick="atrasEdicion"
                     android:src="@drawable/edicion_perfil_atras" />
             </LinearLayout>
         </LinearLayout>

@@ -77,6 +77,9 @@ public class EdicionPerfil extends AppCompatActivity {
         avatar.setImageBitmap(bitmapAvatar);
     }
 
+    public void atrasEdicion(View view){
+        finish();
+    }
     public void updateUsuario(View view) {
         usuarioEditado = Login.getUsuari();
         usuarioEditado.setAvatar(codificarImagenaBase64());
