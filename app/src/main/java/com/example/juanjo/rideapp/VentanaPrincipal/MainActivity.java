@@ -25,14 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.juanjo.rideapp.Amigos.Amigos_main;
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
 import com.example.juanjo.rideapp.Evento.Eventos;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.Rutas.Rutas_cargar_ruta;
 import com.example.juanjo.rideapp.Rutas.Rutas_main;
-import com.example.juanjo.rideapp.Rutas.Rutas_recyclerView_clickListener;
 import com.example.juanjo.rideapp.Usuario.Perfil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -163,21 +162,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        recycler.addOnItemTouchListener(
-                new Rutas_recyclerView_clickListener(getApplicationContext(), recycler,new Rutas_recyclerView_clickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        Ruta_infoDTO ruta = adapter2.getItem(position);
-                        Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);
-                        intent.putExtra("idRuta", ruta.getIdRuta());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
 
-                    @Override public void onLongItemClick(View view, int position) {
-
-                    }
-                })
-        );
     }
 
     private class obtenerInfoRutas extends AsyncTask<Integer,Void,Boolean> {
@@ -233,11 +218,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
-
-
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -278,21 +258,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
 
-                    recycler.addOnItemTouchListener(
-                            new Rutas_recyclerView_clickListener(getApplicationContext(), recycler,new Rutas_recyclerView_clickListener.OnItemClickListener() {
-                                @Override public void onItemClick(View view, int position) {
-                                    Ruta_infoDTO ruta = adapter2.getItem(position);
-                                    Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);
-                                    intent.putExtra("idRuta", ruta.getIdRuta());
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
 
-                                @Override public void onLongItemClick(View view, int position) {
-
-                                }
-                            })
-                    );
                     return true;
                 case R.id.mejores_rutas:
 
@@ -327,21 +293,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
 
-                    recycler.addOnItemTouchListener(
-                            new Rutas_recyclerView_clickListener(getApplicationContext(), recycler,new Rutas_recyclerView_clickListener.OnItemClickListener() {
-                                @Override public void onItemClick(View view, int position) {
-                                    Ruta_infoDTO ruta = adapter2.getItem(position);
-                                    Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);
-                                    intent.putExtra("idRuta", ruta.getIdRuta());
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
 
-                                @Override public void onLongItemClick(View view, int position) {
-
-                                }
-                            })
-                    );
                     return true;
                 case R.id.rutas_mas_dificiles:
                     uiHandlerPerfil.post(new Runnable() {
@@ -377,21 +329,7 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
 
-                    recycler.addOnItemTouchListener(
-                            new Rutas_recyclerView_clickListener(getApplicationContext(), recycler,new Rutas_recyclerView_clickListener.OnItemClickListener() {
-                                @Override public void onItemClick(View view, int position) {
-                                    Ruta_infoDTO ruta = adapter2.getItem(position);
-                                    Intent intent = new Intent(getApplicationContext(), Rutas_cargar_ruta.class);
-                                    intent.putExtra("idRuta", ruta.getIdRuta());
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
 
-                                @Override public void onLongItemClick(View view, int position) {
-
-                                }
-                            })
-                    );
                     return true;
             }
             return false;
@@ -482,6 +420,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_perfil) {
             Intent i = new Intent(this, Perfil.class );
+            i.putExtra("usuario", Login.getUsuari().getIdUsuario());
+            esPrincipal=false;
+            startActivity(i);
+        } else if (id == R.id.nav_amigos) {
+            Intent i = new Intent(this, Amigos_main.class );
             i.putExtra("usuario", Login.getUsuari().getIdUsuario());
             esPrincipal=false;
             startActivity(i);
