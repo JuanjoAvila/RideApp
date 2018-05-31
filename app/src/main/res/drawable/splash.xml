@@ -4,6 +4,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/ic_logo_ride_app"/>
+            android:src="@drawable/logo"/>
     </item>
 </layer-list>

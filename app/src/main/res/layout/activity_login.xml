@@ -18,9 +18,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
 
+        android:layout_marginBottom="5dp"
         android:contentDescription="@string/titulo"
         android:scaleType="center"
-        android:src="@drawable/rideapp_titulo" />
+        android:src="@drawable/logo" />
 
 
 
