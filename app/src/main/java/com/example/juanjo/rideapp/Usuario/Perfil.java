@@ -1,5 +1,6 @@
 package com.example.juanjo.rideapp.Usuario;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,6 @@ import com.example.juanjo.rideapp.DTO.RelacionAmigoDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login;
-import com.example.juanjo.rideapp.MainActivity;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
@@ -58,6 +60,7 @@ public class Perfil extends AppCompatActivity {
     private ImageView avatar;
     private ImageView seguirUsuario;
     private ImageView dejarseguirUsuario;
+    private Button verRutasButton;
     private TextView usuarioNick;
     private TextView usuarioNombre;
     private RecyclerView seguidoresRecycler;
@@ -73,7 +76,7 @@ public class Perfil extends AppCompatActivity {
     private ArrayList<String> seguidosNombres;
     private ArrayList<String> seguidosAvatares;
     private FTPManager ftpManager;
-    private Context mContext;
+    private Activity mContext;
     private ImageView Perfil_configUsuario;
 
     @Override
@@ -87,6 +90,7 @@ public class Perfil extends AppCompatActivity {
         seguidosRecycler = findViewById(R.id.Perfil_recyclerViewSeguidos);
         seguidoresRecycler = findViewById(R.id.Perfil_recyclerViewSeguidores);
         descripcion = findViewById(R.id.Perfil_descripcionUsuario);
+        verRutasButton = findViewById(R.id.Perfil_botonRutas);
         amigosDTO = new ArrayList<RelacionAmigoDTO>();
         seguidoresID = new ArrayList<Integer>();
         seguidosID = new ArrayList<Integer>();
@@ -123,17 +127,13 @@ public class Perfil extends AppCompatActivity {
         uiHandlerPerfil.post(new Runnable() {
             @Override
             public void run() {
+                Log.d("PRUEBAS", "ANTES CARGAR PERFIL: "+System.currentTimeMillis());
                 cargarDatosPerfil();
             }
         });
-        Handler uiHandlerRecyclerViews = new Handler(this.getMainLooper());
-        uiHandlerRecyclerViews.post(new Runnable() {
-            @Override
-            public void run() {
-                ConsultaAmigos selectAmigos = new ConsultaAmigos(mContext);
+        Log.d("PRUEBAS", "ANTES CONSULTA AMIGOS: "+System.currentTimeMillis());
+        ConsultaAmigos selectAmigos = new ConsultaAmigos(mContext);
                 selectAmigos.execute();
-            }
-        });
     }
 
     /**
@@ -172,6 +172,7 @@ public class Perfil extends AppCompatActivity {
                 }
                 usuarioNombre.setText(usuarioPerfil.getNombre()+" "+usuarioPerfil.getApellidos());
                 descripcion.setText(usuarioPerfil.getDescripcion());
+                Log.d("PRUEBAS", "DESPUÉS CARGAR PERFIL: "+System.currentTimeMillis());
 
             }
         } catch (Exception e) {
@@ -185,6 +186,7 @@ public class Perfil extends AppCompatActivity {
      * @throws InterruptedException
      */
     private void cargarRecyclerLists(){
+        Log.d("PRUEBAS", "ANTES CARGAR ARRAYS: "+System.currentTimeMillis());
         for(RelacionAmigoDTO amigo: amigosDTO){
             if(amigo.getIdUsuario()== usuarioPerfil.getIdUsuario()){
                 seguidosID.add(amigo.getIdAmigo());
@@ -199,13 +201,22 @@ public class Perfil extends AppCompatActivity {
                 seguidoresAvatares.add(amigo.getAvatar());
             }
         }
+        Log.d("PRUEBAS", "DESPUES CARGAR ARRAYS: "+System.currentTimeMillis());
         if(!usuarioPerfilID.equals(usuarioActivo.getIdUsuario())){
             if(!seguidoresID.contains(usuarioActivo.getIdUsuario())){
                 seguirUsuario.setVisibility(View.VISIBLE);
+                verRutasButton.setVisibility(View.INVISIBLE);
+                verRutasButton.setVisibility(View.INVISIBLE);
             }
             else {
+                seguirUsuario.setVisibility(View.INVISIBLE);
+                verRutasButton.setVisibility(View.VISIBLE);
                 dejarseguirUsuario.setVisibility(View.VISIBLE);
             }
+        }
+        else{
+            Perfil_configUsuario.setVisibility(View.VISIBLE);
+            verRutasButton.setVisibility(View.VISIBLE);
         }
         generarRecyclerLists();
     }
@@ -214,6 +225,7 @@ public class Perfil extends AppCompatActivity {
      * Carga los RecyclerList del perfil.
      */
     private void generarRecyclerLists(){
+        Log.d("PRUEBAS", "ANTES GENERAR RECYCLERVIEW: "+System.currentTimeMillis());
         Handler uiHandlerRecyclerViewSeguidores = new Handler(this.getMainLooper());
         uiHandlerRecyclerViewSeguidores.post(new Runnable() {
             @Override
@@ -224,7 +236,7 @@ public class Perfil extends AppCompatActivity {
                 seguidoresRecycler.setAdapter(adapter);
             }
         });
-
+        Log.d("PRUEBAS", "ANTES GENERAR RECYCLERVIEW2: "+System.currentTimeMillis());
         Handler uiHandlerRecyclerViewSeguidos = new Handler(this.getMainLooper());
         uiHandlerRecyclerViewSeguidos.post(new Runnable() {
             @Override
@@ -235,6 +247,7 @@ public class Perfil extends AppCompatActivity {
                 seguidosRecycler.setAdapter(adapter2);
             }
         });
+        Log.d("PRUEBAS", "DESPUES GENERAR RECYCLERVIEW: "+System.currentTimeMillis());
     }
 
     public void seguirUsuario(View view){
@@ -256,6 +269,7 @@ public class Perfil extends AppCompatActivity {
             });
             seguirUsuario.setVisibility(View.INVISIBLE);
             dejarseguirUsuario.setVisibility(View.VISIBLE);
+            verRutasButton.setVisibility(View.VISIBLE);
 
         }
     }
@@ -279,6 +293,7 @@ public class Perfil extends AppCompatActivity {
             });
             seguirUsuario.setVisibility(View.VISIBLE);
             dejarseguirUsuario.setVisibility(View.INVISIBLE);
+            verRutasButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -354,6 +369,7 @@ public class Perfil extends AppCompatActivity {
 
         protected void onPostExecute(Boolean result) {
             if(result){
+                Log.d("PRUEBAS", "DESPUÉS CONSULTA AMIGOS: "+System.currentTimeMillis());
                 cargarRecyclerLists();
             }else {
                 Toast.makeText(getApplicationContext(), "Error al cargar seguidoresID/seguidosID", Toast.LENGTH_SHORT).show();

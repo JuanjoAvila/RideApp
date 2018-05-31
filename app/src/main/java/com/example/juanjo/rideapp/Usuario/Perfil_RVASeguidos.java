@@ -1,6 +1,7 @@
 package com.example.juanjo.rideapp.Usuario;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,7 +37,7 @@ public class Perfil_RVASeguidos extends RecyclerView.Adapter<Perfil_RVASeguidos.
     private ArrayList<String> mNombres;
     private ArrayList<String> mImagenesUsuarios;
     private ArrayList<Integer> midsUsuarios;
-    private Context mContext;
+    private Activity mContext;
     private FTPManager ftpManager;
     private Bitmap bitmap = null;
 
@@ -48,7 +49,7 @@ public class Perfil_RVASeguidos extends RecyclerView.Adapter<Perfil_RVASeguidos.
      * @param idsUsers ID del seguidor o seguido, necesario para poder luego acceder a su perfil puslando en su avatar.
      * @param nombres Nombres de la cuenta de los usuarios, necesario para sustituir los Nombres de usuario de Google por sus nombres de la cuenta.
      */
-    public Perfil_RVASeguidos(Context context, ArrayList<String> names, ArrayList<String> imageUrls, ArrayList<Integer> idsUsers, ArrayList<String> nombres) {
+    public Perfil_RVASeguidos(Activity context, ArrayList<String> names, ArrayList<String> imageUrls, ArrayList<Integer> idsUsers, ArrayList<String> nombres) {
         mNombresUsuarios = names;
         mImagenesUsuarios = imageUrls;
         midsUsuarios = idsUsers;
@@ -117,9 +118,11 @@ public class Perfil_RVASeguidos extends RecyclerView.Adapter<Perfil_RVASeguidos.
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mContext.finish();
                 Intent i = new Intent(mContext, Perfil.class );
                 i.putExtra("usuario", midsUsuarios.get(usuarioPosition));
                 mContext.startActivity(i);
+
             }
         });
     }
