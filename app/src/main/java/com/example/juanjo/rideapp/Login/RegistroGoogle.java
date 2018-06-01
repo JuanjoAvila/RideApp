@@ -1,4 +1,4 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class RegistroGoogle {
-    private static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    private static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     private static final String METHOD_NAME = "nuevoUsuario";
     private static final String SOAP_ACTION = "http://tempuri.org/nuevoUsuario";
     private static final String NAMESPACE = "http://tempuri.org/";

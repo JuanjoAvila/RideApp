@@ -1,6 +1,5 @@
 package com.example.juanjo.rideapp.Usuario;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,10 +17,8 @@ import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
-import com.example.juanjo.rideapp.DTO.UsuarioDTO;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.Rutas.Rutas_nueva_ruta;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -38,7 +35,7 @@ import java.util.concurrent.ExecutionException;
 public class Perfil_RVARutas extends RecyclerView.Adapter<Perfil_RVARutas.RutasViewHolder> {
     private List<Ruta_infoDTO> items;
     private Integer idPerfil;
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_BORRARRUTA = "borrarRuta";
     public static final String SOAP_ACTION_BORRARRUTA = "http://tempuri.org/borrarRuta";
     public static final String METHOD_NAME_GUARDARRUTA = "nuevaRuta";

@@ -8,166 +8,229 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="510dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:background="@color/fondoVentanaPrincipal">
 
-        <LinearLayout
-            android:paddingTop="15dp"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            >
+            android:layout_height="wrap_content">
 
-            <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
-                android:columnCount="4"
-                android:orientation="horizontal">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/Perfil_usuarioAvatar"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/user_default" />
-
-                <TextView
-                    android:id="@+id/Perfil_usuarioID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="5dp"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="5dp"
-                    android:text="USUARIO"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_columnSpan="2"/>
-
-                <ImageView
-                    android:id="@+id/Perfil_configUsuario"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="accederEdicionPerfil"
-                    android:src="@mipmap/perfil_editarusuario"
-                    android:visibility="invisible" />
-            </GridLayout>
-            <TextView
-                android:id="@+id/Perfil_nombreCuenta"
-                android:paddingTop="5dp"
-                android:paddingLeft="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:text="Seguidos"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="normal" />
             <LinearLayout
-                android:paddingTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-                <ImageView
-                    android:id="@+id/Perfil_seguirUsuario"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:onClick="seguirUsuario"
-                    android:src="@drawable/perfil_follow"
-                    android:visibility="invisible" />
-                <ImageView
-                    android:id="@+id/Perfil_dejarseguirUsuario"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:onClick="dejarSeguirUsuario"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/perfil_unfollow"
-                    android:visibility="invisible" />
-            </LinearLayout>
-            <TextView
-                android:id="@+id/Perfil_seguidoresTexto"
-                android:paddingTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:text="Seguidores"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/Perfil_recyclerViewSeguidores"
-                android:orientation="horizontal">
-            </android.support.v7.widget.RecyclerView>
-            <TextView
-                android:id="@+id/Perfil_seguidosTexto"
-                android:paddingTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:text="Seguidos"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/Perfil_recyclerViewSeguidos"
-                android:orientation="horizontal">
-            </android.support.v7.widget.RecyclerView>
-            <TextView
-                android:id="@+id/Perfil_descripcionUsuarioTexto"
-                android:paddingTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_marginTop="5dp"
-                android:text="Descripción:"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/Perfil_descripcionUsuario"
-                android:paddingTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:text="Tengo cierto hobbies para poder divertirme, etc..."
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="normal"
-                android:background="@drawable/perfil_cuadrado_rutas"
-                />
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/rutas_guardar_ruta_relativelayout"
+                android:orientation="vertical"
+                android:scrollbars="vertical">
 
-            <Button
-                android:id="@+id/Perfil_botonRutas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/botonsign"
-                android:onClick="cargarRutas"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="Ver Rutas"
-                android:textColor="@color/blanco"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:visibility="invisible"/>
-        </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/perfil_delete"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/Perfil_dejarseguirUsuario"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:onClick="dejarSeguirUsuario"
+                        android:src="@drawable/deleteuser"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/Perfil_seguirUsuario"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignStart="@+id/Perfil_dejarseguirUsuario"
+                        android:layout_alignTop="@+id/Perfil_dejarseguirUsuario"
+                        android:layout_gravity="center"
+                        android:onClick="seguirUsuario"
+                        android:src="@drawable/adduser"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rutas_fondo_guardar2">
+
+                    <ImageView
+                        android:id="@+id/Perfil_configUsuario"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        android:src="@drawable/perfil_config"
+                        android:visibility="invisible" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/Perfil_usuarioAvatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="25dp"
+                        android:src="@drawable/user_default" />
+
+                    <TextView
+                        android:id="@+id/Perfil_nombreCuenta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/Perfil_usuarioID"
+                        android:layout_centerHorizontal="true"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="5dp"
+                        android:text="Richard Álvarez Hayes"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/Perfil_usuarioID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/Perfil_usuarioAvatar"
+                        android:layout_centerHorizontal="true"
+                        android:layout_columnSpan="2"
+                        android:layout_gravity="center"
+                        android:text="Richard"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rutas_fondo_guardar2">
+
+                    <TextView
+                        android:id="@+id/Perfil_seguidoresTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/Perfil_recyclerViewSeguidos"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:paddingTop="5dp"
+                        android:text="Seguidores"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/Perfil_recyclerViewSeguidos"
+                        android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/Perfil_seguidosTexto"
+                        android:orientation="horizontal">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/Perfil_recyclerViewSeguidores"
+                        android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/Perfil_seguidoresTexto"
+                        android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
+
+                    <TextView
+                        android:id="@+id/Perfil_seguidosTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:paddingTop="5dp"
+                        android:text="Siguiendo"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/rutas_fondo_guardar2">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp">
+
+                        <TextView
+                            android:id="@+id/Perfil_descripcionUsuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@+id/Perfil_descripcionUsuarioTexto"
+                            android:layout_marginTop="25dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="5dp"
+                            android:text="Tengo cierto hobbies para poder divertirme, etc..."
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:textStyle="normal" />
+                    </ScrollView>
+
+                    <TextView
+                        android:id="@+id/Perfil_descripcionUsuarioTexto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="7dp"
+                        android:text="Mi descripción"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/Perfil_botonRutas"
+                    android:layout_width="280dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/botonsign"
+                    android:onClick="cargarRutas"
+                    android:text="Ver Rutas"
+                    android:textColor="@color/blanco"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

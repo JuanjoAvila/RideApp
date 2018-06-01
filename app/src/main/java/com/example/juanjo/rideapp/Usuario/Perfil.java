@@ -14,8 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +23,7 @@ import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.RelacionAmigoDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutionException;
  * En el perfil se muestran los datos del usuario, sus seguidores y sus seguidos además de un acceso a sus rutas
  */
 public class Perfil extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_AMIGOS = "Select_amigos_usuarios";
     public static final String SOAP_ACTION_AMIGOS = "http://tempuri.org/Select_amigos_usuarios";
     public static final String METHOD_NAME_USUARIO = "obtenerUsuario_byIdUsuario";

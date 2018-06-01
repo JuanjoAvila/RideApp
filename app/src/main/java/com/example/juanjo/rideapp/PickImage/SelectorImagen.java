@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.juanjo.rideapp.MainActivity;
 import com.mvc.imagepicker.ImagePicker;
 
 public class SelectorImagen {

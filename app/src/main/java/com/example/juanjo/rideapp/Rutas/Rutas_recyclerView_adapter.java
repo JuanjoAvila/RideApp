@@ -13,7 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 
 import java.util.List;

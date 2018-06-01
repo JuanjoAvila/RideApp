@@ -15,7 +15,7 @@ import android.widget.ToggleButton;
 
 import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.Usuario_adapter;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
@@ -39,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class AmigosAdapter extends BaseAdapter {
 
-    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String WS_URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String NAMESPACE = "http://tempuri.org/";
     public static final String NUEVO_AMIGO_ACTION = "http://tempuri.org/nuevoAmigo";
     public static final String NUEVO_AMIGO_METHOD = "nuevoAmigo";

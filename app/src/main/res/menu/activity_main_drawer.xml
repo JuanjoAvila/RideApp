@@ -7,9 +7,13 @@
             android:icon="@drawable/inicio"
             android:title="Inicio" />
         <item
-            android:id="@+id/nav_perfil"
-            android:icon="@drawable/perfil"
-            android:title="Perfil" />
+        android:id="@+id/nav_perfil"
+        android:icon="@drawable/perfil"
+        android:title="Perfil" />
+        <item
+            android:id="@+id/nav_amigos"
+            android:icon="@drawable/amigos"
+            android:title="Amigos" />
         <item
             android:id="@+id/nav_rutas"
             android:icon="@drawable/mapa_rutas"

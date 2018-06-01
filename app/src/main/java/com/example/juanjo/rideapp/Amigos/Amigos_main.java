@@ -3,16 +3,15 @@ package com.example.juanjo.rideapp.Amigos;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.Usuario_adapter;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
@@ -34,7 +33,7 @@ public class Amigos_main extends AppCompatActivity implements SearchView.OnQuery
     /*
     Variables utilizadas para las consultas al WebService
      */
-    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String WS_URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String LISTA_USUARIOS_SIN_ACTUAL_METHOD = "listaUsuarios_sinUsuarioActual";
     public static final String LISTA_USUARIOS_SIN_ACTUAL_ACTION = "http://tempuri.org/listaUsuarios_sinUsuarioActual";
     public static final String NAMESPACE = "http://tempuri.org/";

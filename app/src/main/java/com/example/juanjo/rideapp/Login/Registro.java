@@ -1,12 +1,12 @@
-package com.example.juanjo.rideapp;
+package com.example.juanjo.rideapp.Login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
+import com.example.juanjo.rideapp.R;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -27,7 +28,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class Registro extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "nuevoUsuario";
     public static final String SOAP_ACTION = "http://tempuri.org/nuevoUsuario";
     public static final String NAMESPACE = "http://tempuri.org/";

@@ -2,9 +2,9 @@ package com.example.juanjo.rideapp.Evento;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -14,11 +14,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.juanjo.rideapp.DTO.EventoDTO;
-import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
-import com.example.juanjo.rideapp.Usuario.Perfil;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -29,7 +27,6 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,7 +36,7 @@ import java.util.concurrent.ExecutionException;
  * Clase encargada de gestionar la ventana de creacioón de un Evento
  */
 public class CrearEvento extends AppCompatActivity {
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME_CREAREVENTOS = "nuevoEvento";
     public static final String SOAP_ACTION_CREAREVENTOS = "http://tempuri.org/nuevoEvento";
     public static final String METHOD_NAME_RUTAS = "listaRuta_info_byIdUsuario";

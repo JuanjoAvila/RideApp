@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.PickImage.SelectorImagen;
@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Rutas_guardar_ruta extends AppCompatActivity implements Rutas_guardar2_dialog.CallBack, Rutas_guardar3_dialog.CallBack{
-    public static final String URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "obtenerRuta";
     public static final String SOAP_ACTION = "http://tempuri.org/obtenerRuta";
     public static final String NAMESPACE = "http://tempuri.org/";

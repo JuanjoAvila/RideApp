@@ -21,12 +21,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Base64;
 import android.util.Log;
@@ -39,7 +39,7 @@ import android.widget.ToggleButton;
 import com.example.juanjo.rideapp.DTO.RutaDTO;
 import com.example.juanjo.rideapp.DTO.UsuarioDTO;
 import com.example.juanjo.rideapp.FTP.FTPManager;
-import com.example.juanjo.rideapp.Login;
+import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -113,7 +113,7 @@ public class Rutas_cargar_ruta extends FragmentActivity implements OnMapReadyCal
     /*
     Variables utilizadas para las consultas al WebService
      */
-    public static final String WS_URL = "http://rideapp.somee.com/WebService.asmx";
+    public static final String WS_URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String NAMESPACE = "http://tempuri.org/";
     public static final String NUEVA_RUTA_METHOD = "nuevaRuta";
     public static final String NUEVA_RUTA_ACTION = "http://tempuri.org/nuevaRuta";
