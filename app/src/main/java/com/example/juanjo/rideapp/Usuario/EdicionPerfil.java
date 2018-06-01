@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -57,6 +58,7 @@ public class EdicionPerfil extends AppCompatActivity {
     private ImageView avatar;
     private String imagen_rutaBASE64;
     private UsuarioDTO usuarioEditado;
+    private Editar_perfil_mail_dialog dialogMail;
     private Activity mContext;
 
     @Override
@@ -227,17 +229,23 @@ public class EdicionPerfil extends AppCompatActivity {
         dialogo1.show();
     }
 
-    private void formatoCorreoNoValido(){
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Correo no valido.");
-        dialogo1.setMessage("Debes de introducir un correo válido.");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                return;
-            }
-        });
-        dialogo1.show();
+    private void formatoCorreoNoValido() {
+        dialogMail = null;
+        FragmentManager fm = getSupportFragmentManager();
+        dialogMail = Editar_perfil_mail_dialog.newInstance("Some Title");
+        dialogMail.show(fm, "fragment_edit_name");
+    }
+
+    public void cerrarMailDialog(View view){
+        if(dialogMail!=null){
+            dialogMail.dismiss();
+        }
+    }
+
+    public void cerrarPassDialog(View view){
+        if(dialogMail!=null){
+            dialogMail.dismiss();
+        }
     }
 
     private boolean validarEmail(String email) {

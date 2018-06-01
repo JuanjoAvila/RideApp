@@ -53,8 +53,6 @@
                 android:hint="@string/contrasena_registro"
                 android:textColorHint="#cccccc"
                 android:background="@drawable/cuadrado_redondo_login_contrasena"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="50dp"
                 android:drawableStart="@mipmap/contrasenalogin"
                 android:textSize="14sp"
                 android:drawablePadding="5dp"
@@ -71,13 +69,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <AutoCompleteTextView
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="@string/repetir_contrasena_registro"
                     android:textColorHint="#cccccc"
                     android:background="@drawable/cuadrado_redondo_login_contrasena"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
                     android:drawableStart="@mipmap/contrasenalogin"
                     android:textSize="14sp"
                     android:drawablePadding="5dp"
@@ -96,11 +92,9 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/Edicion_perfil_nombre"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginBottom="15dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginStart="30dp"
                     android:background="@drawable/cuadrado_redondo_login_nombre"
                     android:drawablePadding="5dp"
                     android:drawableStart="@mipmap/usuariologin"
@@ -116,12 +110,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <AutoCompleteTextView
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="@string/apellidos_registro"
                     android:background="@drawable/cuadrado_redondo_login_apellidos"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
                     android:drawableStart="@mipmap/usuariologin"
                     android:textSize="14sp"
                     android:drawablePadding="5dp"
@@ -136,12 +128,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <AutoCompleteTextView
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="@string/correo_registro"
                     android:background="@drawable/cuadrado_redondo_login_correo"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
                     android:drawableStart="@mipmap/correo"
                     android:textSize="14sp"
                     android:drawablePadding="5dp"
@@ -167,8 +157,6 @@
                         android:id="@+id/Edicion_perfil_descripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginStart="30dp"
                         android:background="@drawable/cuadrado_redondo_login_nombre"
                         android:hint="@string/descripcion_edicion_perfil"
                         android:padding="10dp"
@@ -196,7 +184,7 @@
                     android:id="@+id/Edicion_perfil_atras"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginStart="130dp"
+                    android:layout_marginStart="110dp"
                     android:onClick="atrasEdicion"
                     android:src="@drawable/edicion_perfil_atras" />
             </LinearLayout>
