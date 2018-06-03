@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * Clase encargada de gestionar la ventana de creacioón de un Evento
+ * @author RideApp
  */
 public class CrearEvento extends AppCompatActivity {
     public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
@@ -80,6 +81,11 @@ public class CrearEvento extends AppCompatActivity {
         });
     }
 
+    /**
+     * Se genera un Handler encargado de ejecutar la consulta para obtener las rutas del usuario logeado,
+     * carga los datos recibidos en un arraylist concatenando el ID de Ruta, los caracteres ".-" y el título de la ruta.
+     * Una vez obtenido los datos se crea el adaptador y se carga el spinner de selección de ruta.
+     */
     private void cargarRutasLista(){
         Handler uiHandlerLisaRutas = new Handler(this.getMainLooper());
         uiHandlerLisaRutas.post(new Runnable() {
@@ -101,6 +107,15 @@ public class CrearEvento extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Se abre una instancia de EventoDTO a la cual se le cargarán los datos.
+     * El ID de usuario se obtiene del método estático getUsuari de la clase Login.
+     * Se obtiene la fecha del CalendarView, para el ID de la ruta se ejecuta el método split sobre el item seleccionado del spinner.
+     * Y los comentarios del evento se obtienen del widget edittext.
+     * Una vez preparado el objeto a insertar a la BD, se genera un handler para ejecutar la consulta de InsertarEvento y finaliza la activdad.
+     * @param view Botón guardarRuta con este método como onClick.
+     */
     public void guardarRuta(View view){
         eventoDTO = new EventoDTO();
         eventoDTO.setAdmin(Login.getUsuari().getIdUsuario());
@@ -119,6 +134,10 @@ public class CrearEvento extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Finaliza la actividad sin hacer el insert a la BD.
+     * @param view Botón de cancelar ruta con este método como onClick.
+     */
     public void cancelarGuardar(View view){
         this.finish();
     }

@@ -2,6 +2,7 @@ package com.example.juanjo.rideapp.Amigos;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import com.example.juanjo.rideapp.DTO.AmigoDTO;
 import com.example.juanjo.rideapp.DTO.Usuario_adapter;
 import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
+import com.example.juanjo.rideapp.Usuario.Perfil;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -100,7 +102,16 @@ public class AmigosAdapter extends BaseAdapter {
         }else{
             avatar.setImageDrawable(activity.getResources().getDrawable(R.drawable.user_default));
         }
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.finish();
+                Intent i = new Intent(activity, Perfil.class );
+                i.putExtra("usuario", usuarios.get(position).getIdUsuario());
+                activity.startActivity(i);
 
+            }
+        });
         /*
         Se cargan el nombre y apellidos
          */
