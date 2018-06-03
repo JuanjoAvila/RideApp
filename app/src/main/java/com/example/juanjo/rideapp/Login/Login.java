@@ -211,6 +211,17 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
     public void  inicioSession(){
         ConsultaUsuario twsc = new ConsultaUsuario();
         twsc.execute(String.valueOf(loginusuario.getText()));
+        /* Comprueba que la contraseña sea la correspondiente al usuario introducido para validarla si es asi entrará en la ventana principal mediante una funcion
+         * externa para facilitar las cosas. Sino saldra un mensaje de error de contraseña para el usuario .
+         */
+        if (user.getPassword().equals(String.valueOf(logincontrasena.getText()))) {
+            iniciar();
+        }else{
+            Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
+            MainActivity.usuario.clear();
+            MainActivity.primeraVez = false;
+            MainActivity.otras = false;
+        }
     }
 
     /**
@@ -341,17 +352,8 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
                     MainActivity.otras=false;
                 }
                 MainActivity.primeraVez = true;
-                /* Comprueba que la contraseña sea la correspondiente al usuario introducido para validarla si es asi entrará en la ventana principal mediante una funcion
-                 * externa para facilitar las cosas. Sino saldra un mensaje de error de contraseña para el usuario .
-                 */
-                if (user.getPassword().equals(String.valueOf(logincontrasena.getText()))) {
-                    iniciar();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
-                    MainActivity.usuario.clear();
-                    MainActivity.primeraVez = false;
-                    MainActivity.otras = false;
-                }
+
+
             }else{
                 Toast.makeText(getApplicationContext(), "Usuario incorrecto", Toast.LENGTH_SHORT).show();
                 MainActivity.usuario.clear();
