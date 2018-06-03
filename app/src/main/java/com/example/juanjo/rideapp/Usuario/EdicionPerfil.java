@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -57,6 +58,7 @@ public class EdicionPerfil extends AppCompatActivity {
     private ImageView avatar;
     private String imagen_rutaBASE64;
     private UsuarioDTO usuarioEditado;
+    private Editar_perfil_mail_dialog dialogMail;
     private Activity mContext;
 
     @Override
@@ -77,9 +79,18 @@ public class EdicionPerfil extends AppCompatActivity {
         avatar.setImageBitmap(bitmapAvatar);
     }
 
+    /**
+     * Vuelve a la actividad anterior.
+     * @param view
+     */
     public void atrasEdicion(View view){
         finish();
     }
+
+    /**
+     * Comprueba los campos que se han escrito, verifica que las contraseñas coincidan y que el formato del correo sea valido, en caso de pasar las pruebas se genera un update en la BD del usuario activo en la tabla de usuarios.
+     * @param view
+     */
     public void updateUsuario(View view) {
         usuarioEditado = Login.getUsuari();
         usuarioEditado.setAvatar(codificarImagenaBase64());
@@ -121,6 +132,11 @@ public class EdicionPerfil extends AppCompatActivity {
         this.finish();
     }
 
+    /**
+     * Se genera un dialog preguntando al usuario como va a querer efectuar el cambio de avatar, si a través de la cámara tomando una foto en ese instante o a través de la galería.
+     * Según la opción elegida, se genera una nueva actividad con la cámara o con la galería.
+     * @param view
+     */
     public void cambiarAvatar(View view){
             alert(this, "Escoge una opción", "Haz una foto o selecciona una de tu galería",
                     "Cámara", new DialogInterface.OnClickListener() {
@@ -205,6 +221,10 @@ public class EdicionPerfil extends AppCompatActivity {
             }
         }
 
+    /**
+     * Genera el codigo en Base64 del contenido de la imagen seleccionada.
+     * @return
+     */
     private String codificarImagenaBase64() {
         Bitmap avatarBitmap = ((BitmapDrawable)avatar.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -227,19 +247,30 @@ public class EdicionPerfil extends AppCompatActivity {
         dialogo1.show();
     }
 
-    private void formatoCorreoNoValido(){
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Correo no valido.");
-        dialogo1.setMessage("Debes de introducir un correo válido.");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                return;
-            }
-        });
-        dialogo1.show();
+    private void formatoCorreoNoValido() {
+        dialogMail = null;
+        FragmentManager fm = getSupportFragmentManager();
+        dialogMail = Editar_perfil_mail_dialog.newInstance("Some Title");
+        dialogMail.show(fm, "fragment_edit_name");
     }
 
+    public void cerrarMailDialog(View view){
+        if(dialogMail!=null){
+            dialogMail.dismiss();
+        }
+    }
+
+    public void cerrarPassDialog(View view){
+        if(dialogMail!=null){
+            dialogMail.dismiss();
+        }
+    }
+
+    /**
+     * Validador de correo.
+     * @param email
+     * @return
+     */
     private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();

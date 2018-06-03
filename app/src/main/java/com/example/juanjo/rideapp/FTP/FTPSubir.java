@@ -83,10 +83,10 @@ public class FTPSubir extends AsyncTask<File , Integer, Boolean> {
 
         //Cambia la carpeta Ftp
         if(rutaCompleta.getName().endsWith("gpx")){
-            ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Rutas/");
+            ftpClient.changeWorkingDirectory("./www.rideapp2.somee.com/Rutas/");
         }
         else{
-            ftpClient.changeWorkingDirectory("./www.rideapp.somee.com/Imagenes/");
+            ftpClient.changeWorkingDirectory("./www.rideapp2.somee.com/Imagenes/");
         }
 
         //Crea un buffer hacia el servidor de subida

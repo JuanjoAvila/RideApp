@@ -20,7 +20,10 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -37,6 +40,7 @@ public class Eventos extends AppCompatActivity {
     private Context mContext;
     private RVEventos adapterEvento;
     private RecyclerView.LayoutManager layoutManager;
+    private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,8 @@ public class Eventos extends AppCompatActivity {
 
             Boolean result = true;
 
+            listaEventos.clear();
+
             SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME_EVENTOS);
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.dotNet = true;
@@ -117,8 +123,14 @@ public class Eventos extends AppCompatActivity {
                             iu.getPropertyAsString(8), iu.getPropertyAsString(9), Integer.valueOf(iu.getPropertyAsString(10)),
                             Integer.valueOf(iu.getPropertyAsString(11)), Integer.valueOf(iu.getPropertyAsString(12)),
                             iu.getPropertyAsString(13),iu.getPropertyAsString(14));
-
-                    listaEventos.add(eventos_info);
+                    Date fechaActual = new Date();
+                    String fechaActualString = format.format(fechaActual);
+                    Date fechaActualFormateada = format.parse(fechaActualString);
+                    Date fechaEvento =
+                            format.parse(eventos_info.getFecha_evento().replace('/','-'));
+                    if(fechaEvento.after(fechaActualFormateada)) {
+                        listaEventos.add(eventos_info);
+                    }
                 }
             } catch (Exception e) {
                 result = false;
@@ -133,5 +145,10 @@ public class Eventos extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error al cargar los eventos.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargarRecyclerView();
     }
 }

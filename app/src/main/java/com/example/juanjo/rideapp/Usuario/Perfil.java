@@ -112,6 +112,10 @@ public class Perfil extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inicia la actividad de edición de perfil.
+     * @param View botón con onClick asignado a este método.
+     */
     public void accederEdicionPerfil(View View){
         Intent i = new Intent(this, EdicionPerfil.class );
         startActivity(i);
@@ -172,7 +176,6 @@ public class Perfil extends AppCompatActivity {
                 }
                 usuarioNombre.setText(usuarioPerfil.getNombre()+" "+usuarioPerfil.getApellidos());
                 descripcion.setText(usuarioPerfil.getDescripcion());
-                Log.d("PRUEBAS", "DESPUÉS CARGAR PERFIL: "+System.currentTimeMillis());
 
             }
         } catch (Exception e) {
@@ -186,7 +189,6 @@ public class Perfil extends AppCompatActivity {
      * @throws InterruptedException
      */
     private void cargarRecyclerLists(){
-        Log.d("PRUEBAS", "ANTES CARGAR ARRAYS: "+System.currentTimeMillis());
         for(RelacionAmigoDTO amigo: amigosDTO){
             if(amigo.getIdUsuario()== usuarioPerfil.getIdUsuario()){
                 seguidosID.add(amigo.getIdAmigo());
@@ -201,7 +203,6 @@ public class Perfil extends AppCompatActivity {
                 seguidoresAvatares.add(amigo.getAvatar());
             }
         }
-        Log.d("PRUEBAS", "DESPUES CARGAR ARRAYS: "+System.currentTimeMillis());
         if(!usuarioPerfilID.equals(usuarioActivo.getIdUsuario())){
             if(!seguidoresID.contains(usuarioActivo.getIdUsuario())){
                 seguirUsuario.setVisibility(View.VISIBLE);
@@ -225,7 +226,6 @@ public class Perfil extends AppCompatActivity {
      * Carga los RecyclerList del perfil.
      */
     private void generarRecyclerLists(){
-        Log.d("PRUEBAS", "ANTES GENERAR RECYCLERVIEW: "+System.currentTimeMillis());
         Handler uiHandlerRecyclerViewSeguidores = new Handler(this.getMainLooper());
         uiHandlerRecyclerViewSeguidores.post(new Runnable() {
             @Override
@@ -236,7 +236,6 @@ public class Perfil extends AppCompatActivity {
                 seguidoresRecycler.setAdapter(adapter);
             }
         });
-        Log.d("PRUEBAS", "ANTES GENERAR RECYCLERVIEW2: "+System.currentTimeMillis());
         Handler uiHandlerRecyclerViewSeguidos = new Handler(this.getMainLooper());
         uiHandlerRecyclerViewSeguidos.post(new Runnable() {
             @Override
@@ -247,9 +246,12 @@ public class Perfil extends AppCompatActivity {
                 seguidosRecycler.setAdapter(adapter2);
             }
         });
-        Log.d("PRUEBAS", "DESPUES GENERAR RECYCLERVIEW: "+System.currentTimeMillis());
     }
 
+    /**
+     * Realiza el insert a BD sobre la tabla amigos como seguidor el usuario activo y seguido el perfil actual.
+     * @param view
+     */
     public void seguirUsuario(View view){
         SeguirUsuario follow = new SeguirUsuario(this);
         Boolean exito = false;
@@ -274,6 +276,10 @@ public class Perfil extends AppCompatActivity {
         }
     }
 
+    /**
+     * Realiza el delete a BD sobre la tabla amigos como seguidor el usuario activo y seguido el perfil actual.
+     * @param view
+     */
     public void dejarSeguirUsuario(View view){
         DejarSeguirUsuario unfollow = new DejarSeguirUsuario(this);
         Boolean exito = false;
@@ -297,6 +303,10 @@ public class Perfil extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inicia la actividad donde se muestran las rutas de dicho perfil.
+     * @param view
+     */
     public void cargarRutas(View view){
         Intent i = new Intent(this, Perfil_mostrar_rutas.class );
         i.putExtra("idPerfil", usuarioPerfilID);
