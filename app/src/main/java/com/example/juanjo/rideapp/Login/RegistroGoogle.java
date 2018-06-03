@@ -20,11 +20,19 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author RideApp
+ * @version 1.0
+ * created on June
+ */
 public class RegistroGoogle {
+    //variables de la consulta a base de datos de añadir el usuario de google.
     private static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     private static final String METHOD_NAME = "nuevoUsuario";
     private static final String SOAP_ACTION = "http://tempuri.org/nuevoUsuario";
     private static final String NAMESPACE = "http://tempuri.org/";
+
+    //declaracion de los campos que se añadiran al coger los datos de google
     private String idUsuario2;
     private String password1;
     private String password2;
@@ -36,6 +44,7 @@ public class RegistroGoogle {
     private UsuarioDTO usuarioNuevo;
 
     RegistroGoogle(GoogleSignInResult result, Context context) {
+        //se declaran y se cogen la id del resultado que proporcione google con los datos
         idUsuario2 = Objects.requireNonNull(result.getSignInAccount()).getId();
         password1 = result.getSignInAccount().getId();
         password2 = result.getSignInAccount().getId();
@@ -48,6 +57,7 @@ public class RegistroGoogle {
 
 
 
+    //Se añaden los datos registrados de Google.
     public void anadir(){
 
         if(password2.equals(password1)) {
@@ -64,7 +74,7 @@ public class RegistroGoogle {
         }
 
     }
-
+    //se añade el usuario de google con el insert luego llamando al metodo añadir desde la clase del login.
     private Context mContext() {
         return mContext;
     }
@@ -115,7 +125,7 @@ public class RegistroGoogle {
 
         }
     }
-
+    //Se consulta el usuario si existe o no .
     private class ConsultarUsuario extends AsyncTask<String,Void,Boolean> {
 
         private Context context;
@@ -140,7 +150,7 @@ public class RegistroGoogle {
                 transporte.call(SOAP_ACTION,envelope);
                 SoapObject resSoap = (SoapObject)envelope.getResponse();
 
-                // Se corrige el password obtenido, eliminando caracteres de control '%00'. Acuerdate que tambien elimina espacios, VALIDAR PASS AL CREAR USUARIO
+
                 String pass = resSoap.getPropertyAsString(2).replaceAll("\\W", "");
                 Login.setUsuario(new UsuarioDTO(Integer.valueOf(resSoap.getPropertyAsString(0)), resSoap.getPropertyAsString(1), pass, resSoap.getPropertyAsString(3),
                         resSoap.getPropertyAsString(4), resSoap.getPropertyAsString(5), resSoap.getPropertyAsString(6), resSoap.getPropertyAsString(7)));

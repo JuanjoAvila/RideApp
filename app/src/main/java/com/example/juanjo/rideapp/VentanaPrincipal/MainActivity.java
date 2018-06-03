@@ -1,5 +1,6 @@
 package com.example.juanjo.rideapp.VentanaPrincipal;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.example.juanjo.rideapp.Amigos.Amigos_main;
 import com.example.juanjo.rideapp.DTO.Ruta_infoDTO;
 import com.example.juanjo.rideapp.Evento.Eventos;
-import com.example.juanjo.rideapp.FTP.FTPManager;
 import com.example.juanjo.rideapp.Login.Login;
 import com.example.juanjo.rideapp.R;
 import com.example.juanjo.rideapp.Rutas.Rutas_main;
@@ -57,48 +57,62 @@ import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * @author RideApp
+ * @version 1.0
+ * created on June
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+    //Esta variable ayuda a asignar la ventana principal como la que esta actualmente ,es para el menu lateral.
     public static boolean esPrincipal;
+
+    //Esta variable es para saber si entra por primera vez en el login para recordar el usuario y la contraseña
     public static boolean primeraVez = false;
+
+    //Variables para asignar en el menu lateral nombre , correo y la imagen .
     public CircleImageView imagenUsuarioMenu;
     public TextView nombreUsuarioMenu;
     public TextView correoUsuarioMenu;
-    public CircleImageView imagenUsuarioMenuVentanaPrincipal;
+
+    //Variable para saber si ha entrado al login otras veces o no para el recuerdame
     public static  boolean otras = true;
+    //Guarda el usuario y la contraseña en este array para el recuerdame.
     public static ArrayList<String> usuario = new ArrayList<>();
+
+    //declaracion de la api de google
     private GoogleApiClient googleApiClient;
 
-
+    //Declaracion de variables para conectar a la base de datos y acceder a la informacion de la ruta
     public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "listaRuta_info";
     public static final String SOAP_ACTION = "http://tempuri.org/listaRuta_info";
     public static final String NAMESPACE = "http://tempuri.org/";
 
-    private RecyclerView recycler;
+    //Variable para obtener el id del usuario
     private int idUsuario;
+
+    //Inicializacion de las listas donde se guardaran los datos de las rutas.
     private List<Ruta_infoDTO> datosRuta = new ArrayList<>();
     private List<Ruta_infoDTO> ultimaRuta = new ArrayList<>();
     private List<Ruta_infoDTO> topValoracion = new ArrayList<>();
     private List<Ruta_infoDTO> topRutas = new ArrayList<>();
-    private RecicleViewAdapterRutas adapter2;
 
-    // Inicializar Rutas en el tab
-
-
-    // private RecyclerView recycler;
+    // Declaracion del recicle para mostrar la lista de rutas.
+    private RecyclerView recycler;
     private RecyclerView.LayoutManager lManager;
     Handler uiHandlerPerfil ;
+    private RecicleViewAdapterRutas adapter2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Activar la funcion de la barra de abajo.
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//Iniciar tabs
+        //Iniciar tabs
         BottomNavigationView navigation =  findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -109,18 +123,17 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //Al apretar adquiere el valor del boton y te muestra el menu
+        //Al apretar adquiere el valor del boton y te muestra el menu junto con sus datos.
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
         imagenUsuarioMenu = hView.findViewById(R.id.imagenUsuarioMenu);
         nombreUsuarioMenu = hView.findViewById(R.id.nombreUsuarioMenu);
         correoUsuarioMenu = hView.findViewById(R.id.correoUsuarioMenu);
-        imagenUsuarioMenuVentanaPrincipal = findViewById(R.id.action_perfil);
 
 
-        esPrincipal = true;
 
+        //Implementación de la api de Google , para que el proceso de registro se correcto.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -130,30 +143,32 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
 
+        //Variable que adquiere el valor de la ventana principal , como la que se esta ejecutando en este momento.
+        esPrincipal = true;
 
-
+        //Le damos forma a la lista del recicle para que se pueda visualizar por id
         recycler = findViewById(R.id.reciclador);
-        idUsuario = getIntent().getExtras().getInt("idUsuario");
+
+        //Obtenemos la id del usuario que le pasa anteriormente al loguear
+        idUsuario = Objects.requireNonNull(getIntent().getExtras()).getInt("idUsuario");
+
+
+        //Se Inicia el hilo dando forma a la lista de rutas , obteniendo asi las ultimas rutas creadas.
         uiHandlerPerfil = new Handler(this.getMainLooper());
         uiHandlerPerfil.post(new Runnable() {
             @Override
             public void run() {
-
-
                 try {
                     datosRuta.clear();
                     new obtenerInfoRutas(getApplicationContext()).execute(idUsuario).get();
-
                     ultimaRuta.add(datosRuta.get(0));
                     ultimaRuta.add(datosRuta.get(1));
                     ultimaRuta.add(datosRuta.get(2));
-                    adapter2 = new RecicleViewAdapterRutas(datosRuta);
+                    adapter2 = new RecicleViewAdapterRutas(ultimaRuta);
                     recycler.setAdapter(adapter2);
                     recycler.setHasFixedSize(true);
-
                     lManager = new LinearLayoutManager(getApplicationContext());
                     recycler.setLayoutManager(lManager);
-                    ultimaRuta.clear();
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -165,12 +180,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Mediante la consulta a la base de datos obtiene la informacion de las rutas y luego las proceso.
+     */
+    @SuppressLint("StaticFieldLeak")
     private class obtenerInfoRutas extends AsyncTask<Integer,Void,Boolean> {
 
-        private Context context;
-
-        public obtenerInfoRutas(Context context) {
-            this.context = context;
+        obtenerInfoRutas(Context context) {
         }
 
         protected Boolean doInBackground(Integer... params) {
@@ -210,20 +226,20 @@ public class MainActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(Boolean result) {
-            if(result){
-
-            }else{
-
-            }
         }
     }
 
+    /**
+     * Esto nos permite movernos por el tab view los botones de abajo y asi acceder a cada una de las pestañas para añadir las diferentes tipos de rutas
+     * respectivas por fecha , valoraciones y mejores rutas.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+                //obtiene las ultimas rutas y las muestra
                 case R.id.ultimas_rutas:
 
                     uiHandlerPerfil.post(new Runnable() {
@@ -234,16 +250,10 @@ public class MainActivity extends AppCompatActivity
                             try {
                                 datosRuta.clear();
                                 new obtenerInfoRutas(getApplicationContext()).execute(idUsuario).get();
-                                /*Collections.sort(datosRuta, new Comparator<Ruta_infoDTO>(){
-                                    @Override
-                                    public int compare(Ruta_infoDTO r1 , Ruta_infoDTO r2){
-                                        return Integer.compare(Integer.parseInt(r2.getFecha_ruta()), Integer.parseInt(r1.getFecha_ruta()));
-                                    }
-                                });*/
                                 ultimaRuta.add(datosRuta.get(0));
                                 ultimaRuta.add(datosRuta.get(1));
                                 ultimaRuta.add(datosRuta.get(2));
-                                adapter2 = new RecicleViewAdapterRutas(datosRuta);
+                                adapter2 = new RecicleViewAdapterRutas(ultimaRuta);
                                 recycler.setAdapter(adapter2);
                                 recycler.setHasFixedSize(true);
 
@@ -260,6 +270,7 @@ public class MainActivity extends AppCompatActivity
 
 
                     return true;
+                    //obtiene las mejores rutas y las muestra
                 case R.id.mejores_rutas:
 
                     uiHandlerPerfil.post(new Runnable() {
@@ -295,6 +306,7 @@ public class MainActivity extends AppCompatActivity
 
 
                     return true;
+                    //obtiene la rutas mejor valoradas y las muestra.
                 case R.id.rutas_mas_dificiles:
                     uiHandlerPerfil.post(new Runnable() {
                         @Override
@@ -337,10 +349,9 @@ public class MainActivity extends AppCompatActivity
     };
 
 
-
-
-
-
+    /**
+     * Al iniciarse en la ventana principal obtendra el perfil del usuario de google para cargarlo y asi poder utilizar sus datos.
+     */
     @Override
     protected void onStart(){
         super.onStart();
@@ -362,8 +373,7 @@ public class MainActivity extends AppCompatActivity
             nombreUsuarioMenu.setText(Login.user.getNombre());
             correoUsuarioMenu.setText(Login.user.getCorreo());
             Bitmap bitmap;
-            if(foto!=null && foto!=""){
-                FTPManager ftpManager = new FTPManager(this);
+            if(foto!=null && !foto.equals("")){
                 byte[] decodeValue = Base64.decode(foto, Base64.DEFAULT);
                 bitmap = BitmapFactory.decodeByteArray(decodeValue, 0, decodeValue.length);
 
@@ -378,6 +388,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Despues de consultar la cuenta esperando si el resultado que se le pasa el correcto se podra acceder a los datos de google mediante su cuenta
+     * por lo tanto se podria pillar el correo , el nombre y apellidos y por ultimo la imagen de perfil , luego se los pasara al metodo anterior para que se
+     * procesen y se ejecuten.
+     * @param result Obtiene los datos del ususario , si es correcto claro .
+     */
     private void handleSignResult(GoogleSignInResult result) {
         if(result.isSuccess()){
             GoogleSignInAccount account = result.getSignInAccount();
@@ -390,6 +406,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Metodo para poder volver a la ventana de login por si el usuario le da a logout en el menu.
+     */
     private void goLogInScreen() {
         Intent intent = new Intent(this,Login.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -411,37 +430,49 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        //Al apretar a inicio
         if (id == R.id.nav_inicio && !esPrincipal) {
             Intent i = new Intent(this, MainActivity.class );
             startActivity(i);
 
+        //Al darle al perfil
         } else if (id == R.id.nav_perfil) {
             Intent i = new Intent(this, Perfil.class );
             i.putExtra("usuario", Login.getUsuari().getIdUsuario());
             esPrincipal=false;
             startActivity(i);
+
+        //Al darle a amigos
         } else if (id == R.id.nav_amigos) {
             Intent i = new Intent(this, Amigos_main.class );
             i.putExtra("usuario", Login.getUsuari().getIdUsuario());
             esPrincipal=false;
             startActivity(i);
+
+        //Al darle a rutas
         } else if (id == R.id.nav_rutas) {
             Intent i = new Intent(this, Rutas_main.class );
             esPrincipal=false;
             startActivity(i);
+
+        //Al darle a eventos
         } else if (id == R.id.nav_eventos) {
             Intent i = new Intent(this, Eventos.class );
             esPrincipal=false;
             startActivity(i);
+
+        //Al darle a acerca de
         } else if (id == R.id.nav_acerca_de) {
             Intent i = new Intent(this,Acerca_de.class);
             esPrincipal=false;
             startActivity(i);
+
+        //Al darle a ayuda
         } else if (id == R.id.nav_ayuda) {
             Toast.makeText(getApplicationContext(),"Ayuda",Toast.LENGTH_SHORT).show();
+
+        //Al darle a logout
         } else if (id == R.id.nav_logout) {
             if(Login.usuarioGoogle) {
                 Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
@@ -457,10 +488,13 @@ public class MainActivity extends AppCompatActivity
             }else{
                 goLogInScreen();
             }
+
+        //Al darle a salir
         }else if (id == R.id.nav_salir) {
             this.finish();
         }
 
+        //Lo declara y lo cierra el menu lateral
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -472,6 +506,7 @@ public class MainActivity extends AppCompatActivity
         esPrincipal = true;
     }
 
+    //Si ha habido algun problema de conexión se ejecuta este metodo
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this, "Error de conexion!", Toast.LENGTH_SHORT).show();

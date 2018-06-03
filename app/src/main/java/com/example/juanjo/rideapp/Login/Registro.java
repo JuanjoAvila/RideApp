@@ -27,12 +27,22 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+/**
+ * @author RideApp
+ * @version 1.0
+ * created on June
+ */
 public class Registro extends AppCompatActivity {
+    //Variables que se usan para la consulta de insertar usuario
     public static final String URL = "http://rideapp2.somee.com/WebService.asmx";
     public static final String METHOD_NAME = "nuevoUsuario";
     public static final String SOAP_ACTION = "http://tempuri.org/nuevoUsuario";
     public static final String NAMESPACE = "http://tempuri.org/";
+
+    //Declaracion de los campos de texto para poder introducir los datos.
     public AutoCompleteTextView loginusuario, logincontrasena, loginrepetircontrasena,loginnombre,loginapellidos,logincorreo;
+
+    //Variable del usuario
     private UsuarioDTO user = null;
     String idUsuario2;
     @Override
@@ -44,6 +54,7 @@ public class Registro extends AppCompatActivity {
         //Sirve para que no salga al inciar el login , el pop up para escribir .
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        //declara los campos de texto por id.
         loginusuario = findViewById(R.id.loginusuario);
         logincontrasena = findViewById(R.id.logincontraseña);
         loginrepetircontrasena = findViewById(R.id.loginrepetircontraseña);
@@ -51,6 +62,11 @@ public class Registro extends AppCompatActivity {
         loginapellidos = findViewById(R.id.loginapellidos);
         logincorreo = findViewById(R.id.logincorreo);
     }
+
+    /**
+     * Al apretar el boton de añadir verifica todos los campos con sus condiciones que esten correctas a prueba de errores.
+     * @param view Ejecuta la accion de crear el usuario.
+     */
     public void anadir(View view) {
         idUsuario2 = loginusuario.getText().toString();
         String password2 = logincontrasena.getText().toString();
@@ -108,6 +124,12 @@ public class Registro extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Se le pasa la caden del mail este la verifica y confirma que el email introducido es correo
+     * @param email Es la variable de la cadena del email, introducida en el campo de texto por el usuario.
+     * @return Devuelve si es correcto el email introducido o no.
+     */
     private boolean validarEmail(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
@@ -154,7 +176,7 @@ public class Registro extends AppCompatActivity {
 
             return result;
         }
-
+        //Si da error salta el mensaje del usuario existente.
         protected void onPostExecute(Integer result) {
 
             if(result.equals(0)){
@@ -185,7 +207,7 @@ public class Registro extends AppCompatActivity {
 
         }
     }
-
+    //Ejecuta la tarea si existe el usuario para comprobar , asi verifica que no se creen dos iguales.
     @NonNull
     private Boolean existeUsuario(String param) {
         Boolean result = true;
